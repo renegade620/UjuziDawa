@@ -212,7 +212,7 @@ session_start();
 
         <form method="POST">
             <h1>Select symptoms<br>
-                <br< /h1>
+                <br</h1>
                     <label for="symptom-1">Symptom 1:</label>
                     <select id="symptoms-1" name="symptom[]" multiple>
                         <option value="itching">itching</option>
