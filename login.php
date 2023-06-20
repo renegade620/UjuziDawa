@@ -70,8 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
         if (!mysqli_stmt_prepare($stmt, $sql)) {
             header("location: index.html?error=statementfailed");
             exit();
-          } 
-          else {
+        } else {
             mysqli_stmt_bind_param($stmt, "s", $uname);
             mysqli_stmt_execute($stmt);
             $result = mysqli_stmt_get_result($stmt);
@@ -80,34 +79,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
                 $row['password'] = password_hash($pwd, PASSWORD_DEFAULT);
                 $hashed_password = $row['password'];
                 $passwordCheck = password_verify($pwd, $hashed_password);
-                echo $passwordCheck;
+
                 if ($passwordCheck == false) {
                     header("location: index.html?error=wrongpassword");
                     exit();
-                }
-                elseif ($passwordCheck == true) {
-                    session_start();
-                    $_SESSION['username'] = $row['user_name'];
+                } elseif ($passwordCheck == true) {
+                    if ($row['Role'] == 'admin') {
+                        session_start();
+                        $_SESSION['username'] = $row['user_name'];
+                        header("location: admin.php?login=success");
+                        exit();
+                    } else {
+                        session_start();
+                        $_SESSION['username'] = $row['user_name'];
 
-                    header("location: dashboard5.php?login=success");
-                    exit();
-                }
-                else {
+                        header("location: dashboard5.php?login=success");
+                        exit();
+                    }
+                } else {
                     header("location: index.html?error=wrongpassword");
                     exit();
                 }
-
-            }
-            else {
+            } else {
                 header("location: index.html?error=nouser");
-            exit();
+                exit();
             }
-          }
-    } 
-
-}
-else {
+        }
+    }
+} else {
     header("location: index.html");
     exit();
-
 }
