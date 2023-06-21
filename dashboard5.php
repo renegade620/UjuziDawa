@@ -129,9 +129,18 @@ session_start();
             // combine conditions
             $query .= implode(" OR ", $conditions);
 
+            // append the selected symptoms to the users table
+            $u_name = $_SESSION['username']; // assuming you have the username stored in a session variable
+            $symptoms_string = implode(', ', $selected_symptoms);
+            $insert_query = "UPDATE users SET symptoms = CONCAT(symptoms, ', ', '$symptoms_string') WHERE username = '$u_name'";
+    // execute the update query
+    // Note: Make sure to properly sanitize and validate the user input to prevent SQL injection attacks
+
+
             // execute query
             $result = $conn->query($query);
             $result_weights = $conn->query($query_weights);
+            $result_symptoms = $conn->query($insert_query);
 
             // fetch results
             if ($result && $result->num_rows > 0) {
@@ -140,8 +149,7 @@ session_start();
                     $possible_diseases[] = $row['disease'];
                 }
             }
-            var_dump($possible_diseases);
-
+            
             // calculate score for each disease based on symptom weights
             if (!empty($possible_diseases)) {
                 // prepare the SQL query to fetch weights for selected symptoms

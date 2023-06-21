@@ -20,21 +20,21 @@
             border-radius: 5px;
         }
 
-         .sidebar {
+        .sidebar {
             flex-basis: 200px;
             padding: 10px;
         }
-        
+
         .sidebar ul {
             list-style-type: none;
             padding: 0;
             margin: 0;
         }
-        
+
         .sidebar li {
             margin-bottom: 10px;
         }
-        
+
         .sidebar li a {
             display: block;
             padding: 10px;
@@ -43,16 +43,16 @@
             text-decoration: none;
             border-radius: 5px;
         }
-        
+
         .sidebar li a:hover {
             background-color: #ccc;
         }
-        
+
         .main-content {
             flex-basis: calc(100% - 200px);
             padding: 10px;
         }
-        
+
 
         h1 {
             text-align: center;
@@ -86,8 +86,9 @@
 
         .add-user-form {
             margin-top: 20px;
+            display: none;
         }
-        
+
         .add-user-form input[type="text"],
         .add-user-form input[type="email"] {
             width: 100%;
@@ -96,7 +97,7 @@
             border-radius: 5px;
             border: 1px solid #ccc;
         }
-        
+
         .add-user-form button {
             padding: 10px 20px;
             background-color: #4CAF50;
@@ -105,14 +106,12 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        
+
         .add-user-form button:hover {
             background-color: #45a049;
         }
-
-        /* Add your custom styles here */
     </style>
-     <script>
+    <script>
         // JavaScript to toggle the visibility of the user form
         function toggleUserForm() {
             var userForm = document.getElementById("user-form");
@@ -123,7 +122,7 @@
 
 <body>
     <div class="dashboard">
-        
+
 
         <div class="main-content">
             <h1>Users</h1>
@@ -138,14 +137,29 @@
 
             if (mysqli_num_rows($result) > 0) {
                 echo "<table>";
-                echo "<tr><th>ID</th><th>Name</th><th>Email</th></tr>";
+                echo "<tr><th>ID</th><th>Name</th><th>Email</th><th>Username</th><th>Date of Birth</th><th>Gender</th><th>Address</th><th>Phone Number</th><th>Role</th><th>Created At</th></tr>";
 
                 while ($row = mysqli_fetch_assoc($result)) {
                     echo "<tr>";
                     echo "<td>" . $row["user_id"] . "</td>";
                     echo "<td>" . $row["first_name"] . ' ' .  $row["last_name"] . "</td>";
                     echo "<td>" . $row["email"] . "</td>";
+                    echo "<td>" . $row["user_name"] . "</td>";
+                    echo "<td>" . $row["dob"] . "</td>";
+                    echo "<td>" . $row["gender"] . "</td>";
+                    echo "<td>" . $row["address"] . "</td>";
+                    echo "<td>" . $row["phone_number"] . "</td>";
+                    echo "<td>" . $row["Role"] . "</td>";
+                    echo "<td>" . $row["created_at"] . "</td>";
+                    echo '<td>';
+                    echo '<form method="POST">';
+                    echo '<input type="hidden" name="user_id" value="' . $row['user_id'] . '">';
+                    echo '<button type="submit">Delete</button>';
+                    echo '</form>';
+                    echo '</td>';
                     echo "</tr>";
+
+                   
                 }
 
                 echo "</table>";
@@ -156,20 +170,105 @@
             // Close the database connection
             mysqli_close($conn);
             ?>
-                        <button onclick="toggleUserForm()">Add User</button>
+            <button onclick="toggleUserForm()">Add User</button>
 
-             <div class="add-user-form" id="user-form">
+            <div class="add-user-form" id="user-form">
                 <h2>Add User</h2>
-                <form action="create_user.php" method="POST">
-                    <input type="text" name="name" placeholder="Name" required>
+                <form method="POST">
+                    <input type="text" name="firstname" placeholder="First Name" required>
+                    <input type="text" name="lastname" placeholder="Last Name" required>
                     <input type="email" name="email" placeholder="Email" required>
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+                    <input type="date" name="dob" required><br><br>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select><br><br>
+                    <input type="text" name="address" placeholder="Address" required>
+                    <input type="tel" name="phone_num" placeholder="Phone Number" required><br><br>
+
+                    <input type="radio" id="user" name="role" value="user">
+                    <label for="user">User</label><br>
+                    <input type="radio" id="admin" name="role" value="admin">
+                    <label for="admin">Admin</label><br><br>
+
                     <button type="submit">Add User</button>
                 </form>
+                <?php
+                require "connect.php";
+
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                    // Retrieve form data
+                    $firstname = $_POST['firstname'];
+                    $lastname = $_POST['lastname'];
+                    $email = $_POST['email'];
+                    $username = $_POST['username'];
+                    $pwd = $_POST['password'];
+                    $pwd_rpt = $_POST['confirm_password'];
+                    $dob = $_POST['dob'];
+                    $gender = $_POST['gender'];
+                    $address = $_POST['address'];
+                    $phone_num = $_POST['phone_num'];
+                    $role = $_POST['role'];
+
+                    // Validate and sanitize the input as per your requirements
+
+                    // Prepare and execute the SQL query to insert the user into the database
+                    $query = "INSERT INTO users (first_name, last_name, user_name, email, password, confirm_password, dob, gender, address, phone_number, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    $stmt = $conn->prepare($query);
+                    $stmt->bind_param("sssssssssss", $firstname, $lastname, $username, $email, $pwd, $pwd_rpt, $dob, $gender, $address, $phone_num, $role);
+                    $stmt->execute();
+
+                    // Check if the insertion was successful
+                    if ($stmt->affected_rows > 0) {
+                        echo "User added successfully!";
+                    } else {
+                        echo "Failed to add user.";
+                    }
+
+                    // Close the statement and database connection
+                    $stmt->close();
+                    $conn->close();
+                }
+                ?>
+                <?php
+                // Establish a database connection
+                require "connect.php";
+
+                // Check if the user ID is provided
+                if (isset($_POST['user_id'])) {
+                    $user_id = $_POST['user_id'];
+
+                    // Prepare and execute the SQL query to delete the user from the database
+                    $query = "DELETE FROM users WHERE user_id = ?";
+                    $stmt = $conn->prepare($query);
+                    $stmt->bind_param("i", $user_id);
+                    $stmt->execute();
+
+                    // Check if the deletion was successful
+                    if ($stmt->affected_rows > 0) {
+                        echo "User deleted successfully!";
+                    } else {
+                        echo "Failed to delete user.";
+                    }
+
+                    // Close the statement and database connection
+                    $stmt->close();
+                }
+
+                // Close the database connection
+                $conn->close();
+                ?>
+
             </div>
         </div>
         <div class="sidebar">
             <ul>
-                <li><a href="try.php">Dashboard</a></li>
+                <li><a href="admin.php">Dashboard</a></li>
                 <li><a href="users.php">Users</a></li>
                 <li><a href="#">Diseases</a></li>
             </ul>
