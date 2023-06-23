@@ -98,6 +98,16 @@ session_start();
         .top-right select {
             width: 150px;
         }
+
+        #logout {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+        }
     </style>
 </head>
 
@@ -108,6 +118,8 @@ session_start();
                 <li><a href="#">Dashboard</a></li>
                 <li><a href="users.php">Users</a></li>
                 <li><a href="diseases.php">Diseases</a></li>
+                <li><a href="diagnosis.php">Diagnosis</a>
+                <li><a href="demographics.php">Demographics</a>
             </ul>
         </div>
 
@@ -176,7 +188,7 @@ function getTotalDiseases() {
                 <span>Logged in as: <?php echo $_SESSION['username']; ?></span>
             </div>
             <div>
-                <button onclick="logout()">Logout</button>
+                <button id="logout" onclick="logout()">Logout</button>
             </div>
             <script>
                 function logout() {

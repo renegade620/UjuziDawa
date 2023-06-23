@@ -108,6 +108,20 @@
         .add-user-form button:hover {
             background-color: #45a049;
         }
+
+        .back {
+            margin-top: 20px;
+        }
+
+        .back-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+        }
     </style>
     <script>
         function toggleUserForm() {
@@ -118,6 +132,9 @@
 </head>
 
 <body>
+    <div class="back">
+        <a href="admin.php" class="back-button">Back to Dashboard</a>
+    </div>
     <div class="dashboard">
 
 
@@ -259,13 +276,6 @@
                 ?>
 
             </div>
-        </div>
-        <div class="sidebar">
-            <ul>
-                <li><a href="admin.php">Dashboard</a></li>
-                <li><a href="users.php">Users</a></li>
-                <li><a href="#">Diseases</a></li>
-            </ul>
         </div>
     </div>
 </body>
