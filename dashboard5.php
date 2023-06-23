@@ -129,19 +129,12 @@ session_start();
             // combine conditions
             $query .= implode(" OR ", $conditions);
 
-            // append the selected symptoms to the users table
-            $u_name = $_SESSION['username']; // assuming you have the username stored in a session variable
-            $symptoms_string = implode(', ', $selected_symptoms);
-            $insert_query = "UPDATE users SET symptoms = CONCAT(symptoms, ', ', '$symptoms_string') WHERE username = '$u_name'";
-    // execute the update query
-    // Note: Make sure to properly sanitize and validate the user input to prevent SQL injection attacks
-
-
+            $symptoms_json = json_encode($selected_symptoms);
+                        
             // execute query
             $result = $conn->query($query);
             $result_weights = $conn->query($query_weights);
-            $result_symptoms = $conn->query($insert_query);
-
+           
             // fetch results
             if ($result && $result->num_rows > 0) {
                 $possible_diseases = [];
@@ -149,6 +142,7 @@ session_start();
                     $possible_diseases[] = $row['disease'];
                 }
             }
+            $diseases_json = json_encode($possible_diseases);
             
             // calculate score for each disease based on symptom weights
             if (!empty($possible_diseases)) {
@@ -193,7 +187,7 @@ session_start();
                     // display the possible diseases with their scores
                     $max_score = max($scores);
                     $diseases = "";
-                    $diseases = "Possible diseases based on selected symptoms: ($selected_symptom)<br>'";
+                    $diseases = "Possible diseases based on selected symptoms: <br>'";
                     foreach ($scores as $disease => $score) {
                         $percentage = ($score / $max_score) * 100;
                         $diseases .= "<a href='disease_info.php?disease=$disease'>$disease</a> (score: " . $score . ")<br>";
@@ -213,7 +207,18 @@ session_start();
         }
 
 
-        // close the database connection
+                        $user_id = $_SESSION['userid'];
+                        // Insert data into user_profile
+                        $insert_query = "INSERT INTO user_profile (user_id, symptoms, diseases) VALUES ('$user_id', '$symptoms_json', '$diseases_json')";
+                        $conn->query($insert_query);
+
+                        // Check if the insertion was successful
+                        if ($conn->affected_rows > 0) {
+                            echo "Data inserted successfully.";
+                        } else {
+                            echo "Failed to insert data.";
+                        }
+
         $conn->close();
         ?>
 
