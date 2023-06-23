@@ -4,7 +4,7 @@
 <head>
     <style>
         body {
-            font-family: sans-serif;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #6BA5D7;

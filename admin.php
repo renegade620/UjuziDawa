@@ -8,9 +8,8 @@ session_start();
 <head>
     <title>Admin Dashboard - Medical Diagnosis System</title>
     <style>
-        /* CSS styles for the dashboard */
         body {
-            font-family: Arial, sans-serif;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
         }
 
         .dashboard {

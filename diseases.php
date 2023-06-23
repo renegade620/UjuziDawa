@@ -5,7 +5,7 @@
     <title>Diseases</title>
     <style>
         body {
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: Verdana, Tahoma, sans-serif;
         }
 
         h1 {
@@ -60,7 +60,7 @@
 
 <body>
     <div class="back">
-        <a href="admin.php.php" class="back-button">Back to Dashboard</a>
+        <a href="admin.php" class="back-button">Back to Dashboard</a>
     </div>
     <?php
     include "connect.php";

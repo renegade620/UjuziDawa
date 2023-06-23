@@ -4,10 +4,8 @@
 <head>
     <title>Admin Dashboard - Users</title>
     <style>
-        /* CSS styles for the users page */
-        /* CSS styles for the users page */
         body {
-            font-family: Arial, sans-serif;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
             background-color: #f1f1f1;
         }
 
@@ -112,7 +110,6 @@
         }
     </style>
     <script>
-        // JavaScript to toggle the visibility of the user form
         function toggleUserForm() {
             var userForm = document.getElementById("user-form");
             userForm.style.display = (userForm.style.display === "none") ? "block" : "none";
@@ -128,7 +125,6 @@
             <h1>Users</h1>
 
             <?php
-            // Establish a database connection
             require "connect.php";
 
             // Fetch users from the database
@@ -158,8 +154,6 @@
                     echo '</form>';
                     echo '</td>';
                     echo "</tr>";
-
-                   
                 }
 
                 echo "</table>";
