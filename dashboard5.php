@@ -190,7 +190,7 @@ session_start();
                     $diseases = "Possible diseases based on selected symptoms: <br>'";
                     foreach ($scores as $disease => $score) {
                         $percentage = ($score / $max_score) * 100;
-                        $diseases .= "<a href='disease_info.php?disease=$disease'>$disease</a> (score: " . $score . ")<br>";
+                        $diseases .= "<a href='disease_info.php?disease=$disease' target='_blank'>$disease</a> (score: " . $score . ")<br>";
                         $diseases .= "<progress value='$percentage' max='100' style='color:green'></progress><br>";
                     }
                 } else {

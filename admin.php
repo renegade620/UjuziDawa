@@ -108,7 +108,7 @@ session_start();
             <ul>
                 <li><a href="#">Dashboard</a></li>
                 <li><a href="users.php">Users</a></li>
-                <li><a href="#">Diseases</a></li>
+                <li><a href="diseases.php">Diseases</a></li>
             </ul>
         </div>
 
@@ -118,30 +118,55 @@ session_start();
             <div class="summary">
                 <div class="summary-card">
                     <h3>Total Diagnoses</h3>
-                    <p>123</p>
+                    <p><?php echo getTotalDiagnoses(); ?></p>
                 </div>
                 <div class="summary-card">
-                    <h3>Total Patients</h3>
-                    <p>456</p>
+                    <h3>Total Users</h3>
+                    <p><?php echo getTotalUsers(); ?></p>
                 </div>
                 <div class="summary-card">
-                    <h3>Total Doctors</h3>
-                    <p>78</p>
+                    <h3>Total Diseases</h3>
+                    <p><?php echo getTotalDiseases(); ?></p>
                 </div>
+                <?php
+function getTotalDiagnoses() {
+    include "connect.php";
+    $query = "SELECT COUNT(*) AS total_diagnoses FROM user_profile";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_assoc($result);
+    return $row['total_diagnoses'];
+}
+
+function getTotalUsers() {
+    include "connect.php";
+    $query = "SELECT COUNT(*) AS total_users FROM users";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_assoc($result);
+    return $row['total_users'];
+}
+
+function getTotalDiseases() {
+    include "connect.php";
+    $query = "SELECT COUNT(*) AS total_diseases FROM description";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_assoc($result);
+    return $row['total_diseases'];
+}
+?>
             </div>
 
             <div class="activities">
                 <h2>Recent Activities</h2>
                 <div class="activity-item">
-                    <p>John Doe's diagnosis added</p>
+                    <p>Farida Swaleh diagnosis added</p>
                     <p>Date: 2023-06-15</p>
                 </div>
                 <div class="activity-item">
-                    <p>Sarah Smith's diagnosis updated</p>
+                    <p>Ruth Jeptoo's diagnosis updated</p>
                     <p>Date: 2023-06-14</p>
                 </div>
                 <div class="activity-item">
-                    <p>New patient registration: Jane Johnson</p>
+                    <p>New user registration: Francis Mtalaki</p>
                     <p>Date: 2023-06-13</p>
                 </div>
             </div>
