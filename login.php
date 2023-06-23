@@ -33,11 +33,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
                 } elseif ($passwordCheck == true) {
                     if ($row['Role'] == 'admin') {
                         session_start();
+                        $_SESSION['userid'] = $row['user_id'];
                         $_SESSION['username'] = $row['user_name'];
                         header("location: admin.php?login=success");
                         exit();
                     } else {
                         session_start();
+                        $_SESSION['userid'] = $row['user_id'];
                         $_SESSION['username'] = $row['user_name'];
 
                         header("location: dashboard5.php?login=success");
