@@ -130,11 +130,11 @@ session_start();
             $query .= implode(" OR ", $conditions);
 
             $symptoms_json = json_encode($selected_symptoms);
-                        
+
             // execute query
             $result = $conn->query($query);
             $result_weights = $conn->query($query_weights);
-           
+
             // fetch results
             if ($result && $result->num_rows > 0) {
                 $possible_diseases = [];
@@ -143,7 +143,7 @@ session_start();
                 }
             }
             $diseases_json = json_encode($possible_diseases);
-            
+
             // calculate score for each disease based on symptom weights
             if (!empty($possible_diseases)) {
                 // prepare the SQL query to fetch weights for selected symptoms
@@ -207,17 +207,17 @@ session_start();
         }
 
 
-                        $user_id = $_SESSION['userid'];
-                        // Insert data into user_profile
-                        $insert_query = "INSERT INTO user_profile (user_id, symptoms, diseases) VALUES ('$user_id', '$symptoms_json', '$diseases_json')";
-                        $conn->query($insert_query);
+        $user_id = $_SESSION['userid'];
+        // Insert data into user_profile
+        $insert_query = "INSERT INTO user_profile (user_id, symptoms, diseases) VALUES ('$user_id', '$symptoms_json', '$diseases_json')";
+        $conn->query($insert_query);
 
-                        // Check if the insertion was successful
-                        if ($conn->affected_rows > 0) {
-                            echo "Data inserted successfully.";
-                        } else {
-                            echo "Failed to insert data.";
-                        }
+        // Check if the insertion was successful
+        if ($conn->affected_rows > 0) {
+            echo "Data inserted successfully.";
+        } else {
+            echo "Failed to insert data.";
+        }
 
         $conn->close();
         ?>
@@ -225,7 +225,7 @@ session_start();
 
         <form method="POST">
             <h1>Select symptoms<br>
-                <br</h1>
+                <br< /h1>
                     <label for="symptom-1">Symptom 1:</label>
                     <select id="symptoms-1" name="symptom[]" multiple>
                         <option value="itching">itching</option>
@@ -540,22 +540,18 @@ session_start();
                         <option value="blurred and distorted vision">blurred and distorted vision</option>
 
                     </select>
-
-
-
-
                     <input type="submit" value="Check">
                     <input type="reset" value="Reset">
 
                     <div id="diagnosis-results">
                         <?php echo $diseases; ?>
                     </div>
-
-
         </form>
 
     </main>
     <script src="js/home.js" defer></script>
+
+
 </body>
 
 </html>

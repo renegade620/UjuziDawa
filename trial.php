@@ -30,6 +30,37 @@ $labels = array_unique($labels);
 
 
 
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+  // Hide select elements starting from index 4 (3rd element)
+  for (let i = 4; i <= 7; i++) {
+    document.getElementById("symptoms-" + i).style.display = "none";
+  }
+
+  // Counter to keep track of the visible select elements
+  let visibleCount = 3;
+
+  // Event listener for the "More symptoms" button
+  document.getElementById("more-symptoms-btn").addEventListener("click", function() {
+    // Increment the counter and get the next select element to display
+    visibleCount++;
+    const nextSymptomSelect = document.getElementById("symptoms-" + visibleCount);
+
+    // Display the next select element if available
+    if (nextSymptomSelect) {
+      nextSymptomSelect.style.display = "block";
+    }
+
+    // Hide the "More symptoms" button if all select elements are visible
+    if (visibleCount === 7) {
+      this.style.display = "none";
+    }
+  });
+});
+</script>
+
+
 <div style="width: 500px; height: 300px;">
     <canvas id="diseaseChart"></canvas>
 </div>

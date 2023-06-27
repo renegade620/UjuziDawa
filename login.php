@@ -37,6 +37,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
                         $_SESSION['username'] = $row['user_name'];
                         header("location: admin.php?login=success");
                         exit();
+                    } else if($row['Role'] == 'doctor') {
+                        session_start();
+                        $_SESSION['userid'] = $row['user_id'];
+                        $_SESSION['username'] = $row['user_name'];
+
+                        header("location: doctor.php?login=success");
+                        exit();
                     } else {
                         session_start();
                         $_SESSION['userid'] = $row['user_id'];
