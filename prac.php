@@ -231,161 +231,25 @@
                 </ul>
             </aside> -->
 
-            <main class="main-content">
-                <h1>Welcome, Receptionist!</h1>
-                <div class="dashboard-overview">
-                    <h3>Patients</h3>
-                    <!-- Dashboard overview content here -->
-                </div>
-                <div class="patient-registration">
-                    <h3>Patient Registration</h3>
-                    <form action="" method="POST" class="form-container">
-                        <label for="registration-date">Registration Date:</label>
-                        <input type="datetime-local" id="registration-date" name="registration-date" required><br><br>
+        <main class="main-content">
+            <h1>Welcome, Receptionist!</h1>
+            <div class="dashboard-overview">
+                <h3>Patients</h3>
+                <!-- Dashboard overview content here -->
+            </div>
+            <div class="patient-list">
+                <h3>Registered Patients</h3>
+                <?php
+                require "connect.php";
 
-                        <label for="health-number">Health Number:</label>
-                        <input type="text" id="health-number" name="health-number" required><br><br>
+                // Fetch the registered users' information
+                $sql = "SELECT * FROM patient";
+                $result = $conn->query($sql);
 
-                        <label for="patient-name">Patient Name:</label>
-                        <input type="text" id="patient-name" name="patient-name" required><br><br>
-
-                        <label for="gender">Gender:</label>
-                        <select id="gender" name="gender" required>
-                            <option value="">Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                        </select><br><br>
-
-                        <label for="date-of-birth">Date of Birth:</label>
-                        <input type="date" id="date-of-birth" name="date-of-birth" required><br><br>
-
-                        <label for="phone-number">Phone Number:</label>
-                        <input type="tel" id="phone-number" name="phone-number" pattern="[0-9]{10}" required><br><br>
-
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required><br><br>
-
-                        <label for="address">Address:</label>
-                        <input type="text" id="address" name="address" required><br><br>
-
-                        <label for="marital-status">Marital Status:</label>
-                        <select id="marital-status" name="marital-status" required>
-                            <option value="">Select Marital Status</option>
-                            <option value="single">Single</option>
-                            <option value="married">Married</option>
-                            <option value="divorced">Divorced</option>
-                            <option value="widowed">Widowed</option>
-                        </select><br><br>
-
-                        <label for="age-check">Is the Patient Younger than 18:</label><br>
-                        <input type="radio" id="age-check-yes" name="age-check" value="yes">
-                        <label for="age-check-yes">Yes</label>
-                        <input type="radio" id="age-check-no" name="age-check" value="no">
-                        <label for="age-check-no">No</label><br><br>
-
-                        <div id="parent-info" style="display: none;">
-                            <label for="parent-name">Parent Name:</label>
-                            <input type="text" id="parent-name" name="parent-name"><br><br>
-
-                            <label for="parent-phone">Parent Phone Number:</label>
-                            <input type="tel" id="parent-phone" name="parent-phone" pattern="[0-9]{10}"><br><br>
-                        </div>
-
-                        <h3>Emergency Contact</h3>
-                        <label for="emergency-name">Name:</label>
-                        <input type="text" id="emergency-name" name="emergency-name" required><br><br>
-
-                        <label for="emergency-relationship">Relationship:</label>
-                        <input type="text" id="emergency-relationship" name="emergency-relationship" required><br><br>
-
-                        <label for="emergency-phone">Phone Number:</label>
-                        <input type="tel" id="emergency-phone" name="emergency-phone" pattern="[0-9]{10}" required><br><br>
-
-                        <h3>Health History</h3>
-                        <label for="reason-for-registration">Reason for Registration:</label>
-                        <textarea id="reason-for-registration" name="reason-for-registration" required></textarea><br><br>
-
-                        <label for="medications">Taking any Medications:</label><br>
-                        <input type="radio" id="medications-yes" name="medications" value="yes">
-                        <label for="medications-yes">Yes</label>
-                        <input type="radio" id="medications-no" name="medications" value="no">
-                        <label for="medications-no">No</label><br><br>
-
-                        <input type="submit" name="register" value="Register">
-                        <input type="reset" value="Reset">
-                    </form>
-                    <?php
-                    require "connect.php";
-                    if (empty($_POST['health-number']) || empty($_POST['patient-name']) || empty($_POST['gender']) || empty($_POST['date-of-birth']) || empty($_POST['phone-number']) || empty($_POST['email']) || empty($_POST['address']) || empty($_POST['marital-status'])) {
-                        echo "Please fill in all required fields.";
-                    } else {
-                        // Retrieve the form inputs
-                        $registrationDatetime = $_POST['registration-date'];
-                        $healthNumber = $_POST['health-number'];
-                        $patientName = $_POST['patient-name'];
-                        $gender = $_POST['gender'];
-                        $dateOfBirth = $_POST['date-of-birth'];
-                        $phoneNumber = $_POST['phone-number'];
-                        $email = $_POST['email'];
-                        $address = $_POST['address'];
-                        $maritalStatus = $_POST['marital-status'];
-                        $isUnder18 = isset($_POST['age-check']) ?  1 : 0;
-                        $parentName = $_POST['parent-name'];
-                        $parentPhoneNumber = $_POST['parent-phone'];
-                        $emergencyContactName = $_POST['emergency-name'];
-                        $emergencyContactRelationship = $_POST['emergency-relationship'];
-                        $emergencyContactPhoneNumber = $_POST['emergency-phone'];
-                        $reasonForRegistration = $_POST['reason-for-registration'];
-                        $takingMedications = isset($_POST['medications']) ? 1 : 0;
-
-                        // Convert boolean values to "Yes" or "No"
-                        $isUnder18Text = $isUnder18 ?  "No" : "Yes";
-                        $takingMedicationsText = $takingMedications ? "No" : "Yes";
-
-
-                        // Prepare the SQL statement
-                        $sql = "INSERT INTO patient (registration_datetime, health_number, patient_name, gender, date_of_birth, phone_number, email, address, marital_status, is_under_18, parent_name, parent_phone_number, emergency_contact_name, emergency_contact_relationship, emergency_contact_phone_number, reason_for_registration, taking_medications) 
-                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-                        // Prepare and bind the parameters
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("sssssssssssssssss", $registrationDatetime, $healthNumber, $patientName, $gender, $dateOfBirth, $phoneNumber, $email, $address, $maritalStatus, $isUnder18Text, $parentName, $parentPhoneNumber, $emergencyContactName, $emergencyContactRelationship, $emergencyContactPhoneNumber, $reasonForRegistration, $takingMedicationsText);
-
-                        // Execute the statement
-                        if ($stmt->execute()) {
-                            // Registration successful, display success message or redirect
-                            echo "Registration successful!";
-                        } else {
-                            // Check for duplicate entry error
-                            if ($conn->errno == 1062) {
-                                echo "User already exists.";
-                            } else {
-                                echo "Error occurred. Contact IT!";
-                            }
-                        }
-                        $stmt->close();
-                    }
-
-                    // Close the statement and database connection
-
-                    $conn->close();
-                    ?>
-
-                </div>
-                <div class="patient-list">
-                    <h3>Patient List</h3>
-                    <?php
-                    require "connect.php";
-
-                    // Fetch the registered users' information
-                    $sql = "SELECT * FROM patient";
-                    $result = $conn->query($sql);
-
-                    if ($result->num_rows > 0) {
-                        // Display the table header
-                        echo "<table>";
-                        echo "<tr>
+                if ($result->num_rows > 0) {
+                    // Display the table header
+                    echo "<table>";
+                    echo "<tr>
             <th>Health Number</th>
             <th>Patient Name</th>
             <th>Gender</th>
@@ -404,48 +268,185 @@
             <th>Taking Medications</th>
         </tr>";
 
-                        // Loop through each row of the result set
-                        while ($row = $result->fetch_assoc()) {
-                            // Display the table rows with user data
-                            echo "<tr>";
-                            echo "<td>" . $row["health_number"] . "</td>";
-                            echo "<td>" . $row["patient_name"] . "</td>";
-                            echo "<td>" . $row["gender"] . "</td>";
-                            echo "<td>" . $row["date_of_birth"] . "</td>";
-                            echo "<td>" . $row["phone_number"] . "</td>";
-                            echo "<td>" . $row["email"] . "</td>";
-                            echo "<td>" . $row["address"] . "</td>";
-                            echo "<td>" . $row["marital_status"] . "</td>";
-                            echo "<td>" . ($row["is_under_18"] === "Yes" ? "Yes" : "No") . "</td>";
-                            echo "<td>" . $row["parent_name"] . "</td>";
-                            echo "<td>" . $row["parent_phone_number"] . "</td>";
-                            echo "<td>" . $row["emergency_contact_name"] . "</td>";
-                            echo "<td>" . $row["emergency_contact_relationship"] . "</td>";
-                            echo "<td>" . $row["emergency_contact_phone_number"] . "</td>";
-                            echo "<td>" . $row["reason_for_registration"] . "</td>";
-                            echo "<td>" . ($row["taking_medications"] === "Yes" ? "Yes" : "No") . "</td>";
-                            echo "</tr>";
-                        }
-
-                        // Close the table
-                        echo "</table>";
-                    } else {
-                        // No registered users found
-                        echo "No registered users.";
+                    // Loop through each row of the result set
+                    while ($row = $result->fetch_assoc()) {
+                        // Display the table rows with user data
+                        echo "<tr>";
+                        echo "<td>" . $row["health_number"] . "</td>";
+                        echo "<td>" . $row["patient_name"] . "</td>";
+                        echo "<td>" . $row["gender"] . "</td>";
+                        echo "<td>" . $row["date_of_birth"] . "</td>";
+                        echo "<td>" . $row["phone_number"] . "</td>";
+                        echo "<td>" . $row["email"] . "</td>";
+                        echo "<td>" . $row["address"] . "</td>";
+                        echo "<td>" . $row["marital_status"] . "</td>";
+                        echo "<td>" . ($row["is_under_18"] === "Yes" ? "Yes" : "No") . "</td>";
+                        echo "<td>" . $row["parent_name"] . "</td>";
+                        echo "<td>" . $row["parent_phone_number"] . "</td>";
+                        echo "<td>" . $row["emergency_contact_name"] . "</td>";
+                        echo "<td>" . $row["emergency_contact_relationship"] . "</td>";
+                        echo "<td>" . $row["emergency_contact_phone_number"] . "</td>";
+                        echo "<td>" . $row["reason_for_registration"] . "</td>";
+                        echo "<td>" . ($row["taking_medications"] === "Yes" ? "Yes" : "No") . "</td>";
+                        echo "</tr>";
                     }
 
-                    // Close the result and connection
-                    $result->close();
-                    $conn->close();
-                    ?>
-                </div>
-                <div class="appointment-scheduler">
-                    <h3>Appointment Scheduler</h3>
-                    <?php
+                    // Close the table
+                    echo "</table>";
+                } else {
+                    // No registered users found
+                    echo "No registered users.";
+                }
 
-                    ?>
-                </div>
-            </main>
+                // Close the result and connection
+                $result->close();
+                $conn->close();
+                ?>
+            </div>
+            <div class="patient-registration">
+                <h3>Patient Registration</h3>
+                <form action="" method="POST" class="form-container">
+                    <label for="registration-date">Registration Date:</label>
+                    <input type="datetime-local" id="registration-date" name="registration-date" required><br><br>
+
+                    <label for="health-number">Health Number:</label>
+                    <input type="text" id="health-number" name="health-number" required><br><br>
+
+                    <label for="patient-name">Patient Name:</label>
+                    <input type="text" id="patient-name" name="patient-name" required><br><br>
+
+                    <label for="gender">Gender:</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select><br><br>
+
+                    <label for="date-of-birth">Date of Birth:</label>
+                    <input type="date" id="date-of-birth" name="date-of-birth" required><br><br>
+
+                    <label for="phone-number">Phone Number:</label>
+                    <input type="tel" id="phone-number" name="phone-number" pattern="[0-9]{10}" required><br><br>
+
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required><br><br>
+
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" name="address" required><br><br>
+
+                    <label for="marital-status">Marital Status:</label>
+                    <select id="marital-status" name="marital-status" required>
+                        <option value="">Select Marital Status</option>
+                        <option value="single">Single</option>
+                        <option value="married">Married</option>
+                        <option value="divorced">Divorced</option>
+                        <option value="widowed">Widowed</option>
+                    </select><br><br>
+
+                    <label for="age-check">Is the Patient Younger than 18:</label><br>
+                    <input type="radio" id="age-check-yes" name="age-check" value="yes">
+                    <label for="age-check-yes">Yes</label>
+                    <input type="radio" id="age-check-no" name="age-check" value="no">
+                    <label for="age-check-no">No</label><br><br>
+
+                    <div id="parent-info" style="display: none;">
+                        <label for="parent-name">Parent Name:</label>
+                        <input type="text" id="parent-name" name="parent-name"><br><br>
+
+                        <label for="parent-phone">Parent Phone Number:</label>
+                        <input type="tel" id="parent-phone" name="parent-phone" pattern="[0-9]{10}"><br><br>
+                    </div>
+
+                    <h3>Emergency Contact</h3>
+                    <label for="emergency-name">Name:</label>
+                    <input type="text" id="emergency-name" name="emergency-name" required><br><br>
+
+                    <label for="emergency-relationship">Relationship:</label>
+                    <input type="text" id="emergency-relationship" name="emergency-relationship" required><br><br>
+
+                    <label for="emergency-phone">Phone Number:</label>
+                    <input type="tel" id="emergency-phone" name="emergency-phone" pattern="[0-9]{10}" required><br><br>
+
+                    <h3>Health History</h3>
+                    <label for="reason-for-registration">Reason for Registration:</label>
+                    <textarea id="reason-for-registration" name="reason-for-registration" required></textarea><br><br>
+
+                    <label for="medications">Taking any Medications:</label><br>
+                    <input type="radio" id="medications-yes" name="medications" value="yes">
+                    <label for="medications-yes">Yes</label>
+                    <input type="radio" id="medications-no" name="medications" value="no">
+                    <label for="medications-no">No</label><br><br>
+
+                    <input type="submit" name="register" value="Register">
+                    <input type="reset" value="Reset">
+                </form>
+                <?php
+                require "connect.php";
+                if (empty($_POST['health-number']) || empty($_POST['patient-name']) || empty($_POST['gender']) || empty($_POST['date-of-birth']) || empty($_POST['phone-number']) || empty($_POST['email']) || empty($_POST['address']) || empty($_POST['marital-status'])) {
+                    echo "Please fill in all required fields.";
+                } else {
+                    // Retrieve the form inputs
+                    $registrationDatetime = $_POST['registration-date'];
+                    $healthNumber = $_POST['health-number'];
+                    $patientName = $_POST['patient-name'];
+                    $gender = $_POST['gender'];
+                    $dateOfBirth = $_POST['date-of-birth'];
+                    $phoneNumber = $_POST['phone-number'];
+                    $email = $_POST['email'];
+                    $address = $_POST['address'];
+                    $maritalStatus = $_POST['marital-status'];
+                    $isUnder18 = isset($_POST['age-check']) ?  1 : 0;
+                    $parentName = $_POST['parent-name'];
+                    $parentPhoneNumber = $_POST['parent-phone'];
+                    $emergencyContactName = $_POST['emergency-name'];
+                    $emergencyContactRelationship = $_POST['emergency-relationship'];
+                    $emergencyContactPhoneNumber = $_POST['emergency-phone'];
+                    $reasonForRegistration = $_POST['reason-for-registration'];
+                    $takingMedications = isset($_POST['medications']) ? 1 : 0;
+
+                    // Convert boolean values to "Yes" or "No"
+                    $isUnder18Text = $isUnder18 ?  "No" : "Yes";
+                    $takingMedicationsText = $takingMedications ? "No" : "Yes";
+
+
+                    // Prepare the SQL statement
+                    $sql = "INSERT INTO patient (registration_datetime, health_number, patient_name, gender, date_of_birth, phone_number, email, address, marital_status, is_under_18, parent_name, parent_phone_number, emergency_contact_name, emergency_contact_relationship, emergency_contact_phone_number, reason_for_registration, taking_medications) 
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+                    // Prepare and bind the parameters
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("sssssssssssssssss", $registrationDatetime, $healthNumber, $patientName, $gender, $dateOfBirth, $phoneNumber, $email, $address, $maritalStatus, $isUnder18Text, $parentName, $parentPhoneNumber, $emergencyContactName, $emergencyContactRelationship, $emergencyContactPhoneNumber, $reasonForRegistration, $takingMedicationsText);
+
+                    // Execute the statement
+                    if ($stmt->execute()) {
+                        // Registration successful, display success message or redirect
+                        echo "Registration successful!";
+                    } else {
+                        // Check for duplicate entry error
+                        if ($conn->errno == 1062) {
+                            echo "User already exists.";
+                        } else {
+                            echo "Error occurred. Contact IT!";
+                        }
+                    }
+                    $stmt->close();
+                }
+
+                // Close the statement and database connection
+
+                $conn->close();
+                ?>
+
+            </div>
+
+            <div class="appointment-scheduler">
+                <h3>Appointment Scheduler</h3>
+                <?php
+
+                ?>
+            </div>
+        </main>
         </div>
 
         <footer>

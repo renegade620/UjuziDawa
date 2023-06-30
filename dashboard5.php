@@ -23,7 +23,7 @@ session_start();
     <header class="header flex">
         <div class="container flex">
             <div class="logo">
-                <img src=".\img\logo\ujuzi-dawa-logo.png" alt="" class="logo-img" />
+                <img src="img\logo\ujuzi-dawa-logo-removebg-preview.png" alt="" class="logo-img" />
                 <marquee id="runn" style="height: auto; width:650px;  color: #FFFFFF;" loop="infinite" direction="left" scrollamount="5">
                     <p class="text-center text-success"><span id="stdmsg" class="label label-danger" style="font-size: 18px">
                             <span id="stdmsg" class="labell label-danger" style="font-size: 18px">
@@ -225,7 +225,7 @@ session_start();
 
         <form method="POST">
             <h1>Select symptoms<br>
-                <br< /h1>
+                <br</h1>
                     <label for="symptom-1">Symptom 1:</label>
                     <select id="symptoms-1" name="symptom[]" multiple>
                         <option value="itching">itching</option>
