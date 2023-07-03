@@ -1,5 +1,5 @@
 <?php
-// session_start();
+session_start();
 ?>
 
 <DOCTYPE html>
@@ -426,108 +426,135 @@
             <div>
                 <?php
 
-                // establish database connection
-                $servername = "localhost";
-                $username = "root";
-                $password = "";
-                $dbname = "ujuzidawa";
+                require "connect.php";
 
-                $conn = new mysqli($servername, $username, $password, $dbname);
+                $symptoms_json = "";
+                $diseases_json = "";
 
-                // check connection
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    // retrieve selected symptom from the user
+                    if (isset($_POST['symptom']) && is_array($_POST['symptom'])) {
+                        $selected_symptoms = $_POST['symptom'];
 
-                // retrieve selected symptom from the user
-                if (isset($_POST['symptom']) && is_array($_POST['symptom'])) {
-                    $selected_symptoms = $_POST['symptom'];
+                        // prepare the SQL query to fetch diseases based on selected symptoms
+                        $query = "SELECT DISTINCT disease FROM symptoms WHERE ";
+                        $query_weights = "SELECT * FROM severity WHERE symptom IN ('" . implode("','", $selected_symptoms) . "')";
 
-                    // prepare the SQL query to fetch diseases based on selected symptoms
-                    $query = "SELECT DISTINCT disease FROM symptoms WHERE ";
-                    $query_weights = "SELECT * FROM severity WHERE symptom IN ('" . implode("','", $selected_symptoms) . "')";
-
-                    // query conditions for each select element
-                    $conditions = array();
-                    foreach ($selected_symptoms as $selected_symptom) {
-                        $conditions[] = "symptom_1 = '$selected_symptom'";
-                        $conditions[] = "symptom_2 = '$selected_symptom'";
-                        $conditions[] = "symptom_3 = '$selected_symptom'";
-                        $conditions[] = "symptom_4 = '$selected_symptom'";
-                        $conditions[] = "symptom_5 = '$selected_symptom'";
-                        $conditions[] = "symptom_6 = '$selected_symptom'";
-                        $conditions[] = "symptom_7 = '$selected_symptom'";
-                    }
-
-                    // combine conditions
-                    $query .= implode(" OR ", $conditions);
-
-                    $symptoms_json = json_encode($selected_symptoms);
-
-                    // execute query
-                    $result = $conn->query($query);
-                    $result_weights = $conn->query($query_weights);
-
-                    // fetch results
-                    if ($result && $result->num_rows > 0) {
-                        $possible_diseases = [];
-                        while ($row = $result->fetch_assoc()) {
-                            $possible_diseases[] = $row['disease'];
+                        // query conditions for each select element
+                        $conditions = array();
+                        foreach ($selected_symptoms as $selected_symptom) {
+                            $conditions[] = "symptom_1 = '$selected_symptom'";
+                            $conditions[] = "symptom_2 = '$selected_symptom'";
+                            $conditions[] = "symptom_3 = '$selected_symptom'";
+                            $conditions[] = "symptom_4 = '$selected_symptom'";
+                            $conditions[] = "symptom_5 = '$selected_symptom'";
+                            $conditions[] = "symptom_6 = '$selected_symptom'";
+                            $conditions[] = "symptom_7 = '$selected_symptom'";
                         }
-                    }
-                    $diseases_json = json_encode($possible_diseases);
 
-                    // calculate score for each disease based on symptom weights
-                    if (!empty($possible_diseases)) {
+                        // combine conditions
+                        $query .= implode(" OR ", $conditions);
+
+                        $symptoms_json = json_encode($selected_symptoms);
+
+                        // execute query
+                        $result = $conn->query($query);
+                        $result_weights = $conn->query($query_weights);
+
                         // fetch results
-                        if ($result_weights && $result_weights->num_rows > 0) {
-                            // initialize array to store weights for each symptom
-                            $weights = [];
-                            while ($row_weights = $result_weights->fetch_assoc()) {
-                                // store weight for each symptom in array
-                                $weights[$row_weights['symptom']] = (int)$row_weights['weigh'];
+                        if ($result && $result->num_rows > 0) {
+                            $possible_diseases = [];
+                            while ($row = $result->fetch_assoc()) {
+                                $possible_diseases[] = $row['disease'];
                             }
+                        }
+                        $diseases_json = json_encode($possible_diseases);
 
-                            // initialize array to store scores for each disease
-                            $scores = [];
-                            foreach ($possible_diseases as $disease) {
-                                // initialize score for current disease to 0
-                                $scores[$disease] = 0;
+                        // calculate score for each disease based on symptom weights
+                        if (!empty($possible_diseases)) {
+                            // fetch results
+                            if ($result_weights && $result_weights->num_rows > 0) {
+                                // initialize array to store weights for each symptom
+                                $weights = [];
+                                while ($row_weights = $result_weights->fetch_assoc()) {
+                                    // store weight for each symptom in array
+                                    $weights[$row_weights['symptom']] = (int)$row_weights['weigh'];
+                                }
 
-                                // add weight of each selected symptom to score of current disease
-                                foreach ($selected_symptoms as $selected_symptom) {
-                                    if (isset($weights[$selected_symptom])) {
-                                        // add weight of current symptom to score of current disease
-                                        $scores[$disease] += (int)$weights[$selected_symptom];
+                                // initialize array to store scores for each disease
+                                $scores = [];
+                                foreach ($possible_diseases as $disease) {
+                                    // initialize score for current disease to 0
+                                    $scores[$disease] = 0;
+
+                                    // add weight of each selected symptom to score of current disease
+                                    foreach ($selected_symptoms as $selected_symptom) {
+                                        if (isset($weights[$selected_symptom])) {
+                                            // add weight of current symptom to score of current disease
+                                            $scores[$disease] += (int)$weights[$selected_symptom];
+                                        }
                                     }
                                 }
-                            }
 
-                            // sort diseases by score in descending order
-                            arsort($scores);
+                                // sort diseases by score in descending order
+                                arsort($scores);
 
-                            // display the possible diseases with their scores
-                            $max_score = max($scores);
-                            $diseases = "";
-                            $diseases = "Possible diseases based on selected symptoms: <br>'";
-                            foreach ($scores as $disease => $score) {
-                                $percentage = ($score / $max_score) * 100;
-                                $diseases .= "<a href='disease_info.php?disease=$disease' target='_blank'>$disease</a> (score: " . $score . ")<br>";
-                                $diseases .= "<progress value='$percentage' max='100' style='color:green'></progress><br>";
+                                // display the possible diseases with their scores
+                                $max_score = max($scores);
+                                $diseases = "";
+                                $diseases = "Possible diseases based on selected symptoms: <br>'";
+                                foreach ($scores as $disease => $score) {
+                                    $percentage = ($score / $max_score) * 100;
+                                    $diseases .= "<a href='disease_info.php?disease=$disease' target='_blank'>$disease</a> (score: " . $score . ")<br>";
+                                    $diseases .= "<progress value='$percentage' max='100' style='color:green'></progress><br>";
+                                }
+                            } else {
+                                // no weights found for selected symptoms
+                                $diseases = "No weights found for selected symptoms.";
                             }
                         } else {
-                            // no weights found for selected symptoms
-                            $diseases = "No weights found for selected symptoms.";
+                            // no diseases found for selected symptoms
+                            $diseases = "No diseases found for selected symptoms.";
                         }
                     } else {
-                        // no diseases found for selected symptoms
-                        $diseases = "No diseases found for selected symptoms.";
+                        // no symptoms selected by user
+                        $diseases = "Please select at least one symptom.";
                     }
-                } else {
-                    // no symptoms selected by user
-                    $diseases = "Please select at least one symptom.";
-                }
 
+                    if (isset($_POST['patientname'])) {
+                        $patient_name = $_POST['patientname'];
+                        $department = $_POST['department'];
+                        $date = $_POST['date'];
+                        $time = $_POST['time'];
+
+                        $patient_query = "SELECT * FROM patient WHERE patient_name = '$patient_name'";
+                        $patient_result = $conn->query($patient_query);
+
+
+                        if ($patient_result && $patient_result->num_rows > 0) {
+                            $patient_row = $patient_result->fetch_assoc();
+                            $patient_id = $patient_row['patient_id'];
+
+                            echo "Patient ID: " . $patient_id . "<br>";
+                            echo "Patient Name: " . $patient_name . "<br>";
+                            echo "Department: " . $department . "<br>";
+                            echo "Date: " . $date . "<br>";
+                            echo "Time: " . $time . "<br>";
+
+                            $diagnosis_query = "SELECT * FROM diagnosis";
+                            $diagnosis_result = $conn->query($diagnosis_query);
+
+                            if ($diagnosis_result && $diagnosis_result->num_rows > 0) {
+                                $diagnosis_row = $diagnosis_result->fetch_assoc();
+                                $symptomu = $diagnosis_row['symptoms'];
+                                $diseaso =  $diagnosis_row['diseases'];
+                            }
+
+                            echo "Symptoms: " . $symptomu . "<br>";
+                            echo "Diseases: " . $diseaso . "<br>";
+                        }
+                    }
+                }
                 $conn->close();
                 ?>
             </div>
@@ -680,181 +707,26 @@
 
                 </select>
 
-                <!-- <label for="symptom-4">Symptom 4:</label>
-                                <select id="symptoms-4" name="symptom[]" multiple>
-                                    <option value="dischromic patches">dischromic patches</option>
-                                    <option value="watering from eyes">shivering</option>
-                                    <option value="vomiting">vomiting</option>
-                                    <option value="cough">cough</option>
-                                    <option value="nausea">nausea</option>
-                                    <option value="loss of appetite">loss of appetite</option>
-                                    <option value="spotting urination">spotting urination</option>
-                                    <option value="burning micturition">burning micturition</option>
-                                    <option value="passage of gases">passage of gases</option>
-                                    <option value="abdominal pain">abdominal pain</option>
-                                    <option value="extra marital contacts">extra marital contacts</option>
-                                    <option value="lethargy">lethargy</option>
-                                    <option value="irregular sugar level">irregular sugar level</option>
-                                    <option value="diarrhoea">diarrhoea</option>
-                                    <option value="breathlessness">breathlessness</option>
-                                    <option value="family history">family history</option>
-                                    <option value="loss of balance">loss of balance</option>
-                                    <option value="lack of concentration">lack of concentration</option>
-                                    <option value=" blurred and distorted vision"> blurred and distorted vision</option>
-                                    <option value="dizziness">dizziness</option>
-                                    <option value="altered sensorium">altered sensorium</option>
-                                    <option value="excessive hunger">excessive hunger</option>
-                                    <option value="weight loss">weight loss</option>
-                                    <option value="high fever">high fever</option>
-                                    <option value="headache">headache</option>
-                                    <option value="sweating">sweating</option>
-                                    <option value="fatigue">fatigue</option>
-                                    <option value="dark urine">dark urine</option>
-                                    <option value="yellowish skin">yellowish skin</option>
-                                    <option value="yellowing of eyes">yellowing of eyes</option>
-                                    <option value="swelling of stomach">swelling of stomach</option>
-                                    <option value="distention of abdomen">distention of abdomen</option>
-                                    <option value="bloody stool">bloody stool</option>
-                                    <option value="irritation in anus">irritation in anus</option>
-                                    <option value="chest pain">chest pain</option>
-                                    <option value="obesity">obesity</option>
-                                    <option value="swollen legs">swollen legs</option>
-                                    <option value="mood swings">mood swings</option>
-                                    <option value="restlessness">restlessness</option>
-                                    <option value="swelling joints">swelling joints</option>
-                                    <option value="hip joint pain">hip joint pen</option>
-                                    <option value="movement stiffness">movement stiffness</option>
-                                    <option value="painful walking">painful walking</option>
-                                    <option value="spinning movements">spinning movements</option>
-                                    <option value="scurring">scurring</option>
-                                    <option value="continuous feel of urine">continuous feel of urine</option>
-                                    <option value="silver like dusting">silver like dusting</option>
-                                    <option value="small dents in nails">small dents in nails</option>
-                                    <option value="red sore around nose">red sore around nose</option>
-                                    <option value="yellow crust ooze">yellow crust ooze</option>
 
-                                </select>
-
-                                <label for="symptom-5">Symptom 5:</label>
-                                <select id="symptoms-5" name="symptom[]" multiple>
-                                    <option value="cough">cough</option>
-                                    <option value="chest pain">chest pain</option>
-                                    <option value="itching">itching</option>
-                                    <option value="loss of appetite">loss of appetite</option>
-                                    <option value="abdominal pain">abdominal pain</option>
-                                    <option value="internal itching">internal itching</option>
-                                    <option value="passage of gases">passage of gases</option>
-                                    <option value="irregular sugar level">irregular sugar level</option>
-                                    <option value="blurred and distorted vision">blurred and distorted vision</option>
-                                    <option value="family history">family history</option>
-                                    <option value="mucoid sputum">mucoid sputum</option>
-                                    <option value="fatigue">fatigue</option>
-                                    <option value="lack of concentration">lack of concentration</option>
-                                    <option value="excessive hunger">excessive hunger</option>
-                                    <option value="stiff neck">stiff neck</option>
-                                    <option value="loss of balance">loss of balance</option>
-                                    <option value="high fever">high fever</option>
-                                    <option value="yellowish skin">yellowish skin</option>
-                                    <option value="nausea">nausea</option>
-                                    <option value="headache">headache</option>
-                                    <option value="dark urine">dark urine</option>
-                                    <option value="yellowing of eyes">yellowing of eyes</option>
-                                    <option value="distention of abdomen">distention of abdomen</option>
-                                    <option value="history of alcohol consumption">history of alcohol consumption</option>
-                                    <option value="breathlessness">breathlessness</option>
-                                    <option value="sweating">sweating</option>
-                                    <option value="irritation in anus">irritation in anus</option>
-                                    <option value="swollen legs">swollen legs</option>
-                                    <option value="swollen blood vessels">swollen blood vessels</option>
-                                    <option value="lethargy">lethargy</option>
-                                    <option value="dizziness">dizziness</option>
-                                    <option value="diarrhoea">diarrhoea</option>
-                                    <option value="swelling joints">swelling joints</option>
-                                    <option value="painful walking">painful walking</option>
-                                    <option value="unsteadiness">unsteadiness</option>
-                                    <option value="small dents in nails">small dents in nails</option>
-                                    <option value="inflammatory nails">inflammatory nails</option>
-                                    <option value="yellow crust ooze">yellow crust ooze</option>
-
-
-                                </select>
-
-                                <label for="symptom-6">Symptom 6:</label>
-                                <select id="symptoms-6" name="symptom[]" multiple>
-                                    <option value="chest pain">chest pain</option>
-                                    <option value="abdominal pain">abdominal pain</option>
-                                    <option value="yellowing of eyes">yellowing of eyes</option>
-                                    <option value="internal itching">internal itching</option>
-                                    <option value="blurred and distorted vision">blurred and distorted vision</option>
-                                    <option value="obesity">obesity</option>
-                                    <option value="mucoid sputum">mucoid sputum</option>
-                                    <option value="stiff neck">stiff neck</option>
-                                    <option value="depression">depression</option>
-                                    <option value="yellowish skin">yellowish skin</option>
-                                    <option value="dark urine">dark urine</option>
-                                    <option value="diarrhoea">diarrhoea</option>
-                                    <option value="headache">headache</option>
-                                    <option value="loss of appetite">loss of appetite</option>
-                                    <option value="constipation">constipatiom</option>
-                                    <option value="family history">family history</option>
-                                    <option value="nausea">nausea</option>
-                                    <option value="history of alcohol consumption">history of alcohol consumption</option>
-                                    <option value="fluid overload">fluid overload</option>
-                                    <option value="high fever">high fever</option>
-                                    <option value="breathlessness">breathlessness</option>
-                                    <option value="swelled lymph nodes">swelled lymph nodes</option>
-                                    <option value="sweating">sweating</option>
-                                    <option value="malaise">malaise</option>
-                                    <option value="swollen blood vessels">swollen blood vessels</option>
-                                    <option value="prominent veins on calf">prominent veins on calf</option>
-                                    <option value="dizziness">dizziness</option>
-                                    <option value="puffy face and eyes">puffy face and eyes</option>
-                                    <option value="fast heart rate">fast heart rate</option>
-                                    <option value="painful walking">painful walking</option>
-                                    <option value="inflammatory nails">inflammatory nails</option>
-
-                                </select>
-
-                                <label for="symptom-7">Symptom 7:</label>
-                                <select id="symptoms-7" name="symptom[]" multiple>
-                                    <option value="yellowing of eyes">yellowing of eyes</option>
-                                    <option value="obesity">obesity</option>
-                                    <option value="excessive hunger">excessive hunger</option>
-                                    <option value="depression">depression</option>
-                                    <option value="irritability">irritability</option>
-                                    <option value="dark urine">dark urine</option>
-                                    <option value="abdominal pain">abdominal pain</option>
-                                    <option value="muscle pain">muscle pain</option>
-                                    <option value="loss of appetite">loss of appetite</option>
-                                    <option value="mild fever">mild fever</option>
-                                    <option value="headache">headache</option>
-                                    <option value="nausea">nausea</option>
-                                    <option value="constipation">constipation</option>
-                                    <option value="diarrhoea">diarrhoea</option>
-                                    <option value="yellow urine">yellow urine</option>
-                                    <option value="fluid overload">fluid overload</option>
-                                    <option value="breathlessness">breathlessness</option>
-                                    <option value="sweating">sweating</option>
-                                    <option value="swelled lymph nodes">swelled lymph nodes</option>
-                                    <option value="malaise">malaise</option>
-                                    <option value="yellowish skin">yellowish skin</option>
-                                    <option value="phlegm">phlegm</option>
-                                    <option value="prominent veins on calf">prominent veins on calf</option>
-                                    <option value="puffy face and eyes">puffy face and eyes</option>
-                                    <option value="enlarged thyroid">enlarged thyroid</option>
-                                    <option value="fast heart rate">fast heart rate</option>
-                                    <option value="high fever">high fever</option>
-                                    <option value="blurred and distorted vision">blurred and distorted vision</option>
-
-                                </select> -->
-
-                <!-- <button id="show-more-button" style="background-color: #45a049;">+</button> -->
-                <input id="check" type="submit" value="Check">
+                <input id="check" type="submit" value="Diagnose">
                 <input id="reset" type="reset" value="Reset">
 
                 <div id="diagnosis-results">
                     <?php echo $diseases; ?>
                 </div>
+
+                <?php
+                require "connect.php";
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['symptom'])) {
+
+                    $x = "INSERT INTO diagnosis(symptoms, diseases) VALUES ('$symptoms_json', '$diseases_json')";
+                    $conn->query($x);
+                ?>
+                    <div id="diagnosis-results">
+                        Symptoms: <?php echo $symptoms_json; ?> <br>
+                        Diseases: <?php echo $diseases_json; ?> <br>
+                    </div>
+                <?php } ?>
 
 
             </form>
@@ -867,7 +739,7 @@
                 <label for="patientname">Patient Name:</label>
                 <input type="text" id="patientname" name="patientname">
                 <label for="department">Select Department:</label>
-                <select id="department">
+                <select id="department" name="department">
                     <option value="Internal Medicine">Internal Medicine</option>
                     <option value="Infectious Diseases">Infectious Diseases</option>
                     <option value="Allergy & Immunology">Allergy & Immunology</option>
@@ -887,31 +759,14 @@
                 <label for="time">Select Time:</label>
                 <input type="time" id="time" name="time" required>
                 <button id="book-appointment-btn">Book Appointment</button>
-            </form>
-            <div>
                 <?php
-
                 require "connect.php";
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['patientname'])) {
 
-                $patient_name = $_POST['patientname'];
-                $patient_query = "SELECT patient_id FROM patient WHERE name = '$patient_name'";
-                $patient_result = $conn->query($patient_query);
-
-                if ($patient_result && $patient_result->num_rows > 0) {
-                    $patient_row = $patient_result->fetch_assoc();
-                    $patient_id = $patient_row['patient_id'];
-
-                    $department = $_POST['department'];
-                    $date = $_POST['date'];
-                    $time = $_POST['time'];
-
-                    // $user_id = $_SESSION['userid'];
-                    // Insert data into appointments
-                    $insert_query = "INSERT INTO appointments (patient_id, patient_name, symptoms, diseases, department, date, time) VALUES ('$patient_id', '$patient_name', '$symptoms_json', '$diseases_json', '$department', '$date', '$time')";
-
+                    $y = "INSERT INTO appointments(patient_id, patient_name, symptoms, diseases, department, date, time) VALUES ('$patient_id', '$patient_name','$symptomu', '$diseaso', '$department', '$date', '$time')";
 
                     // Check if the insertion was successful
-                    if ($conn->query($insert_query) === TRUE) {
+                    if ($conn->query($y) === TRUE) {
                         echo "Appointment booked successfully!.";
                     } else {
                         echo "Error: " . $conn->error;
@@ -919,11 +774,8 @@
                 } else {
                     echo "Patient not found!";
                 }
-
-                $conn->close();
                 ?>
-            </div>
-
+            </form>
         </div>
 
 
@@ -966,7 +818,6 @@
                 diagnosisForm.style.display = "none";
                 patientReport.style.display = "block";
             });
-
         </script>
         <!-- <script>
             // Get the select elements and store them in an array
