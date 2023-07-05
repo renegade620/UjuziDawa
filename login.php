@@ -23,38 +23,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
             $result = mysqli_stmt_get_result($stmt);
 
             if ($row = mysqli_fetch_assoc($result)) {
-                $row['password'] = password_hash($pwd, PASSWORD_DEFAULT);
-                $hashed_password = $row['password'];
-                $passwordCheck = password_verify($pwd, $hashed_password);
+                $passwordCheck = password_verify($pwd, $row['password']);
 
                 if ($passwordCheck == false) {
                     header("location: index.html?error=wrongpassword");
                     exit();
                 } elseif ($passwordCheck == true) {
+                    session_start();
+                    $_SESSION['userid'] = $row['user_id'];
+                    $_SESSION['username'] = $row['user_name'];
+
                     if ($row['Role'] == 'admin') {
-                        session_start();
-                        $_SESSION['userid'] = $row['user_id'];
-                        $_SESSION['username'] = $row['user_name'];
                         header("location: admin.php?login=success");
-                        exit();
-                    } else if($row['Role'] == 'doctor') {
-                        session_start();
-                        $_SESSION['userid'] = $row['user_id'];
-                        $_SESSION['username'] = $row['user_name'];
-
-                        header("location: doctor.php?login=success");
-                        exit();
+                    } else if ($row['Role'] == 'doctor') {
+                        header("location: doctors.php?login=success");
+                    } else if ($row['Role'] == 'reception') {
+                        header("location: reception.php?login=success");
                     } else {
-                        session_start();
-                        $_SESSION['userid'] = $row['user_id'];
-                        $_SESSION['username'] = $row['user_name'];
-
                         header("location: dashboard5.php?login=success");
-                        exit();
                     }
                 } else {
                     header("location: index.html?error=wrongpassword");
-                    exit();
                 }
             } else {
                 header("location: index.html?error=nouser");

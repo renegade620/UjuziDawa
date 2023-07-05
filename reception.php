@@ -6,7 +6,7 @@ session_start();
     <html>
 
     <head>
-        <title>Reception Desk</title>
+        <title>UjuziDawa</title>
         <link rel="stylesheet" href="css\home.css" />
 
         <style>
@@ -187,10 +187,9 @@ session_start();
                 <div id="title">
                     <h1>Receptionist Desk</h1>
                 </div>
-                <div>
-                    <button id="logout"><a href="#">Logout</a></button>
-                </div>
-
+                <form action="logout.php">
+                    <button id="logout-btn" class="btn btn-rounded">Logout</button>
+                </form>
             </div>
         </header>
 
