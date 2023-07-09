@@ -23,7 +23,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
             $result = mysqli_stmt_get_result($stmt);
 
             if ($row = mysqli_fetch_assoc($result)) {
-                $passwordCheck = password_verify($pwd, $row['password']);
+                $row['password'] = password_hash($pwd, PASSWORD_DEFAULT);
+                $hashed_password = $row['password'];
+                $passwordCheck = password_verify($pwd, $hashed_password);
 
                 if ($passwordCheck == false) {
                     header("location: index.html?error=wrongpassword");
@@ -36,6 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
                     if ($row['Role'] == 'admin') {
                         header("location: admin.php?login=success");
                     } else if ($row['Role'] == 'doctor') {
+                        $_SESSION['userid'] = $row['doctor_id'];
                         header("location: doctors.php?login=success");
                     } else if ($row['Role'] == 'reception') {
                         header("location: reception.php?login=success");
@@ -55,3 +58,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
     header("location: index.html");
     exit();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
