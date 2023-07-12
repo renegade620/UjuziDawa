@@ -40,10 +40,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
                     } else if ($row['Role'] == 'doctor') {
                         $_SESSION['userid'] = $row['doctor_id'];
                         header("location: doctors.php?login=success");
-                    } else if ($row['Role'] == 'reception') {
+                    } else if ($row['Role'] == 'receptionist') {
                         header("location: reception.php?login=success");
-                    } else {
-                        header("location: dashboard5.php?login=success");
+                    } else if ($row['Role'] == 'nurse') {
+                        header("location: nurse.php?login=success");
                     }
                 } else {
                     header("location: index.html?error=wrongpassword");

@@ -92,4 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["time-slot"])) {
 
     $stmt->close();
 }
+
+header("Location: doctors.php");
+exit;
 ?>

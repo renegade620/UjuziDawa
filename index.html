@@ -29,7 +29,7 @@
         <label for="lname">Last Name:</label>
         <input type="text" id="lname" name="lname" required><br><br>
 
-        <label for="username">Username:</label>
+        <label for="uname">Username:</label>
         <input type="text" id="uname" name="uname" required><br><br>
 
 
@@ -90,12 +90,12 @@
       <h2>Log in</h2>
       <form action="login.php" method="POST">
         <div>
-          <input type="text" name="username" required="">
-          <label>Username</label>
+          <input type="text" name="username" id="username"  required="">
+          <label for="username">Username</label>
         </div>
         <div>
-          <input type="password" name="password" required="">
-          <label>Password</label>
+          <input type="password" name="pwd"  id="pwd"  required="">
+          <label for="pwd">Password</label>
         </div>
         <input type="submit" name="login" value="Login">
         <a href="#" id="forgot-password-link">Forgot Password?</a>
@@ -122,18 +122,12 @@
   <header class="header flex">
     <div class="container flex">
       <div class="logo">
-        <img src="./img/logo/ujuzi-dawa-logo.png" alt="" class="logo-img" />
+        <img src="img\logo\ujuzi-dawa-logo-removebg-preview.png" alt="" class="logo-img" />
       </div>
       <nav class="main-nav">
         <ul class="nav-list flex">
           <li class="list-item">
             <a href="#home" class="nav-link">Home</a>
-          </li>
-          <li class="list-item">
-            <a href="#about" class="nav-link">About</a>
-          </li>
-          <li class="list-item">
-            <a href="#features" class="nav-link">Features</a>
           </li>
         </ul>
       </nav>
@@ -148,7 +142,8 @@
         <p class="lead">
           With this application, your patient doesn't get impatient
         </p>
-        <a><button id="signup-btn" class="btn btn-rounded">Get Started</button></a>
+        <p class="lead">Create Account: <a><button id="signup-btn" class="btn btn-rounded">Get Started</button></a><br><br></p>
+        <p class="lead">Login as: <a href="login.html"><button  id="login-btn"  class="btn btn-rounded">Receptionist</button></a>  <a href="login.html"><button id="login-btn"  class="btn btn-rounded">Nurse</button></a>  <a href="login.html"><button id="login-btn"  class="btn btn-rounded">Doctor</button></a>  <a href="login.html"><button id="login-btn"  class="btn btn-rounded">Admin</button></a></p>
       </div>
       <div class="banner-img">
         <img src="img\hero\medcare.jpg" alt="Banner" />
@@ -156,79 +151,6 @@
     </div>
   </section>
   <!-- END BANNER -->
-  <!-- START ABOUT -->
-  <section class="about" id="about">
-    <div class="container">
-      <div class="section-heading">
-        <h2>Who we are</h2>
-        <p class="lead">Welcome to the Medical Diagnosis System, an online tool designed to help you identify potential
-          health issues and determine the best course of action. Our system is easy to use, with a simple interface that
-          allows you to input your symptoms and quickly receive potential diagnoses and remedies.</p>
-
-        <p class="lead">Our system relies on a repository approach, where stored data is used to generate the output.
-          The application logic of our system includes algorithms and rules that process the user input and generate
-          potential diagnoses. It analyzes the symptoms entered by the user and compares them to a database of medical
-          knowledge to identify potential medical conditions. Our database includes information on common medical
-          conditions, their symptoms, and recommended treatments.</p>
-
-        <p class="lead">Our system is designed to be user-friendly, with a simple interface that allows users to input
-          their symptoms and quickly receive potential diagnoses and remedies. The system is fast and accurate, with the
-          ability to process large amounts of data quickly and provide users with accurate results.</p>
-
-        <p class="lead">At the Medical Diagnosis System, we believe that access to accurate health information is a
-          fundamental right for all individuals. Our system is designed to be a reliable resource for anyone who is
-          looking to better understand their health and identify potential health issues.</p>
-
-        <p class="lead">Thank you for choosing the Medical Diagnosis System. We hope that our system can help you make
-          informed decisions about your health and well-being.</p>
-      </div>
-    </div>
-  </section>
-  <!-- END ABOUT -->
-  <!-- START FEATURES -->
-  <section class="features" id="features">
-    <div class="container">
-      <div class="section-heading">
-        <h2>Why Us</h2>
-        <p class="lead">
-          You can do whatever you want with this system as if you are inside the
-          hospital.
-        </p>
-      </div>
-      <div class="features-items flex">
-        <div class="item">
-          <div class="feature-icon">
-          </div>
-          <div class="feature-body">
-            <h3 class="feature-title">Easy To Use</h3>
-            <p class="lead">
-              Simple and straightforward design.
-            </p>
-          </div>
-        </div>
-        <div class="item">
-          <div class="feature-icon">
-          </div>
-          <div class="feature-body">
-            <h3 class="feature-title">Saves you money and time</h3>
-            <p class="lead">No more long journeys to the doctor.<br> No more long wait hours to see the doctor.</p>
-          </div>
-        </div>
-        <div class="item">
-          <div class="feature-icon">
-          </div>
-          <div class="feature-body">
-            <h3 class="feature-title">24hr Operation</h3>
-            <p class="lead">
-              The system is available for use on a daily for every hour.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- END FEATURES -->
-  <!-- MAIN JS  -->
   <script src="js/home.js"></script>
 </body>
 

@@ -585,16 +585,20 @@ echo $_SESSION['userid'];
             <div class="booked-appointments">
                 <h2>Booked Appointments</h2>
                 <?php
-                $appointmentquery = "SELECT * FROM appointments WHERE doctor_id = $doctorId";
-                $result = mysqli_query($connection, $query);
+                require "connect.php";
+
+                $doctor_ID = $_SESSION['userid'];
+
+                $app_query = "SELECT * FROM appointments WHERE doctor_id = '$doctor_ID'";
+                $app_result = mysqli_query($conn, $app_query);
 
                 // Check if there are any booked appointments
-                if (mysqli_num_rows($result) > 0) {
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        $appointmentId = $row['appointment_id'];
-                        $patientName = $row['patient_name'];
-                        $appointmentTime = $row['appointment_time'];
-                        $department = $row['department'];
+                if (mysqli_num_rows($app_result) > 0) {
+                    while ($app_row = mysqli_fetch_assoc($app_result)) {
+                        $appointmentId = $app_row['appointment_id'];
+                        $patientName = $app_row['patient_name'];
+                        $appointmentTime = $app_row['appointment_time'];
+                        $department = $app_row['department'];
 
                         // Display the booked appointment information
                 ?>

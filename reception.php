@@ -1,14 +1,15 @@
 <?php
 session_start();
 ?>
-
 <DOCTYPE html>
-    <html>
+    <html lang="en">
 
     <head>
-        <title>UjuziDawa</title>
-        <link rel="stylesheet" href="css\home.css" />
-
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>UjuziDawa || Medical Diagnosis System</title>
+        <link rel="stylesheet" href="css\home.css">
         <style>
             body {
                 font-size: 1rem;
@@ -28,6 +29,7 @@ session_start();
             .tiles-container {
                 display: flex;
                 flex-wrap: wrap;
+                margin-left: 220px;
             }
 
             .tile {
@@ -53,7 +55,6 @@ session_start();
 
             header {
                 height: 120px;
-                /* position: fixed; */
                 top: 0;
                 right: 0;
                 width: 100%;
@@ -161,20 +162,26 @@ session_start();
                 background-color: #e6e6e6;
             }
 
-            /* #select-container {
-                display: flex;
-                flex-direction: column;
+            .sidebar {
+                width: 200px;
+                background-color: #f1f1f1;
+                float: left;
             }
 
-            #select-container label,
-            #select-container select {
-                display: none;
+            .sidebar ul {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
             }
 
-            #select-container label:first-of-type,
-            #select-container select:first-of-type {
-                display: block;
-            } */
+            .sidebar ul li {
+                padding: 10px;
+            }
+
+            .sidebar ul li a {
+                text-decoration: none;
+                color: #000;
+            }
         </style>
     </head>
 
@@ -192,6 +199,15 @@ session_start();
                 </form>
             </div>
         </header>
+
+        <div class="sidebar">
+            <ul>
+                <li><a href="#" id="patientRegistrationLink">Patient Registration</a></li>
+                <li><a href="#" id="diagnosisLink">Diagnosis</a></li>
+                <li><a href="#" id="bookAppointmentLink">Appointment</a></li>
+                <li><a href="#" id="patientReportLink">Reports</a></li>
+            </ul>
+        </div>
 
         <div class="tiles-container">
             <div id="patientRegistrationTile" class="tile">
@@ -280,144 +296,178 @@ session_start();
 
 
         <div id="patientRegistrationForm" style="display: none;">
-            <!-- Add the patient registration form here -->
-            <div class="patient-registration">
-                <form action="" method="POST" class="form-container">
-                    <h3 style="color: white;">Patient Registration Form</h3>
-                    <label for="registration-date">Registration Date:</label>
-                    <input type="datetime-local" id="registration-date" name="registration-date" required><br><br>
+            <?php if (!empty($errors)) : ?>
+                <div class="error">
+                    <p>echo $errs;</p>
+                <?php endif; ?>
+                </div>
+                <div class="patient-registration">
+                    <form action="" method="POST" class="form-container">
 
-                    <label for="health-number">Health Number:</label>
-                    <input type="text" id="health-number" name="health-number" required><br><br>
+                        <h3 style="color: white;">Patient Registration Form</h3>
+                        <label for="registration-date">Registration Date:</label>
+                        <input type="datetime-local" id="registration-date" name="registration-date" required value="<?php echo isset($_POST['registration-date']) ? htmlspecialchars($_POST['registration-date']) : ''; ?>">><br><br>
 
-                    <label for="patient-name">Patient Name:</label>
-                    <input type="text" id="patient-name" name="patient-name" required><br><br>
+                        <label for="health-number">Health Number:</label>
+                        <input type="text" id="health-number" name="health-number" required value="<?php echo isset($_POST['health-number']) ? htmlspecialchars($_POST['health-number']) : ''; ?>">><br><br>
 
-                    <label for="gender">Gender:</label>
-                    <select id="gender" name="gender" required>
-                        <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                    </select><br><br>
+                        <label for="patient-name">Patient Name:</label>
+                        <input type="text" id="patient-name" name="patient-name" required value="<?php echo isset($_POST['patient-name']) ? htmlspecialchars($_POST['patient-name']) : ''; ?>">><br><br>
 
-                    <label for="date-of-birth">Date of Birth:</label>
-                    <input type="date" id="date-of-birth" name="date-of-birth" required><br><br>
+                        <label for="gender">Gender:</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select><br><br>
 
-                    <label for="phone-number">Phone Number:</label>
-                    <input type="tel" id="phone-number" name="phone-number" pattern="[0-9]{10}" required><br><br>
+                        <label for="date-of-birth">Date of Birth:</label>
+                        <input type="date" id="date-of-birth" name="date-of-birth" required><br><br>
+                        <?php if (isset($errors['date-of-birth'])) : ?>
+                            <span class="error"><?php echo $errors['date-of-birth']; ?></span>
+                        <?php endif; ?>
 
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required><br><br>
+                        <label for="phone-number">Phone Number:</label>
+                        <input type="tel" id="phone-number" name="phone-number" pattern="[0-9]{10}" required><br><br>
+                        <?php if (isset($errors['phone-number'])) : ?>
+                            <span class="error"><?php echo $errors['phone-number']; ?></span>
+                        <?php endif; ?>
 
-                    <label for="address">Address:</label>
-                    <input type="text" id="address" name="address" required><br><br>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required><br><br>
+                        <?php if (isset($errors['email'])) : ?>
+                            <span class="error"><?php echo $errors['email']; ?></span>
+                        <?php endif; ?>
 
-                    <label for="marital-status">Marital Status:</label>
-                    <select id="marital-status" name="marital-status" required>
-                        <option value="">Select Marital Status</option>
-                        <option value="single">Single</option>
-                        <option value="married">Married</option>
-                        <option value="divorced">Divorced</option>
-                        <option value="widowed">Widowed</option>
-                    </select><br><br>
+                        <label for="address">Address:</label>
+                        <input type="text" id="address" name="address" required><br><br>
 
-                    <label for="age-check">Is the Patient Younger than 18:</label><br>
-                    <input type="radio" id="age-check-yes" name="age-check" value="yes">
-                    <label for="age-check-yes">Yes</label>
-                    <input type="radio" id="age-check-no" name="age-check" value="no">
-                    <label for="age-check-no">No</label><br><br>
+                        <label for="marital-status">Marital Status:</label>
+                        <select id="marital-status" name="marital-status" required>
+                            <option value="">Select Marital Status</option>
+                            <option value="single">Single</option>
+                            <option value="married">Married</option>
+                            <option value="divorced">Divorced</option>
+                            <option value="widowed">Widowed</option>
+                        </select><br><br>
 
-                    <div id="parent-info" style="display: none;">
-                        <label for="parent-name">Parent Name:</label>
-                        <input type="text" id="parent-name" name="parent-name"><br><br>
+                        <label for="age-check">Is the Patient Younger than 18:</label><br>
+                        <input type="radio" id="age-check-yes" name="age-check" value="yes">
+                        <label for="age-check-yes">Yes</label>
+                        <input type="radio" id="age-check-no" name="age-check" value="no">
+                        <label for="age-check-no">No</label><br><br>
 
-                        <label for="parent-phone">Parent Phone Number:</label>
-                        <input type="tel" id="parent-phone" name="parent-phone" pattern="[0-9]{10}"><br><br>
-                    </div>
+                        <div id="parent-info" style="display: none;">
+                            <label for="parent-name">Parent Name:</label>
+                            <input type="text" id="parent-name" name="parent-name"><br><br>
 
-                    <h3>Emergency Contact</h3>
-                    <label for="emergency-name">Name:</label>
-                    <input type="text" id="emergency-name" name="emergency-name" required><br><br>
+                            <label for="parent-phone">Parent Phone Number:</label>
+                            <input type="tel" id="parent-phone" name="parent-phone" pattern="[0-9]{10}"><br><br>
+                        </div>
 
-                    <label for="emergency-relationship">Relationship:</label>
-                    <input type="text" id="emergency-relationship" name="emergency-relationship" required><br><br>
+                        <h3>Emergency Contact</h3>
+                        <label for="emergency-name">Name:</label>
+                        <input type="text" id="emergency-name" name="emergency-name" required><br><br>
 
-                    <label for="emergency-phone">Phone Number:</label>
-                    <input type="tel" id="emergency-phone" name="emergency-phone" pattern="[0-9]{10}" required><br><br>
+                        <label for="emergency-relationship">Relationship:</label>
+                        <input type="text" id="emergency-relationship" name="emergency-relationship" required><br><br>
 
-                    <h3>Health History</h3>
-                    <label for="reason-for-registration">Reason for Registration:</label>
-                    <textarea id="reason-for-registration" name="reason-for-registration" required></textarea><br><br>
+                        <label for="emergency-phone">Phone Number:</label>
+                        <input type="tel" id="emergency-phone" name="emergency-phone" pattern="[0-9]{10}" required><br><br>
 
-                    <label for="medications">Taking any Medications:</label><br>
-                    <input type="radio" id="medications-yes" name="medications" value="yes">
-                    <label for="medications-yes">Yes</label>
-                    <input type="radio" id="medications-no" name="medications" value="no">
-                    <label for="medications-no">No</label><br><br>
+                        <h3>Health History</h3>
+                        <label for="reason-for-registration">Reason for Registration:</label>
+                        <textarea id="reason-for-registration" name="reason-for-registration" required></textarea><br><br>
 
-                    <input type="submit" name="register" value="Register">
-                    <input type="reset" value="Reset">
-                </form>
-                <?php
-                require "connect.php";
-                if (empty($_POST['health-number']) || empty($_POST['patient-name']) || empty($_POST['gender']) || empty($_POST['date-of-birth']) || empty($_POST['phone-number']) || empty($_POST['email']) || empty($_POST['address']) || empty($_POST['marital-status'])) {
-                    echo "Please fill in all required fields.";
-                } else {
-                    // Retrieve the form inputs
-                    $registrationDatetime = $_POST['registration-date'];
-                    $healthNumber = $_POST['health-number'];
-                    $patientName = $_POST['patient-name'];
-                    $gender = $_POST['gender'];
-                    $dateOfBirth = $_POST['date-of-birth'];
-                    $phoneNumber = $_POST['phone-number'];
-                    $email = $_POST['email'];
-                    $address = $_POST['address'];
-                    $maritalStatus = $_POST['marital-status'];
-                    $isUnder18 = isset($_POST['age-check']) ?  1 : 0;
-                    $parentName = $_POST['parent-name'];
-                    $parentPhoneNumber = $_POST['parent-phone'];
-                    $emergencyContactName = $_POST['emergency-name'];
-                    $emergencyContactRelationship = $_POST['emergency-relationship'];
-                    $emergencyContactPhoneNumber = $_POST['emergency-phone'];
-                    $reasonForRegistration = $_POST['reason-for-registration'];
-                    $takingMedications = isset($_POST['medications']) ? 1 : 0;
+                        <label for="medications">Taking any Medications:</label><br>
+                        <input type="radio" id="medications-yes" name="medications" value="yes">
+                        <label for="medications-yes">Yes</label>
+                        <input type="radio" id="medications-no" name="medications" value="no">
+                        <label for="medications-no">No</label><br><br>
 
-                    // Convert boolean values to "Yes" or "No"
-                    $isUnder18Text = $isUnder18 ?  "No" : "Yes";
-                    $takingMedicationsText = $takingMedications ? "No" : "Yes";
+                        <input type="submit" name="register" value="Register">
+                        <input type="reset" value="Reset">
+                    </form>
+                    <?php
+                    require "connect.php";
 
+                    $errors = array();
 
-                    // Prepare the SQL statement
-                    $sql = "INSERT INTO patient (registration_datetime, health_number, patient_name, gender, date_of_birth, phone_number, email, address, marital_status, is_under_18, parent_name, parent_phone_number, emergency_contact_name, emergency_contact_relationship, emergency_contact_phone_number, reason_for_registration, taking_medications) 
-                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-                    // Prepare and bind the parameters
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("sssssssssssssssss", $registrationDatetime, $healthNumber, $patientName, $gender, $dateOfBirth, $phoneNumber, $email, $address, $maritalStatus, $isUnder18Text, $parentName, $parentPhoneNumber, $emergencyContactName, $emergencyContactRelationship, $emergencyContactPhoneNumber, $reasonForRegistration, $takingMedicationsText);
-
-                    // Execute the statement
-                    if ($stmt->execute()) {
-                        // Registration successful, display success message or redirect
-                        echo "Registration successful!";
+                    if (empty($_POST['health-number']) || empty($_POST['patient-name']) || empty($_POST['gender']) || empty($_POST['date-of-birth']) || empty($_POST['phone-number']) || empty($_POST['email']) || empty($_POST['address']) || empty($_POST['marital-status']) || empty($_POST['reason-for-registration'])) {
+                        $error[] = "Please fill in all required fields.";
                     } else {
-                        // Check for duplicate entry error
-                        if ($conn->errno == 1062) {
-                            echo "User already exists.";
-                        } else {
-                            echo "Error occurred. Contact IT!";
+                        // Retrieve the form inputs
+                        $registrationDatetime = $_POST['registration-date'];
+                        $healthNumber = $_POST['health-number'];
+                        $patientName = $_POST['patient-name'];
+                        $gender = $_POST['gender'];
+                        $dateOfBirth = $_POST['date-of-birth'];
+                        $phoneNumber = $_POST['phone-number'];
+                        $email = $_POST['email'];
+                        $address = $_POST['address'];
+                        $maritalStatus = $_POST['marital-status'];
+                        $isUnder18 = isset($_POST['age-check']) ?  1 : 0;
+                        $parentName = $_POST['parent-name'];
+                        $parentPhoneNumber = $_POST['parent-phone'];
+                        $emergencyContactName = $_POST['emergency-name'];
+                        $emergencyContactRelationship = $_POST['emergency-relationship'];
+                        $emergencyContactPhoneNumber = $_POST['emergency-phone'];
+                        $reasonForRegistration = $_POST['reason-for-registration'];
+                        $takingMedications = isset($_POST['medications']) ? 1 : 0;
+
+                        // Convert boolean values to "Yes" or "No"
+                        $isUnder18Text = $isUnder18 ?  "No" : "Yes";
+                        $takingMedicationsText = $takingMedications ? "No" : "Yes";
+
+                        // Validate date of birth
+                        $dateOfBirthTimestamp = strtotime($dateOfBirth);
+                        if ($dateOfBirthTimestamp === false) {
+                            $errors['date-of-birth'] = "Invalid date of birth";
+                        } elseif ($dateOfBirthTimestamp > time()) {
+                            $errors['date-of-birth'] = "Date of birth must be in the past";
+                        }
+
+                        // Validate phone number
+                        if (!preg_match('/^\d{10}$/', $phoneNumber)) {
+                            $errors['phone-number'] = "Invalid phone number";
+                        }
+
+                        // Validate email
+                        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                            $errors['email'] = "Invalid email address";
                         }
                     }
-                    $stmt->close();
-                }
+                    if (!empty($errors)) {
+                        $errs = implode("<br>", $errors);
+                    } else {
 
-                // Close the statement and database connection
+                        // Prepare the SQL statement
+                        $sql = "INSERT INTO patient (registration_datetime, health_number, patient_name, gender, date_of_birth, phone_number, email, address, marital_status, is_under_18, parent_name, parent_phone_number, emergency_contact_name, emergency_contact_relationship, emergency_contact_phone_number, reason_for_registration, taking_medications) 
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                $conn->close();
-                ?>
+                        // Prepare and bind the parameters
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param("sssssssssssssssss", $registrationDatetime, $healthNumber, $patientName, $gender, $dateOfBirth, $phoneNumber, $email, $address, $maritalStatus, $isUnder18Text, $parentName, $parentPhoneNumber, $emergencyContactName, $emergencyContactRelationship, $emergencyContactPhoneNumber, $reasonForRegistration, $takingMedicationsText);
 
-            </div>
-            <!-- Include the necessary form fields and submit button -->
+                        // Execute the statement
+                        if ($stmt->execute()) {
+                            // Registration successful, display success message or redirect
+                            echo "Registration successful!";
+                        } else {
+                            // Check for duplicate entry error
+                            if ($conn->errno == 1062) {
+                                echo "User already exists.";
+                            } else {
+                                echo "Error occurred. Contact IT!";
+                            }
+                        }
+                        $stmt->close();
+                    }
+                    $conn->close();
+                    ?>
+
+                </div>
         </div>
 
         <div id="diagnosisForm" style="display: none;">
@@ -435,82 +485,48 @@ session_start();
                     if (isset($_POST['symptom']) && is_array($_POST['symptom'])) {
                         $selected_symptoms = $_POST['symptom'];
 
-                        // prepare the SQL query to fetch diseases based on selected symptoms
-                        $query = "SELECT DISTINCT disease FROM symptoms WHERE ";
-                        $query_weights = "SELECT * FROM severity WHERE symptom IN ('" . implode("','", $selected_symptoms) . "')";
+                        // Calculate the threshold based on the number of selected symptoms and their weights
+                        $threshold_query = "SELECT SUM(weight) as threshold FROM disease_symptom WHERE symptom IN ('" . implode("','", $selected_symptoms) . "')";
+                        $threshold_result = $conn->query($threshold_query);
+                        $threshold_row = $threshold_result->fetch_assoc();
+                        $threshold = $threshold_row['threshold'] * 0.05; // Only display diseases with a total score above 50% of the maximum possible score
 
-                        // query conditions for each select element
-                        $conditions = array();
-                        foreach ($selected_symptoms as $selected_symptom) {
-                            $conditions[] = "symptom_1 = '$selected_symptom'";
-                            $conditions[] = "symptom_2 = '$selected_symptom'";
-                            $conditions[] = "symptom_3 = '$selected_symptom'";
-                            $conditions[] = "symptom_4 = '$selected_symptom'";
-                            $conditions[] = "symptom_5 = '$selected_symptom'";
-                            $conditions[] = "symptom_6 = '$selected_symptom'";
-                            $conditions[] = "symptom_7 = '$selected_symptom'";
-                        }
-
-                        // combine conditions
-                        $query .= implode(" OR ", $conditions);
+                        $query = "SELECT disease, SUM(weight) as total_score FROM disease_symptom WHERE symptom IN ('" . implode("','", $selected_symptoms) . "') GROUP BY disease ORDER BY total_score DESC";
+                        $result = $conn->query($query);
 
                         $symptoms_json = json_encode($selected_symptoms);
+                        echo $symptoms_json;
 
-                        // execute query
-                        $result = $conn->query($query);
-                        $result_weights = $conn->query($query_weights);
-
-                        // fetch results
                         if ($result && $result->num_rows > 0) {
-                            $possible_diseases = [];
+                            // Find the maximum score
+                            $max_score = 0;
                             while ($row = $result->fetch_assoc()) {
-                                $possible_diseases[] = $row['disease'];
+                                if ($row['total_score'] > $max_score) {
+                                    $max_score = $row['total_score'];
+                                }
                             }
-                        }
-                        $diseases_json = json_encode($possible_diseases);
 
-                        // calculate score for each disease based on symptom weights
-                        if (!empty($possible_diseases)) {
-                            // fetch results
-                            if ($result_weights && $result_weights->num_rows > 0) {
-                                // initialize array to store weights for each symptom
-                                $weights = [];
-                                while ($row_weights = $result_weights->fetch_assoc()) {
-                                    // store weight for each symptom in array
-                                    $weights[$row_weights['symptom']] = (int)$row_weights['weigh'];
-                                }
+                            // Reset result pointer
+                            $result->data_seek(0);
 
-                                // initialize array to store scores for each disease
-                                $scores = [];
-                                foreach ($possible_diseases as $disease) {
-                                    // initialize score for current disease to 0
-                                    $scores[$disease] = 0;
-
-                                    // add weight of each selected symptom to score of current disease
-                                    foreach ($selected_symptoms as $selected_symptom) {
-                                        if (isset($weights[$selected_symptom])) {
-                                            // add weight of current symptom to score of current disease
-                                            $scores[$disease] += (int)$weights[$selected_symptom];
-                                        }
-                                    }
-                                }
-
-                                // sort diseases by score in descending order
-                                arsort($scores);
-
-                                // display the possible diseases with their scores
-                                $max_score = max($scores);
-                                $diseases = "";
-                                $diseases = "Possible diseases based on selected symptoms: <br>'";
-                                foreach ($scores as $disease => $score) {
-                                    $percentage = ($score / $max_score) * 100;
-                                    $diseases .= "<a href='disease_info.php?disease=$disease' target='_blank'>$disease</a> (score: " . $score . ")<br>";
+                            // Display diseases with scores and progress bars
+                            $diseases = "Possible diseases based on selected symptoms: <br>";
+                            $counter = 0;
+                            $diseases_array = array();
+                            while (($row = $result->fetch_assoc()) && $counter < 5) {
+                                if ($row['total_score'] > $threshold) {
+                                    // Only display diseases with a total score above the threshold
+                                    $disease = $row['disease'];
+                                    $total_score = $row['total_score'];
+                                    $percentage = ($total_score / $max_score) * 100;
+                                    $diseases .= "<a href='disease_info.php?disease=$disease' target='_blank'>$disease</a> (score: " . $total_score . ")<br>";
                                     $diseases .= "<progress value='$percentage' max='100' style='color:green'></progress><br>";
+
+                                    array_push($diseases_array, $disease);
+                                    $counter++;
                                 }
-                            } else {
-                                // no weights found for selected symptoms
-                                $diseases = "No weights found for selected symptoms.";
                             }
+                            $diseases_json = json_encode($diseases_array);
                         } else {
                             // no diseases found for selected symptoms
                             $diseases = "No diseases found for selected symptoms.";
@@ -540,17 +556,25 @@ session_start();
                             echo "Date: " . $date . "<br>";
                             echo "Time: " . $time . "<br>";
 
-                            $diagnosis_query = "SELECT * FROM diagnosis";
+                            $_SESSION['patient_id'] = $patient_id;
+
+
+                            $diagnosis_query = "SELECT * FROM diagnosis WHERE patient_id = '$patient_id'";
                             $diagnosis_result = $conn->query($diagnosis_query);
 
                             if ($diagnosis_result && $diagnosis_result->num_rows > 0) {
-                                $diagnosis_row = $diagnosis_result->fetch_assoc();
-                                $symptomu = $diagnosis_row['symptoms'];
-                                $diseaso =  $diagnosis_row['diseases'];
+                                while ($diagnosis_row = $diagnosis_result->fetch_assoc()) {
+                                    if ($diagnosis_row['patient_id'] == $patient_id) {
+                                        $symptomu = json_decode($diagnosis_row['symptoms']);
+                                        $diseaso =  json_decode($diagnosis_row['diseases']);
+                                    }
+                                }
                             }
+                            $_SESSION["symptoms"] = isset($symptomu) ? json_encode($symptomu) : '';
+                            $_SESSION["diseases"] = isset($diseaso) ? json_encode($diseaso) : '';
 
-                            echo "Symptoms: " . $symptomu . "<br>";
-                            echo "Diseases: " . $diseaso . "<br>";
+                            echo "Symptoms: " . (isset($symptomu) ? implode(', ', $symptomu) : '') . "<br>";
+                            echo "Diseases: " . (isset($diseaso) ? implode(', ', $diseaso) : '') . "<br>";
                         }
                     }
                 }
@@ -717,8 +741,10 @@ session_start();
                 <?php
                 require "connect.php";
                 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['symptom'])) {
+                    $patientID = $_SESSION['patient_id'];
 
-                    $x = "INSERT INTO diagnosis(symptoms, diseases) VALUES ('$symptoms_json', '$diseases_json')";
+                    $x = "INSERT INTO diagnosis(symptoms, diseases, patient_id) VALUES ('$symptoms_json', '$diseases_json', '$patientID)";
+                    echo $x;
                     $conn->query($x);
                 ?>
                     <div id="diagnosis-results">
@@ -761,8 +787,14 @@ session_start();
                 <?php
                 require "connect.php";
                 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['patientname'])) {
+                    $symptomu = json_decode($_SESSION["symptoms"]);
+                    $diseaso = json_decode($_SESSION["diseases"]);
 
-                    $y = "INSERT INTO appointments(patient_id, patient_name, symptoms, diseases, department, date, time) VALUES ('$patient_id', '$patient_name','$symptomu', '$diseaso', '$department', '$date', '$time')";
+                    $symptomu_json = json_encode($symptomu);
+                    $diseaso_json = json_encode($diseaso);
+
+                    $y = "INSERT INTO appointments(patient_id, patient_name, symptoms, diseases, department, date, time) VALUES ('$patient_id', '$patient_name','$symptomu_json', '$diseaso_json', '$department', '$date', '$time')";
+
 
                     // Check if the insertion was successful
                     if ($conn->query($y) === TRUE) {
@@ -777,93 +809,114 @@ session_start();
             </form>
         </div>
 
-
-        <script src="js/home.js" defer></script>
-
         <script>
+            var patientRegistrationLink = document.getElementById("patientRegistrationLink");
             var patientRegistrationTile = document.getElementById("patientRegistrationTile");
             var patientRegistrationForm = document.getElementById("patientRegistrationForm");
+            var bookAppointmentLink = document.getElementById("bookAppointmentLink");
             var bookAppointmentTile = document.getElementById("bookAppointmentTile");
             var bookAppointmentForm = document.getElementById("bookAppointmentForm");
+            var diagnosisLink = document.getElementById("diagnosisLink");
             var diagnosisTile = document.getElementById("diagnosisTile");
             var diagnosisForm = document.getElementById("diagnosisForm");
+            var patientReportLink = document.getElementById("patientReportLink");
             var patientReportTile = document.getElementById("patientReportTile");
             var patientReport = document.getElementById("patientReport")
 
-            patientRegistrationTile.addEventListener("click", function() {
+            patientRegistrationLink.addEventListener("click", function(e) {
+                e.preventDefault();
                 patientRegistrationForm.style.display = "block";
-                diagnosisForm.style.display = "none";
-                patientReport.style.display = "none";
                 bookAppointmentForm.style.display = "none";
-            });
-
-            bookAppointmentTile.addEventListener("click", function() {
-                patientRegistrationForm.style.display = "none";
-                bookAppointmentForm.style.display = "block";
                 diagnosisForm.style.display = "none";
                 patientReport.style.display = "none";
             });
 
-            diagnosisTile.addEventListener("click", function() {
-                patientRegistrationForm.style.display = "none";
-                bookAppointmentForm.style.display = "none";
+            diagnosisLink.addEventListener("click", function(e) {
+                e.preventDefault();
                 diagnosisForm.style.display = "block";
+                patientRegistrationForm.style.display = "none";
+                bookAppointmentForm.style.display = "none";
                 patientReport.style.display = "none";
             });
 
-            patientReportTile.addEventListener("click", function() {
+            bookAppointmentLink.addEventListener("click", function(e) {
+                e.preventDefault();
+                bookAppointmentForm.style.display = "block";
+                patientRegistrationForm.style.display = "none";
+                diagnosisForm.style.display = "none";
+                patientReport.style.display = "none";
+            });
+
+            patientReportLink.addEventListener("click", function(e) {
+                e.preventDefault();
+                patientReport.style.display = "block";
                 patientRegistrationForm.style.display = "none";
                 bookAppointmentForm.style.display = "none";
                 diagnosisForm.style.display = "none";
-                patientReport.style.display = "block";
             });
+
+            // var urlParams = new URLSearchParams(window.location.search);
+            // var initialOption = urlParams.get("option") || "patientRegistration";
+            // showOption(initialOption);
+
+            // function showOption(option) {
+            //     switch (option) {
+            //         case "patientRegistration":
+            //             patientRegistrationForm.style.display = "block";
+            //             bookAppointmentForm.style.display = "none";
+            //             diagnosisForm.style.display = "none";
+            //             patientReport.style.display = "none";
+            //             break;
+            //         case "diagnosis":
+            //             diagnosisForm.style.display = "block";
+            //             patientRegistrationForm.style.display = "none";
+            //             bookAppointmentForm.style.display = "none";
+            //             patientReport.style.display = "none";
+            //             break;
+            //         case "bookAppointment":
+            //             bookAppointmentForm.style.display = "block";
+            //             patientRegistrationForm.style.display = "none";
+            //             diagnosisForm.style.display = "none";
+            //             patientReport.style.display = "none";
+            //             break;
+            //         case "patientReport":
+            //             patientReport.style.display = "block";
+            //             patientRegistrationForm.style.display = "none";
+            //             bookAppointmentForm.style.display = "none";
+            //             diagnosisForm.style.display = "none";
+            //             break;
+            //     }
+            // }
+
+            // patientRegistrationTile.addEventListener("click", function() {
+            //     patientRegistrationForm.style.display = "block";
+            //     bookAppointmentForm.style.display = "none";
+            //     diagnosisForm.style.display = "none";
+            //     patientReport.style.display = "none";
+            // });
+
+            // bookAppointmentTile.addEventListener("click", function() {
+            //     patientRegistrationForm.style.display = "none";
+            //     bookAppointmentForm.style.display = "block";
+            //     diagnosisForm.style.display = "none";
+            //     patientReport.style.display = "none";
+            // });
+
+            // diagnosisTile.addEventListener("click", function() {
+            //     patientRegistrationForm.style.display = "none";
+            //     bookAppointmentForm.style.display = "none";
+            //     diagnosisForm.style.display = "block";
+            //     patientReport.style.display = "none";
+            // });
+
+            // patientReportTile.addEventListener("click", function() {
+            //     patientRegistrationForm.style.display = "none";
+            //     bookAppointmentForm.style.display = "none";
+            //     diagnosisForm.style.display = "none";
+            //     patientReport.style.display = "block";
+            // });
         </script>
-        <!-- <script>
-            // Get the select elements and store them in an array
-            var selectElements = Array.from(document.querySelectorAll('#select-container select'));
 
-            // Function to show a select element
-            function showSelectElement(index) {
-                selectElements[index].style.display = 'block';
-            }
-
-            // Function to hide a select element
-            function hideSelectElement(index) {
-                selectElements[index].style.display = 'none';
-            }
-
-            // Hide all select elements except the first one initially
-            for (var i = 1; i < selectElements.length; i++) {
-                hideSelectElement(i);
-            }
-
-            // Get the "Show More" button element
-            var showMoreButton = document.getElementById('show-more-button');
-
-            // Event listener for the "Show More" button click
-            showMoreButton.addEventListener('click', function() {
-                // Loop through the hidden select elements and show them
-                for (var i = 1; i < selectElements.length; i++) {
-                    showSelectElement(i);
-                }
-
-                // Hide the "Show More" button
-                showMoreButton.style.display = 'none';
-            });
-        </script> -->
-        <script>
-            // document.getElementById('check').addEventListener('click', function(event) {
-            //     event.preventDefault();
-            // });
-
-            // document.getElementById('reset').addEventListener('click', function(event) {
-            //     event.preventDefault();
-            // });
-
-            // document.getElementById('book-appointment-btn').addEventListener('click', function(event) {
-            //     event.preventDefault();
-            // });
-        </script>
     </body>
 
     </html>

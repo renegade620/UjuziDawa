@@ -170,15 +170,16 @@ session_start();
                     $scores = [];
                     foreach ($possible_diseases as $disease) {
                         // initialize score for current disease to 0
-                        $scores[$disease] = 0;
+                        $totalScore = 0;
 
                         // add weight of each selected symptom to score of current disease
                         foreach ($selected_symptoms as $selected_symptom) {
                             if (isset($weights[$selected_symptom])) {
                                 // add weight of current symptom to score of current disease
-                                $scores[$disease] += (int)$weights[$selected_symptom];
+                                $totalScore += (int)$weights[$selected_symptom];
                             }
                         }
+                        $scores[$disease] = $totalScore;
                     }
 
                     // sort diseases by score in descending order
@@ -225,7 +226,8 @@ session_start();
 
         <form method="POST">
             <h1>Select symptoms<br>
-                <br</h1>
+                <br>
+                </h1>
                     <label for="symptom-1">Symptom 1:</label>
                     <select id="symptoms-1" name="symptom[]" multiple>
                         <option value="itching">itching</option>

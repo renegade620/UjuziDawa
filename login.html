@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/home.css" />
+    <title>UjuziDawa || Medical Diagnosis System</title>
+    <style>
+        body {
+            padding: 20px;
+            text-align: center;
+            background-color: lightgray;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+        }
+    </style>
+</head>
+
+
+</html>
+
+<body>
+    <a href="index.html">Back</a>
+    <h2>Log in</h2>
+    <form action="login.php" method="POST">
+        <div>
+            <input type="text" name="username" required="">
+            <label>Username</label>
+        </div>
+        <div>
+            <input type="password" name="password" required="">
+            <label>Password</label>
+        </div>
+        <input type="submit" name="login" value="Login">
+        <a href="#" id="forgot-password-link">Forgot Password?</a>
+    </form>
+
+</body>
+
+
+
+
+
+
+
+
+<div class="sidebar">
+    <ul>
+        <li><a href="#" id="patientRegistrationLink">Patient Registration</a></li>
+        <li><a href="#" id="diagnosisLink">Diagnosis</a></li>
+        <li><a href="#" id="bookAppointmentLink">Appointment</a></li>
+        <li><a href="#" id="patientReportLink">Reports</a></li>
+    </ul>
+</div>
+
+<div class="tiles-container">
+    <div id="patientRegistrationTile" class="tile">
+        <h2>Patient Registration</h2>
+    </div>
+    <div id="diagnosisTile" class="tile">
+        <h2>Diagnosis</h2>
+    </div>
+    <div id="bookAppointmentTile" class="tile">
+        <h2>Appointment</h2>
+    </div>
+    <div id="patientReportTile" class="tile">
+        <h2>Reports</h2>
+    </div>
+</div>
+
+<div id="patientReport" style="display: none;">
+    ...
+</div>
+
+<div id="patientRegistrationForm" style="display: none;">
+    ...
+</div>
+
+<div id="diagnosisForm" style="display: none;">
+    ...
+</div>
+
+<div id="bookAppointmentForm" style="display: none;">
+    ...
+</div>
+
+<script>
+    var patientRegistrationLink = document.getElementById("patientRegistrationLink");
+    var patientRegistrationTile = document.getElementById("patientRegistrationTile");
+    var patientRegistrationForm = document.getElementById("patientRegistrationForm");
+
+    var diagnosisLink = document.getElementById("diagnosisLink");
+    var diagnosisTile = document.getElementById("diagnosisTile");
+    var diagnosisForm = document.getElementById("diagnosisForm");
+
+    var bookAppointmentLink = document.getElementById("bookAppointmentLink");
+    var bookAppointmentTile = document.getElementById("bookAppointmentTile");
+    var bookAppointmentForm = document.getElementById("bookAppointmentForm");
+
+    var patientReportLink = document.getElementById("patientReportLink");
+    var patientReportTile = document.getElementById("patientReportTile");
+    var patientReport = document.getElementById("patientReport");
+
+    patientRegistrationLink.addEventListener("click", function(e) {
+        e.preventDefault();
+        patientRegistrationForm.style.display = "block";
+        bookAppointmentForm.style.display = "none";
+        diagnosisForm.style.display = "none";
+        patientReport.style.display = "none";
+    });
+
+    diagnosisLink.addEventListener("click", function(e) {
+        e.preventDefault();
+        diagnosisForm.style.display = "block";
+        patientRegistrationForm.style.display = "none";
+        bookAppointmentForm.style.display = "none";
+        patientReport.style.display = "none";
+    });
+
+    bookAppointmentLink.addEventListener("click", function(e) {
+        e.preventDefault();
+        bookAppointmentForm.style.display = "block";
+        patientRegistrationForm.style.display = "none";
+        diagnosisForm.style.display = "none";
+        patientReport.style.display = "none";
+    });
+
+    patientReportLink.addEventListener("click", function(e) {
+        e.preventDefault();
+        patientReport.style.display = "block";
+        patientRegistrationForm.style.display = "none";
+        bookAppointmentForm.style.display = "none";
+        diagnosisForm.style.display = "none";
+    });
+
+    // Optional: Set initial display based on URL or default option
+    var urlParams = new URLSearchParams(window.location.search);
+    var initialOption = urlParams.get("option") || "patientRegistration";
+    showOption(initialOption);
+
+    function showOption(option) {
+        switch (option) {
+            case "patientRegistration":
+                patientRegistrationForm.style.display = "block";
+                bookAppointmentForm.style.display = "none";
+                diagnosisForm.style.display = "none";
+                patientReport.style.display = "none";
+                break;
+            case "diagnosis":
+                diagnosisForm.style.display = "block";
+                patientRegistrationForm.style.display = "none";
+                bookAppointmentForm.style.display = "none";
+                patientReport.style.display = "none";
+                break;
+            case "bookAppointment":
+                bookAppointmentForm.style.display = "block";
+                patientRegistrationForm.style.display = "none";
+                diagnosisForm.style.display = "none";
+                patientReport.style.display = "none";
+                break;
+            case "patientReport":
+                patientReport.style.display = "block";
+                patientRegistrationForm.style.display = "none";
+                bookAppointmentForm.style.display = "none";
+                diagnosisForm.style.display = "none";
+                break;
+        }
+    }
+</script>
+
+<style>
+    .sidebar {
+        width: 200px;
+        background-color: #f1f1f1;
+        float: left;
+    }
+
+    .sidebar ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar ul li {
+        padding: 10px;
+    }
+
+    .sidebar ul li a {
+        text-decoration: none;
+        color: #000;
+    }
+
+    .tiles-container {
+        margin-left: 220px; /* Adjust as needed to create space for the sidebar */
+    }
+
+    /* Add styling for tiles and other elements as needed */
+    .tile {
+        /* Add tile styles */
+    }
+</style>

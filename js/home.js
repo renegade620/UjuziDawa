@@ -3,7 +3,8 @@ const navLink = document.querySelectorAll('.nav-link');
 const navList = document.querySelector('.nav-list');
 const loader = document.querySelector('.loader-overlay');
 var modal = document.getElementById("signup-modal"); // Get the modal
-var btn = document.getElementById("signup-btn"); // Get the button that opens the modal
+var btn = document.getElementById("signup-btn"); // Get the button that opens the sign-up modal
+var btn = document.getElementById("login-btn"); // Get the button that opens the login modal
 var span = document.getElementsByClassName("close")[0]; // Get the <span> element that closes the modal
 // Get the modals
 var signupModal = document.getElementById("signup-modal");

@@ -367,3 +367,82 @@ $labels = array_unique($labels);
         $conn->close();
     }
 ?>
+
+
+
+
+
+
+ <!-- START ABOUT -->
+ <section class="about" id="about">
+    <div class="container">
+      <div class="section-heading">
+        <h2>Who we are</h2>
+        <p class="lead">Welcome to the Medical Diagnosis System, an online tool designed to help you identify potential
+          health issues and determine the best course of action. Our system is easy to use, with a simple interface that
+          allows you to input your symptoms and quickly receive potential diagnoses and remedies.</p>
+
+        <p class="lead">Our system relies on a repository approach, where stored data is used to generate the output.
+          The application logic of our system includes algorithms and rules that process the user input and generate
+          potential diagnoses. It analyzes the symptoms entered by the user and compares them to a database of medical
+          knowledge to identify potential medical conditions. Our database includes information on common medical
+          conditions, their symptoms, and recommended treatments.</p>
+
+        <p class="lead">Our system is designed to be user-friendly, with a simple interface that allows users to input
+          their symptoms and quickly receive potential diagnoses and remedies. The system is fast and accurate, with the
+          ability to process large amounts of data quickly and provide users with accurate results.</p>
+
+        <p class="lead">At the Medical Diagnosis System, we believe that access to accurate health information is a
+          fundamental right for all individuals. Our system is designed to be a reliable resource for anyone who is
+          looking to better understand their health and identify potential health issues.</p>
+
+        <p class="lead">Thank you for choosing the Medical Diagnosis System. We hope that our system can help you make
+          informed decisions about your health and well-being.</p>
+      </div>
+    </div>
+  </section>
+  <!-- END ABOUT -->
+  <!-- START FEATURES -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-heading">
+        <h2>Why Us</h2>
+        <p class="lead">
+          You can do whatever you want with this system as if you are inside the
+          hospital.
+        </p>
+      </div>
+      <div class="features-items flex">
+        <div class="item">
+          <div class="feature-icon">
+          </div>
+          <div class="feature-body">
+            <h3 class="feature-title">Easy To Use</h3>
+            <p class="lead">
+              Simple and straightforward design.
+            </p>
+          </div>
+        </div>
+        <div class="item">
+          <div class="feature-icon">
+          </div>
+          <div class="feature-body">
+            <h3 class="feature-title">Saves you money and time</h3>
+            <p class="lead">No more long journeys to the doctor.<br> No more long wait hours to see the doctor.</p>
+          </div>
+        </div>
+        <div class="item">
+          <div class="feature-icon">
+          </div>
+          <div class="feature-body">
+            <h3 class="feature-title">24hr Operation</h3>
+            <p class="lead">
+              The system is available for use on a daily for every hour.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END FEATURES -->
+  <!-- MAIN JS  -->
