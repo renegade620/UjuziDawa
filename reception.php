@@ -29,7 +29,6 @@ session_start();
             .tiles-container {
                 display: flex;
                 flex-wrap: wrap;
-                margin-left: 220px;
             }
 
             .tile {
@@ -161,27 +160,6 @@ session_start();
             table tr:hover {
                 background-color: #e6e6e6;
             }
-
-            .sidebar {
-                width: 200px;
-                background-color: #f1f1f1;
-                float: left;
-            }
-
-            .sidebar ul {
-                list-style-type: none;
-                padding: 0;
-                margin: 0;
-            }
-
-            .sidebar ul li {
-                padding: 10px;
-            }
-
-            .sidebar ul li a {
-                text-decoration: none;
-                color: #000;
-            }
         </style>
     </head>
 
@@ -199,15 +177,6 @@ session_start();
                 </form>
             </div>
         </header>
-
-        <div class="sidebar">
-            <ul>
-                <li><a href="#" id="patientRegistrationLink">Patient Registration</a></li>
-                <li><a href="#" id="diagnosisLink">Diagnosis</a></li>
-                <li><a href="#" id="bookAppointmentLink">Appointment</a></li>
-                <li><a href="#" id="patientReportLink">Reports</a></li>
-            </ul>
-        </div>
 
         <div class="tiles-container">
             <div id="patientRegistrationTile" class="tile">
@@ -810,111 +779,42 @@ session_start();
         </div>
 
         <script>
-            var patientRegistrationLink = document.getElementById("patientRegistrationLink");
             var patientRegistrationTile = document.getElementById("patientRegistrationTile");
             var patientRegistrationForm = document.getElementById("patientRegistrationForm");
-            var bookAppointmentLink = document.getElementById("bookAppointmentLink");
             var bookAppointmentTile = document.getElementById("bookAppointmentTile");
             var bookAppointmentForm = document.getElementById("bookAppointmentForm");
-            var diagnosisLink = document.getElementById("diagnosisLink");
             var diagnosisTile = document.getElementById("diagnosisTile");
             var diagnosisForm = document.getElementById("diagnosisForm");
-            var patientReportLink = document.getElementById("patientReportLink");
             var patientReportTile = document.getElementById("patientReportTile");
             var patientReport = document.getElementById("patientReport")
 
-            patientRegistrationLink.addEventListener("click", function(e) {
-                e.preventDefault();
+            patientRegistrationTile.addEventListener("click", function() {
                 patientRegistrationForm.style.display = "block";
                 bookAppointmentForm.style.display = "none";
                 diagnosisForm.style.display = "none";
                 patientReport.style.display = "none";
             });
 
-            diagnosisLink.addEventListener("click", function(e) {
-                e.preventDefault();
-                diagnosisForm.style.display = "block";
+            bookAppointmentTile.addEventListener("click", function() {
                 patientRegistrationForm.style.display = "none";
-                bookAppointmentForm.style.display = "none";
-                patientReport.style.display = "none";
-            });
-
-            bookAppointmentLink.addEventListener("click", function(e) {
-                e.preventDefault();
                 bookAppointmentForm.style.display = "block";
-                patientRegistrationForm.style.display = "none";
                 diagnosisForm.style.display = "none";
                 patientReport.style.display = "none";
             });
 
-            patientReportLink.addEventListener("click", function(e) {
-                e.preventDefault();
-                patientReport.style.display = "block";
+            diagnosisTile.addEventListener("click", function() {
+                patientRegistrationForm.style.display = "none";
+                bookAppointmentForm.style.display = "none";
+                diagnosisForm.style.display = "block";
+                patientReport.style.display = "none";
+            });
+
+            patientReportTile.addEventListener("click", function() {
                 patientRegistrationForm.style.display = "none";
                 bookAppointmentForm.style.display = "none";
                 diagnosisForm.style.display = "none";
+                patientReport.style.display = "block";
             });
-
-            // var urlParams = new URLSearchParams(window.location.search);
-            // var initialOption = urlParams.get("option") || "patientRegistration";
-            // showOption(initialOption);
-
-            // function showOption(option) {
-            //     switch (option) {
-            //         case "patientRegistration":
-            //             patientRegistrationForm.style.display = "block";
-            //             bookAppointmentForm.style.display = "none";
-            //             diagnosisForm.style.display = "none";
-            //             patientReport.style.display = "none";
-            //             break;
-            //         case "diagnosis":
-            //             diagnosisForm.style.display = "block";
-            //             patientRegistrationForm.style.display = "none";
-            //             bookAppointmentForm.style.display = "none";
-            //             patientReport.style.display = "none";
-            //             break;
-            //         case "bookAppointment":
-            //             bookAppointmentForm.style.display = "block";
-            //             patientRegistrationForm.style.display = "none";
-            //             diagnosisForm.style.display = "none";
-            //             patientReport.style.display = "none";
-            //             break;
-            //         case "patientReport":
-            //             patientReport.style.display = "block";
-            //             patientRegistrationForm.style.display = "none";
-            //             bookAppointmentForm.style.display = "none";
-            //             diagnosisForm.style.display = "none";
-            //             break;
-            //     }
-            // }
-
-            // patientRegistrationTile.addEventListener("click", function() {
-            //     patientRegistrationForm.style.display = "block";
-            //     bookAppointmentForm.style.display = "none";
-            //     diagnosisForm.style.display = "none";
-            //     patientReport.style.display = "none";
-            // });
-
-            // bookAppointmentTile.addEventListener("click", function() {
-            //     patientRegistrationForm.style.display = "none";
-            //     bookAppointmentForm.style.display = "block";
-            //     diagnosisForm.style.display = "none";
-            //     patientReport.style.display = "none";
-            // });
-
-            // diagnosisTile.addEventListener("click", function() {
-            //     patientRegistrationForm.style.display = "none";
-            //     bookAppointmentForm.style.display = "none";
-            //     diagnosisForm.style.display = "block";
-            //     patientReport.style.display = "none";
-            // });
-
-            // patientReportTile.addEventListener("click", function() {
-            //     patientRegistrationForm.style.display = "none";
-            //     bookAppointmentForm.style.display = "none";
-            //     diagnosisForm.style.display = "none";
-            //     patientReport.style.display = "block";
-            // });
         </script>
 
     </body>
