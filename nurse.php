@@ -114,107 +114,6 @@ session_start();
         }
 
         body {
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
-        }
-
-        .dashboard {
-            display: flex;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .sidebar {
-            flex-basis: 200px;
-            background-color: #f1f1f1;
-            padding: 10px;
-            margin-right: 20px;
-        }
-
-        .sidebar ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar li {
-            margin-bottom: 10px;
-        }
-
-        .sidebar li a {
-            display: block;
-            padding: 10px;
-            background-color: #ddd;
-            color: #333;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-
-        .sidebar li a:hover {
-            background-color: #ccc;
-        }
-
-        .main-content {
-            flex-basis: 80%;
-            padding: 10px;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        .summary {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .summary-card {
-            flex-basis: 30%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .activities {
-            margin-bottom: 20px;
-        }
-
-        .activity-item {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
-        .activity-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .top-right {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .top-right select {
-            width: 150px;
-        }
-
-        #logout {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 5px;
-        }
-
-        body {
             font-size: 1rem;
             font-weight: normal;
             color: #60698d;
@@ -432,7 +331,7 @@ session_start();
                 <img src="img\logo\ujuzi-dawa-logo-removebg-preview.png" alt="Logo">
             </div>
             <div id="title">
-                <h1>Doctor's Desk</h1>
+                <h1>Nurse's Desk</h1>
             </div>
             <form action="logout.php">
                 <button id="logout-btn" class="btn btn-rounded">Logout</button>
@@ -443,22 +342,20 @@ session_start();
         <div class="sidebar">
             <ul>
                 <li><a href="#">Dashboard</a></li>
-                <li><a href="get-patient-vital.php">Patient Vitals</a></li>
-                <li><a href="diagnoses.php">Diagnosis</a></li>
-                <li><a href="#">Referred</a></li>
+                <li><a href="regNvitals.php">Registered Patients</a>
+                <li><a href="vitals.php">Patient Vitals</a></li>
+                <li><a href="get-patient-vitals.php">Patient Vitals List</a></li>
             </ul>
         </div>
 
         <div class="main-content">
-            <h1>Doctor Dashboard</h1>
-
             <div class="summary">
                 <div class="summary-card">
                     <h3>Total Registered Patients</h3>
                     <p><?php echo getTotalPatients(); ?></p>
                 </div>
                 <div class="summary-card">
-                    <h3>Total Patient Vital Records</h3>
+                    <h3>Total Recorded Vitals</h3>
                     <p><?php echo getTotalVitals(); ?></p>
                 </div>
                 <?php
@@ -474,14 +371,6 @@ session_start();
                 {
                     include "connect.php";
                     $query = "SELECT COUNT(*) AS total_vitals FROM vitals";
-                    $result = mysqli_query($conn, $query);
-                    $row = mysqli_fetch_assoc($result);
-                    return $row['total_vitals'];
-                }
-                function getTotalDiagnoses()
-                {
-                    include "connect.php";
-                    $query = "SELECT COUNT(*) AS total_diagnoses FROM diagnosis";
                     $result = mysqli_query($conn, $query);
                     $row = mysqli_fetch_assoc($result);
                     return $row['total_vitals'];

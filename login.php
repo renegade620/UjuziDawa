@@ -58,18 +58,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
     header("location: index.html");
     exit();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

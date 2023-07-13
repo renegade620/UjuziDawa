@@ -1,4 +1,4 @@
-<?php
+<?php 
 session_start();
 ?>
 <DOCTYPE html>
@@ -160,6 +160,65 @@ session_start();
             table tr:hover {
                 background-color: #e6e6e6;
             }
+
+            .card-container {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            .card {
+                width: 300px;
+                margin: 10px;
+                border: 1px solid #ccc;
+                box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.3);
+            }
+
+            .card-header {
+                background-color: #f4f4f4;
+                padding: 10px;
+            }
+
+            .card-header h3 {
+                margin: 0;
+            }
+
+            .card-body {
+                padding: 10px;
+            }
+
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0, 0, 0, 0.4);
+            }
+
+            .modal-content {
+                background-color: #fefefe;
+                margin: 15% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%;
+            }
+
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
         </style>
     </head>
 
@@ -182,87 +241,10 @@ session_start();
             <div id="patientRegistrationTile" class="tile">
                 <h2>Patient Registration</h2>
             </div>
-            <div id="diagnosisTile" class="tile">
-                <h2>Diagnosis</h2>
-            </div>
-            <div id="bookAppointmentTile" class="tile">
-                <h2>Appointment</h2>
-            </div>
             <div id="patientReportTile" class="tile">
                 <h2>Reports</h2>
             </div>
         </div>
-
-        <div id="patientReport" style="display: none;">
-            <h3>Reports</h3>
-            <div class="patient-list">
-                <h3>Registered Patients</h3>
-                <?php
-                require "connect.php";
-
-                // Fetch the registered users' information
-                $sqlll = "SELECT * FROM patient";
-                $resulttt = $conn->query($sqlll);
-
-                if ($resulttt->num_rows > 0) {
-                    // Display the table header
-                    echo "<table>";
-                    echo "<tr>
-                    <th>Health Number</th>
-                    <th>Patient Name</th>
-                    <th>Gender</th>
-                    <th>Date of Birth</th>
-                    <th>Phone Number</th>
-                    <th>Email</th>
-                    <th>Address</th>
-                    <th>Marital Status</th>
-                    <th>Is Under 18</th>
-                    <th>Parent Name</th>
-                    <th>Parent Phone Number</th>
-                    <th>Emergency Contact Name</th>
-                    <th>Emergency Contact Relationship</th>
-                    <th>Emergency Contact Phone Number</th>
-                    <th>Reason for Registration</th>
-                    <th>Taking Medications</th>
-                    </tr>";
-
-                    // Loop through each row of the result set
-                    while ($rowww = $resulttt->fetch_assoc()) {
-                        // Display the table rows with user data
-                        echo "<tr>";
-                        echo "<td>" . $rowww["health_number"] . "</td>";
-                        echo "<td>" . $rowww["patient_name"] . "</td>";
-                        echo "<td>" . $rowww["gender"] . "</td>";
-                        echo "<td>" . $rowww["date_of_birth"] . "</td>";
-                        echo "<td>" . $rowww["phone_number"] . "</td>";
-                        echo "<td>" . $rowww["email"] . "</td>";
-                        echo "<td>" . $rowww["address"] . "</td>";
-                        echo "<td>" . $rowww["marital_status"] . "</td>";
-                        echo "<td>" . ($rowww["is_under_18"] === "Yes" ? "Yes" : "No") . "</td>";
-                        echo "<td>" . $rowww["parent_name"] . "</td>";
-                        echo "<td>" . $rowww["parent_phone_number"] . "</td>";
-                        echo "<td>" . $rowww["emergency_contact_name"] . "</td>";
-                        echo "<td>" . $rowww["emergency_contact_relationship"] . "</td>";
-                        echo "<td>" . $rowww["emergency_contact_phone_number"] . "</td>";
-                        echo "<td>" . $rowww["reason_for_registration"] . "</td>";
-                        echo "<td>" . ($rowww["taking_medications"] === "Yes" ? "Yes" : "No") . "</td>";
-                        echo "</tr>";
-                    }
-
-                    // Close the table
-                    echo "</table>";
-                } else {
-                    // No registered users found
-                    echo "No registered users.";
-                }
-
-                // Close the result and connection
-                $resulttt->close();
-                $conn->close();
-                ?>
-            </div>
-        </div>
-
 
         <div id="patientRegistrationForm" style="display: none;">
             <?php if (!empty($errors)) : ?>
@@ -272,6 +254,8 @@ session_start();
                 </div>
                 <div class="patient-registration">
                     <form action="" method="POST" class="form-container">
+                        <input type="hidden" name="form-submitted" value="1">
+
 
                         <h3 style="color: white;">Patient Registration Form</h3>
                         <label for="registration-date">Registration Date:</label>
@@ -361,77 +345,80 @@ session_start();
                     <?php
                     require "connect.php";
 
-                    $errors = array();
+                    if (isset($_POST['form-submitted'])) {
 
-                    if (empty($_POST['health-number']) || empty($_POST['patient-name']) || empty($_POST['gender']) || empty($_POST['date-of-birth']) || empty($_POST['phone-number']) || empty($_POST['email']) || empty($_POST['address']) || empty($_POST['marital-status']) || empty($_POST['reason-for-registration'])) {
-                        $error[] = "Please fill in all required fields.";
-                    } else {
-                        // Retrieve the form inputs
-                        $registrationDatetime = $_POST['registration-date'];
-                        $healthNumber = $_POST['health-number'];
-                        $patientName = $_POST['patient-name'];
-                        $gender = $_POST['gender'];
-                        $dateOfBirth = $_POST['date-of-birth'];
-                        $phoneNumber = $_POST['phone-number'];
-                        $email = $_POST['email'];
-                        $address = $_POST['address'];
-                        $maritalStatus = $_POST['marital-status'];
-                        $isUnder18 = isset($_POST['age-check']) ?  1 : 0;
-                        $parentName = $_POST['parent-name'];
-                        $parentPhoneNumber = $_POST['parent-phone'];
-                        $emergencyContactName = $_POST['emergency-name'];
-                        $emergencyContactRelationship = $_POST['emergency-relationship'];
-                        $emergencyContactPhoneNumber = $_POST['emergency-phone'];
-                        $reasonForRegistration = $_POST['reason-for-registration'];
-                        $takingMedications = isset($_POST['medications']) ? 1 : 0;
+                        $errors = array();
 
-                        // Convert boolean values to "Yes" or "No"
-                        $isUnder18Text = $isUnder18 ?  "No" : "Yes";
-                        $takingMedicationsText = $takingMedications ? "No" : "Yes";
-
-                        // Validate date of birth
-                        $dateOfBirthTimestamp = strtotime($dateOfBirth);
-                        if ($dateOfBirthTimestamp === false) {
-                            $errors['date-of-birth'] = "Invalid date of birth";
-                        } elseif ($dateOfBirthTimestamp > time()) {
-                            $errors['date-of-birth'] = "Date of birth must be in the past";
-                        }
-
-                        // Validate phone number
-                        if (!preg_match('/^\d{10}$/', $phoneNumber)) {
-                            $errors['phone-number'] = "Invalid phone number";
-                        }
-
-                        // Validate email
-                        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                            $errors['email'] = "Invalid email address";
-                        }
-                    }
-                    if (!empty($errors)) {
-                        $errs = implode("<br>", $errors);
-                    } else {
-
-                        // Prepare the SQL statement
-                        $sql = "INSERT INTO patient (registration_datetime, health_number, patient_name, gender, date_of_birth, phone_number, email, address, marital_status, is_under_18, parent_name, parent_phone_number, emergency_contact_name, emergency_contact_relationship, emergency_contact_phone_number, reason_for_registration, taking_medications) 
-                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-                        // Prepare and bind the parameters
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("sssssssssssssssss", $registrationDatetime, $healthNumber, $patientName, $gender, $dateOfBirth, $phoneNumber, $email, $address, $maritalStatus, $isUnder18Text, $parentName, $parentPhoneNumber, $emergencyContactName, $emergencyContactRelationship, $emergencyContactPhoneNumber, $reasonForRegistration, $takingMedicationsText);
-
-                        // Execute the statement
-                        if ($stmt->execute()) {
-                            // Registration successful, display success message or redirect
-                            echo "Registration successful!";
+                        if (empty($_POST['health-number']) || empty($_POST['patient-name']) || empty($_POST['gender']) || empty($_POST['date-of-birth']) || empty($_POST['phone-number']) || empty($_POST['email']) || empty($_POST['address']) || empty($_POST['marital-status']) || empty($_POST['reason-for-registration'])) {
+                            $error[] = "Please fill in all required fields.";
                         } else {
-                            // Check for duplicate entry error
-                            if ($conn->errno == 1062) {
-                                echo "User already exists.";
-                            } else {
-                                echo "Error occurred. Contact IT!";
+                            // Retrieve the form inputs
+                            $registrationDatetime = $_POST['registration-date'];
+                            $healthNumber = $_POST['health-number'];
+                            $patientName = $_POST['patient-name'];
+                            $gender = $_POST['gender'];
+                            $dateOfBirth = $_POST['date-of-birth'];
+                            $phoneNumber = $_POST['phone-number'];
+                            $email = $_POST['email'];
+                            $address = $_POST['address'];
+                            $maritalStatus = $_POST['marital-status'];
+                            $isUnder18 = isset($_POST['age-check']) ?  1 : 0;
+                            $parentName = $_POST['parent-name'];
+                            $parentPhoneNumber = $_POST['parent-phone'];
+                            $emergencyContactName = $_POST['emergency-name'];
+                            $emergencyContactRelationship = $_POST['emergency-relationship'];
+                            $emergencyContactPhoneNumber = $_POST['emergency-phone'];
+                            $reasonForRegistration = $_POST['reason-for-registration'];
+                            $takingMedications = isset($_POST['medications']) ? 1 : 0;
+
+                            // Convert boolean values to "Yes" or "No"
+                            $isUnder18Text = $isUnder18 ?  "No" : "Yes";
+                            $takingMedicationsText = $takingMedications ? "No" : "Yes";
+
+                            // Validate date of birth
+                            $dateOfBirthTimestamp = strtotime($dateOfBirth);
+                            if ($dateOfBirthTimestamp === false) {
+                                $errors['date-of-birth'] = "Invalid date of birth";
+                            } elseif ($dateOfBirthTimestamp > time()) {
+                                $errors['date-of-birth'] = "Date of birth must be in the past";
+                            }
+
+                            // Validate phone number
+                            if (!preg_match('/^\d{10}$/', $phoneNumber)) {
+                                $errors['phone-number'] = "Invalid phone number";
+                            }
+
+                            // Validate email
+                            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                                $errors['email'] = "Invalid email address";
                             }
                         }
-                        $stmt->close();
+                        if (!empty($errors)) {
+                            $errs = implode("<br>", $errors);
+                        } else {
+
+                            // Prepare the SQL statement
+                            $sql = "INSERT INTO patient (registration_datetime, health_number, patient_name, gender, date_of_birth, phone_number, email, address, marital_status, is_under_18, parent_name, parent_phone_number, emergency_contact_name, emergency_contact_relationship, emergency_contact_phone_number, reason_for_registration, taking_medications) 
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+                            // Prepare and bind the parameters
+                            $stmt = $conn->prepare($sql);
+                            $stmt->bind_param("sssssssssssssssss", $registrationDatetime, $healthNumber, $patientName, $gender, $dateOfBirth, $phoneNumber, $email, $address, $maritalStatus, $isUnder18Text, $parentName, $parentPhoneNumber, $emergencyContactName, $emergencyContactRelationship, $emergencyContactPhoneNumber, $reasonForRegistration, $takingMedicationsText);
+
+                            // Execute the statement
+                            if ($stmt->execute()) {
+                                // Registration successful, display success message or redirect
+                                echo "Registration successful!";
+                            } else {
+                                // Check for duplicate entry error
+                                if ($conn->errno == 1062) {
+                                    echo "User already exists.";
+                                } else {
+                                    echo "Error occurred. Contact IT!";
+                                }
+                            }
+                            $stmt->close();
+                        }
                     }
                     $conn->close();
                     ?>
@@ -439,383 +426,119 @@ session_start();
                 </div>
         </div>
 
-        <div id="diagnosisForm" style="display: none;">
-            <h3>Diagnosis</h3>
-            <div>
+        <div id="patientReport" style="display: none;">
+            <h3>Reports</h3>
+            <div class="card-container">
                 <?php
-
                 require "connect.php";
 
-                $symptoms_json = "";
-                $diseases_json = "";
+                // Fetch the registered users' information
+                $sqlll = "SELECT * FROM patient";
+                $resulttt = $conn->query($sqlll);
 
-                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    // retrieve selected symptom from the user
-                    if (isset($_POST['symptom']) && is_array($_POST['symptom'])) {
-                        $selected_symptoms = $_POST['symptom'];
-
-                        // Calculate the threshold based on the number of selected symptoms and their weights
-                        $threshold_query = "SELECT SUM(weight) as threshold FROM disease_symptom WHERE symptom IN ('" . implode("','", $selected_symptoms) . "')";
-                        $threshold_result = $conn->query($threshold_query);
-                        $threshold_row = $threshold_result->fetch_assoc();
-                        $threshold = $threshold_row['threshold'] * 0.05; // Only display diseases with a total score above 50% of the maximum possible score
-
-                        $query = "SELECT disease, SUM(weight) as total_score FROM disease_symptom WHERE symptom IN ('" . implode("','", $selected_symptoms) . "') GROUP BY disease ORDER BY total_score DESC";
-                        $result = $conn->query($query);
-
-                        $symptoms_json = json_encode($selected_symptoms);
-                        echo $symptoms_json;
-
-                        if ($result && $result->num_rows > 0) {
-                            // Find the maximum score
-                            $max_score = 0;
-                            while ($row = $result->fetch_assoc()) {
-                                if ($row['total_score'] > $max_score) {
-                                    $max_score = $row['total_score'];
-                                }
-                            }
-
-                            // Reset result pointer
-                            $result->data_seek(0);
-
-                            // Display diseases with scores and progress bars
-                            $diseases = "Possible diseases based on selected symptoms: <br>";
-                            $counter = 0;
-                            $diseases_array = array();
-                            while (($row = $result->fetch_assoc()) && $counter < 5) {
-                                if ($row['total_score'] > $threshold) {
-                                    // Only display diseases with a total score above the threshold
-                                    $disease = $row['disease'];
-                                    $total_score = $row['total_score'];
-                                    $percentage = ($total_score / $max_score) * 100;
-                                    $diseases .= "<a href='disease_info.php?disease=$disease' target='_blank'>$disease</a> (score: " . $total_score . ")<br>";
-                                    $diseases .= "<progress value='$percentage' max='100' style='color:green'></progress><br>";
-
-                                    array_push($diseases_array, $disease);
-                                    $counter++;
-                                }
-                            }
-                            $diseases_json = json_encode($diseases_array);
-                        } else {
-                            // no diseases found for selected symptoms
-                            $diseases = "No diseases found for selected symptoms.";
-                        }
-                    } else {
-                        // no symptoms selected by user
-                        $diseases = "Please select at least one symptom.";
+                if ($resulttt->num_rows > 0) {
+                    // Loop through each row of the result set
+                    while ($rowww = $resulttt->fetch_assoc()) {
+                        // Display the patient information in a card
+                        echo '<div class="card">';
+                        echo '<div class="card-header"><h3>' . $rowww["patient_name"] . '</h3></div>';
+                        echo '<div class="card-body">';
+                        echo '<p>Health Number: ' . $rowww["health_number"] . '</p>';
+                        echo '<p>Gender: ' . $rowww["gender"] . '</p>';
+                        echo '<p>Date of Birth: ' . $rowww["date_of_birth"] . '</p>';
+                        echo '<p>Phone Number: ' . $rowww["phone_number"] . '</p>';
+                        echo '<p>Email: ' . $rowww["email"] . '</p>';
+                        echo '<p>Address: ' . $rowww["address"] . '</p>';
+                        echo '<p>Marital Status: ' . $rowww["marital_status"] . '</p>';
+                        echo '</div>';
+                        echo '</div>';
                     }
-
-                    if (isset($_POST['patientname'])) {
-                        $patient_name = $_POST['patientname'];
-                        $department = $_POST['department'];
-                        $date = $_POST['date'];
-                        $time = $_POST['time'];
-
-                        $patient_query = "SELECT * FROM patient WHERE patient_name = '$patient_name'";
-                        $patient_result = $conn->query($patient_query);
-
-
-                        if ($patient_result && $patient_result->num_rows > 0) {
-                            $patient_row = $patient_result->fetch_assoc();
-                            $patient_id = $patient_row['patient_id'];
-
-                            echo "Patient ID: " . $patient_id . "<br>";
-                            echo "Patient Name: " . $patient_name . "<br>";
-                            echo "Department: " . $department . "<br>";
-                            echo "Date: " . $date . "<br>";
-                            echo "Time: " . $time . "<br>";
-
-                            $_SESSION['patient_id'] = $patient_id;
-
-
-                            $diagnosis_query = "SELECT * FROM diagnosis WHERE patient_id = '$patient_id'";
-                            $diagnosis_result = $conn->query($diagnosis_query);
-
-                            if ($diagnosis_result && $diagnosis_result->num_rows > 0) {
-                                while ($diagnosis_row = $diagnosis_result->fetch_assoc()) {
-                                    if ($diagnosis_row['patient_id'] == $patient_id) {
-                                        $symptomu = json_decode($diagnosis_row['symptoms']);
-                                        $diseaso =  json_decode($diagnosis_row['diseases']);
-                                    }
-                                }
-                            }
-                            $_SESSION["symptoms"] = isset($symptomu) ? json_encode($symptomu) : '';
-                            $_SESSION["diseases"] = isset($diseaso) ? json_encode($diseaso) : '';
-
-                            echo "Symptoms: " . (isset($symptomu) ? implode(', ', $symptomu) : '') . "<br>";
-                            echo "Diseases: " . (isset($diseaso) ? implode(', ', $diseaso) : '') . "<br>";
-                        }
-                    }
+                } else {
+                    // No registered users found
+                    echo "No registered users.";
                 }
+
+                // Close the result and connection
+                $resulttt->close();
                 $conn->close();
                 ?>
             </div>
-            <form method="POST">
-                <h1>Select symptoms<br><br></h1>
-                <label for="symptom-1">Symptom 1:</label>
-                <select id="symptoms-1" name="symptom[]" multiple>
-                    <option value="itching">itching</option>
-                    <option value="skin rash">skin rash</option>
-                    <option value="continuous sneezing">continuous sneezing</option>
-                    <option value="stomach pain">stomach pain</option>
-                    <option value="acidity">acidity</option>
-                    <option value="shivering">shivering</option>
-                    <option value="vomiting">vomiting</option>
-                    <option value="muscle wasting">muscle wasting</option>
-                    <option value="patches in throat">patches in throat</option>
-                    <option value="fatigue">fatigue</option>
-                    <option value="weight loss">weight loss</option>
-                    <option value="indigestion">indigestion</option>
-                    <option value="sunken eyes">sunken eyes</option>
-                    <option value="headache">headache</option>
-                    <option value="cough">cough</option>
-                    <option value="chest pain">chest pain</option>
-                    <option value="weakness in limbs">weakness in limbs</option>
-                    <option value="back pain">back pain</option>
-                    <option value="chills">chills</option>
-                    <option value="joint pain">joint pain</option>
-                    <option value="yellowish skin">yellowish skin</option>
-                    <option value="constipation">constipation</option>
-                    <option value="pain during bowel movements">pain during bowel movements</option>
-                    <option value="breathlessness">breathlessness</option>
-                    <option value="cramps">cramps</option>
-                    <option value="mood swings">mood swings</option>
-                    <option value="stiff neck">stiff neck</option>
-                    <option value="muscle weakness">muscle weakness</option>
-                    <option value="pus filled pimples">pus filled pimples</option>
-                    <option value="burning mictrution">burning mictrution</option>
-                    <option value="bladder discomfort">bladder discomfort</option>
-                    <option value="high fever">high fever</option>
-
-                </select>
-
-                <label for="symptom-2">Symptom 2:</label>
-                <select id="symptoms-2" name="symptom[]" multiple>
-                    <option value="nodal skin eruptions">nodal skin eruptions</option>
-                    <option value="skin rash">skin rash</option>
-                    <option value="shivering">shivering</option>
-                    <option value="chills">chills</option>
-                    <option value="acidity">acidity</option>
-                    <option value="ulcers on tongue">ulcers on tongue</option>
-                    <option value="vomiting">vomiting</option>
-                    <option value="yellowish skin">yellowish skin</option>
-                    <option value="stomach pain">stomach pain</option>
-                    <option value="loss of appetite">loss of appetite</option>
-                    <option value="indigestion">indigestion</option>
-                    <option value="patches in throat">patches in throat</option>
-                    <option value="high fever">high fever</option>
-                    <option value="weight loss">weight loss</option>
-                    <option value="restlessness">restlessness</option>
-                    <option value="sunken eyes">sunken eyes</option>
-                    <option value="dehydration">dehydration</option>
-                    <option value="cough">cough</option>
-                    <option value="chest pain">chest pain</option>
-                    <option value="dizziness">dizziness</option>
-                    <option value="headache">headache</option>
-                    <option value="weakness in limbs">weakness in limbs</option>
-                    <option value="neck pain">joint pain</option>
-                    <option value="weakness of one body side">weakness of one body size</option>
-                    <option value="fatigue">fatigue</option>
-                    <option value="joint pain">joint pain</option>
-                    <option value="lethargy">lethargy</option>
-                    <option value="nausea">nausea</option>
-                    <option value="abdominal pain">abdominal pain</option>
-                    <option value="pain during bowel movements">pain during bowel movements</option>
-                    <option value="pain in anal region">pain in anal region</option>
-                    <option value="sweating">sweating</option>
-                    <option value="breathlessness">breathlessness</option>
-                    <option value="cramps">cramps</option>
-                    <option value="bruising">bruising</option>
-                    <option value="weight gain">weight gain</option>
-                    <option value="cold hands and feets">cold hands and feets</option>
-                    <option value="anxiety">anxiety</option>
-                    <option value="knee pain">knee pain</option>
-                    <option value="stiff neck">stiff neck</option>
-                    <option value="swelling joints">swelling joints</option>
-                    <option value="pus filled pimples">pus filled pimples</option>
-                    <option value="blackheads">blackheads</option>
-                    <option value="bladder discomfort">bladder discomfort</option>
-                    <option value="skin peeling">skin peeling</option>
-                    <option value="foul smell of urine">foul smell of urine</option>
-                    <option value="blister">blister</option>
-                </select>
-
-                <label for="symptom-3">Symptom 3:</label>
-                <select id="symptoms-3" name="symptom[]" multiple>
-                    <option value="nodal skin eruptions">nodal skin eruptions</option>
-                    <option value="dischromic patches">dischromic patches</option>
-                    <option value="chills">chills</option>
-                    <option value="watering from eyes">shivering</option>
-                    <option value="ulcers on tongue">ulcers on tongue</option>
-                    <option value="vomiting">vomiting</option>
-                    <option value="yellowish skin">yellowish skin</option>
-                    <option value="nausea">nausea</option>
-                    <option value="stomach pain">stomach pain</option>
-                    <option value="burning micturition">burning micturition</option>
-                    <option value="abdominal pain">abdominal pain</option>
-                    <option value="loss of appetite">loss of appetite</option>
-                    <option value="high fever">high fever</option>
-                    <option value="extra marital contacts">extra marital contacts</option>
-                    <option value="restlessness">restlessness</option>
-                    <option value="lethargy">lethargy</option>
-                    <option value="dehydration">dehydration</option>
-                    <option value="diarrhoea">diarrhoea</option>
-                    <option value="breathlessness">breathlessness</option>
-                    <option value="dizziness">dizziness</option>
-                    <option value="loss of balance">loss of balance</option>
-                    <option value="headache">headache</option>
-                    <option value="blurred and distorted vision">blurred and distorted vision</option>
-                    <option value="neck pain">joint pain</option>
-                    <option value="weakness of one body side">weakness of one body size</option>
-                    <option value="altered sensorium">altered sensorium</option>
-                    <option value="fatigue">fatigue</option>
-                    <option value="weight loss">weight loss</option>
-                    <option value="sweating">sweating</option>
-                    <option value="joint pain">joint pain</option>
-                    <option value="dark urine">dark urine</option>
-                    <option value="swelling of stomach">swelling of stomach</option>
-                    <option value="cough">cough</option>
-                    <option value="pain in anal region">pain in anal region</option>
-                    <option value="bloody stool">bloody stool</option>
-                    <option value="chest pain">chest pain</option>
-                    <option value="bruising">bruising</option>
-                    <option value="cold hands and feets">cold hands and feets</option>
-                    <option value="obesity">obesity</option>
-                    <option value="mood swings">mood swings</option>
-                    <option value="anxiety">anxiety</option>
-                    <option value="knee pain">knee pain</option>
-                    <option value="hip joint pain">hip joint pen</option>
-                    <option value="swelling joints">swelling joints</option>
-                    <option value="movement stiffness">movement stiffness</option>
-                    <option value="spinning movements">spinning movements</option>
-                    <option value="blackheads">blackheads</option>
-                    <option value="scurring">scurring</option>
-                    <option value="foul smell of urine">foul smell of urine</option>
-                    <option value="continuous feel of urine">continuous feel of urine</option>
-                    <option value="skin peeling">skin peeling</option>
-                    <option value="silver like dusting">silver like dusting</option>
-                    <option value="blister">blister</option>
-                    <option value="red sore around nose">red sore around nose</option>
-
-                </select>
-
-
-                <input id="check" type="submit" value="Diagnose">
-                <input id="reset" type="reset" value="Reset">
-
-                <div id="diagnosis-results">
-                    <?php echo $diseases; ?>
-                </div>
-
-                <?php
-                require "connect.php";
-                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['symptom'])) {
-                    $patientID = $_SESSION['patient_id'];
-
-                    $x = "INSERT INTO diagnosis(symptoms, diseases, patient_id) VALUES ('$symptoms_json', '$diseases_json', '$patientID)";
-                    echo $x;
-                    $conn->query($x);
-                ?>
-                    <div id="diagnosis-results">
-                        Symptoms: <?php echo $symptoms_json; ?> <br>
-                        Diseases: <?php echo $diseases_json; ?> <br>
-                    </div>
-                <?php } ?>
-
-
-            </form>
         </div>
 
-        <div id="bookAppointmentForm" style="display: none;">
-            <h3>Patient Diagnosis and Appointment</h3>
-            <form method="POST">
-                <h3>Book Appointment</h3>
-                <label for="patientname">Patient Name:</label>
-                <input type="text" id="patientname" name="patientname">
-                <label for="department">Select Department:</label>
-                <select id="department" name="department">
-                    <option value="Internal Medicine">Internal Medicine</option>
-                    <option value="Infectious Diseases">Infectious Diseases</option>
-                    <option value="Allergy & Immunology">Allergy & Immunology</option>
-                    <option value="Cardiology">Cardiology</option>
-                    <option value="Dermatology">Dermatology</option>
-                    <option value="Orthopedics">Orthopedics</option>
-                    <option value="Gastroenterology">Gastroenterology</option>
-                    <option value="ENT">ENT</option>
-                    <option value="Surgery">Surgery</option>
-                    <option value="Urology">Urology</option>
-                    <option value="Neurology">Neurology</option>
-                    <option value="Pulmonology">Pulmonology</option>
-                </select>
-                <label for="date">Select Date:</label>
-                <input type="date" id="date" name="date" required>
-
-                <label for="time">Select Time:</label>
-                <input type="time" id="time" name="time" required>
-                <button id="book-appointment-btn">Book Appointment</button>
-                <?php
-                require "connect.php";
-                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['patientname'])) {
-                    $symptomu = json_decode($_SESSION["symptoms"]);
-                    $diseaso = json_decode($_SESSION["diseases"]);
-
-                    $symptomu_json = json_encode($symptomu);
-                    $diseaso_json = json_encode($diseaso);
-
-                    $y = "INSERT INTO appointments(patient_id, patient_name, symptoms, diseases, department, date, time) VALUES ('$patient_id', '$patient_name','$symptomu_json', '$diseaso_json', '$department', '$date', '$time')";
-
-
-                    // Check if the insertion was successful
-                    if ($conn->query($y) === TRUE) {
-                        echo "Appointment booked successfully!.";
-                    } else {
-                        echo "Error: " . $conn->error;
-                    }
-                } else {
-                    echo "Patient not found!";
-                }
-                ?>
-            </form>
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">×</span>
+                <div id="modal-body"></div>
+            </div>
         </div>
 
         <script>
             var patientRegistrationTile = document.getElementById("patientRegistrationTile");
             var patientRegistrationForm = document.getElementById("patientRegistrationForm");
-            var bookAppointmentTile = document.getElementById("bookAppointmentTile");
-            var bookAppointmentForm = document.getElementById("bookAppointmentForm");
-            var diagnosisTile = document.getElementById("diagnosisTile");
-            var diagnosisForm = document.getElementById("diagnosisForm");
             var patientReportTile = document.getElementById("patientReportTile");
             var patientReport = document.getElementById("patientReport")
 
             patientRegistrationTile.addEventListener("click", function() {
                 patientRegistrationForm.style.display = "block";
-                bookAppointmentForm.style.display = "none";
-                diagnosisForm.style.display = "none";
-                patientReport.style.display = "none";
-            });
-
-            bookAppointmentTile.addEventListener("click", function() {
-                patientRegistrationForm.style.display = "none";
-                bookAppointmentForm.style.display = "block";
-                diagnosisForm.style.display = "none";
-                patientReport.style.display = "none";
-            });
-
-            diagnosisTile.addEventListener("click", function() {
-                patientRegistrationForm.style.display = "none";
-                bookAppointmentForm.style.display = "none";
-                diagnosisForm.style.display = "block";
                 patientReport.style.display = "none";
             });
 
             patientReportTile.addEventListener("click", function() {
                 patientRegistrationForm.style.display = "none";
-                bookAppointmentForm.style.display = "none";
-                diagnosisForm.style.display = "none";
                 patientReport.style.display = "block";
             });
         </script>
+
+<script>
+    // Get the modal element
+    var modal = document.getElementById("modal");
+
+    // Get the close button element
+    var closeBtn = document.querySelector(".close");
+
+    // Get the modal body element
+    var modalBody = document.getElementById("modal-body");
+
+    // Add a click event listener to the close button
+    closeBtn.addEventListener("click", function() {
+        // Hide the modal when the close button is clicked
+        modal.style.display = "none";
+    });
+
+    // Add a click event listener to the window
+    window.addEventListener("click", function(event) {
+        // Hide the modal when the user clicks outside of it
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    // Get all the cards
+    var cards = document.querySelectorAll('.card');
+
+    // Loop through each card
+    cards.forEach(function(card) {
+        // Add a click event listener to the card
+        card.addEventListener('click', function() {
+            // Get the patient's health number from the card
+            var healthNumber = card.querySelector('.health-number').textContent;
+
+            // Use AJAX to fetch the full report of the patient from your server
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    // Update the modal body with the full report of the patient
+                    modalBody.innerHTML = this.responseText;
+
+                    // Show the modal
+                    modal.style.display = "block";
+                }
+            };
+            xhr.open("GET", "get-patient-report.php?health_number=" + healthNumber, true);
+            xhr.send();
+        });
+    });
+</script>
 
     </body>
 

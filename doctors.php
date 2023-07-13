@@ -162,7 +162,7 @@ echo $_SESSION['userid'];
             table tr:hover {
                 background-color: #e6e6e6;
             }
-        </style>
+        </style> 
     </head>
 
     <body>
@@ -269,8 +269,8 @@ echo $_SESSION['userid'];
             </div>
         </div>
 
-        <div id="treatmentForm" style="display: none;">
-            <h3>Diagnosis and Treatment</h3>
+        <div id="diagnosisForm" style="display: none;">
+            <h3>Diagnosis</h3>
             <div>
                 <?php
 
@@ -284,82 +284,48 @@ echo $_SESSION['userid'];
                     if (isset($_POST['symptom']) && is_array($_POST['symptom'])) {
                         $selected_symptoms = $_POST['symptom'];
 
-                        // prepare the SQL query to fetch diseases based on selected symptoms
-                        $query = "SELECT DISTINCT disease FROM symptoms WHERE ";
-                        $query_weights = "SELECT * FROM severity WHERE symptom IN ('" . implode("','", $selected_symptoms) . "')";
+                        // Calculate the threshold based on the number of selected symptoms and their weights
+                        $threshold_query = "SELECT SUM(weight) as threshold FROM disease_symptom WHERE symptom IN ('" . implode("','", $selected_symptoms) . "')";
+                        $threshold_result = $conn->query($threshold_query);
+                        $threshold_row = $threshold_result->fetch_assoc();
+                        $threshold = $threshold_row['threshold'] * 0.05; // Only display diseases with a total score above 50% of the maximum possible score
 
-                        // query conditions for each select element
-                        $conditions = array();
-                        foreach ($selected_symptoms as $selected_symptom) {
-                            $conditions[] = "symptom_1 = '$selected_symptom'";
-                            $conditions[] = "symptom_2 = '$selected_symptom'";
-                            $conditions[] = "symptom_3 = '$selected_symptom'";
-                            $conditions[] = "symptom_4 = '$selected_symptom'";
-                            $conditions[] = "symptom_5 = '$selected_symptom'";
-                            $conditions[] = "symptom_6 = '$selected_symptom'";
-                            $conditions[] = "symptom_7 = '$selected_symptom'";
-                        }
-
-                        // combine conditions
-                        $query .= implode(" OR ", $conditions);
+                        $query = "SELECT disease, SUM(weight) as total_score FROM disease_symptom WHERE symptom IN ('" . implode("','", $selected_symptoms) . "') GROUP BY disease ORDER BY total_score DESC";
+                        $result = $conn->query($query);
 
                         $symptoms_json = json_encode($selected_symptoms);
+                        echo $symptoms_json;
 
-                        // execute query
-                        $result = $conn->query($query);
-                        $result_weights = $conn->query($query_weights);
-
-                        // fetch results
                         if ($result && $result->num_rows > 0) {
-                            $possible_diseases = [];
+                            // Find the maximum score
+                            $max_score = 0;
                             while ($row = $result->fetch_assoc()) {
-                                $possible_diseases[] = $row['disease'];
+                                if ($row['total_score'] > $max_score) {
+                                    $max_score = $row['total_score'];
+                                }
                             }
-                        }
-                        $diseases_json = json_encode($possible_diseases);
 
-                        // calculate score for each disease based on symptom weights
-                        if (!empty($possible_diseases)) {
-                            // fetch results
-                            if ($result_weights && $result_weights->num_rows > 0) {
-                                // initialize array to store weights for each symptom
-                                $weights = [];
-                                while ($row_weights = $result_weights->fetch_assoc()) {
-                                    // store weight for each symptom in array
-                                    $weights[$row_weights['symptom']] = (int)$row_weights['weigh'];
-                                }
+                            // Reset result pointer
+                            $result->data_seek(0);
 
-                                // initialize array to store scores for each disease
-                                $scores = [];
-                                foreach ($possible_diseases as $disease) {
-                                    // initialize score for current disease to 0
-                                    $scores[$disease] = 0;
-
-                                    // add weight of each selected symptom to score of current disease
-                                    foreach ($selected_symptoms as $selected_symptom) {
-                                        if (isset($weights[$selected_symptom])) {
-                                            // add weight of current symptom to score of current disease
-                                            $scores[$disease] += (int)$weights[$selected_symptom];
-                                        }
-                                    }
-                                }
-
-                                // sort diseases by score in descending order
-                                arsort($scores);
-
-                                // display the possible diseases with their scores
-                                $max_score = max($scores);
-                                $diseases = "";
-                                $diseases = "Possible diseases based on selected symptoms: <br>'";
-                                foreach ($scores as $disease => $score) {
-                                    $percentage = ($score / $max_score) * 100;
-                                    $diseases .= "<a href='disease_info.php?disease=$disease' target='_blank'>$disease</a> (score: " . $score . ")<br>";
+                            // Display diseases with scores and progress bars
+                            $diseases = "Possible diseases based on selected symptoms: <br>";
+                            $counter = 0;
+                            $diseases_array = array();
+                            while (($row = $result->fetch_assoc()) && $counter < 5) {
+                                if ($row['total_score'] > $threshold) {
+                                    // Only display diseases with a total score above the threshold
+                                    $disease = $row['disease'];
+                                    $total_score = $row['total_score'];
+                                    $percentage = ($total_score / $max_score) * 100;
+                                    $diseases .= "<a href='disease_info.php?disease=$disease' target='_blank'>$disease</a> (score: " . $total_score . ")<br>";
                                     $diseases .= "<progress value='$percentage' max='100' style='color:green'></progress><br>";
+
+                                    array_push($diseases_array, $disease);
+                                    $counter++;
                                 }
-                            } else {
-                                // no weights found for selected symptoms
-                                $diseases = "No weights found for selected symptoms.";
                             }
+                            $diseases_json = json_encode($diseases_array);
                         } else {
                             // no diseases found for selected symptoms
                             $diseases = "No diseases found for selected symptoms.";
@@ -389,17 +355,25 @@ echo $_SESSION['userid'];
                             echo "Date: " . $date . "<br>";
                             echo "Time: " . $time . "<br>";
 
-                            $diagnosis_query = "SELECT * FROM diagnosis";
+                            $_SESSION['patient_id'] = $patient_id;
+
+
+                            $diagnosis_query = "SELECT * FROM diagnosis WHERE patient_id = '$patient_id'";
                             $diagnosis_result = $conn->query($diagnosis_query);
 
                             if ($diagnosis_result && $diagnosis_result->num_rows > 0) {
-                                $diagnosis_row = $diagnosis_result->fetch_assoc();
-                                $symptomu = $diagnosis_row['symptoms'];
-                                $diseaso =  $diagnosis_row['diseases'];
+                                while ($diagnosis_row = $diagnosis_result->fetch_assoc()) {
+                                    if ($diagnosis_row['patient_id'] == $patient_id) {
+                                        $symptomu = json_decode($diagnosis_row['symptoms']);
+                                        $diseaso =  json_decode($diagnosis_row['diseases']);
+                                    }
+                                }
                             }
+                            $_SESSION["symptoms"] = isset($symptomu) ? json_encode($symptomu) : '';
+                            $_SESSION["diseases"] = isset($diseaso) ? json_encode($diseaso) : '';
 
-                            echo "Symptoms: " . $symptomu . "<br>";
-                            echo "Diseases: " . $diseaso . "<br>";
+                            echo "Symptoms: " . (isset($symptomu) ? implode(', ', $symptomu) : '') . "<br>";
+                            echo "Diseases: " . (isset($diseaso) ? implode(', ', $diseaso) : '') . "<br>";
                         }
                     }
                 }
@@ -566,8 +540,10 @@ echo $_SESSION['userid'];
                 <?php
                 require "connect.php";
                 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['symptom'])) {
+                    $patientID = $_SESSION['patient_id'];
 
-                    $x = "INSERT INTO diagnosis(symptoms, diseases) VALUES ('$symptoms_json', '$diseases_json')";
+                    $x = "INSERT INTO diagnosis(symptoms, diseases, patient_id) VALUES ('$symptoms_json', '$diseases_json', '$patientID)";
+                    echo $x;
                     $conn->query($x);
                 ?>
                     <div id="diagnosis-results">

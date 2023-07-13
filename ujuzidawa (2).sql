@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 12, 2023 at 10:58 PM
+-- Generation Time: Jul 14, 2023 at 12:27 AM
 -- Server version: 10.4.16-MariaDB
 -- PHP Version: 7.4.12
 
@@ -1061,6 +1061,29 @@ INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `user_name`, `email`,
 (2, 'Omondi', 'Were', 'franko', 'franklinegift@gmail.com', '$2y$10$pdlEorz1K3twu/z4XNebveIcI8UYuglMsC/I9MP78a2', '$2y$10$pdlEorz1K3twu/z4XNebveIcI8UYuglMsC/I9MP78a2', '1990-03-06', 'm', 'Nairobi', '0712345678', 'doctor'),
 (3, 'Ruth', 'Jeptoo', 'ruthj', 'ruthj@gmail.com', '$2y$10$g2Wmw/oeY38luPpj6ENgdeVeUJfy/6kPrmtLLucrWdF', '$2y$10$g2Wmw/oeY38luPpj6ENgdeVeUJfy/6kPrmtLLucrWdF', '1995-11-03', 'f', 'Nairobi', '0712345678', 'receptionist');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vitals`
+--
+
+CREATE TABLE `vitals` (
+  `id` int(11) NOT NULL,
+  `health_number` varchar(255) NOT NULL,
+  `recorded_at` datetime NOT NULL,
+  `temperature` float NOT NULL,
+  `blood_pressure` varchar(255) NOT NULL,
+  `heart_rate` int(11) NOT NULL,
+  `respiratory_rate` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `vitals`
+--
+
+INSERT INTO `vitals` (`id`, `health_number`, `recorded_at`, `temperature`, `blood_pressure`, `heart_rate`, `respiratory_rate`) VALUES
+(1, 'NHIF201', '2023-07-13 11:13:54', 36, '90', 70, 15);
+
 --
 -- Indexes for dumped tables
 --
@@ -1116,6 +1139,13 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`);
 
 --
+-- Indexes for table `vitals`
+--
+ALTER TABLE `vitals`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `health_number` (`health_number`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -1129,13 +1159,19 @@ ALTER TABLE `department`
 -- AUTO_INCREMENT for table `patient`
 --
 ALTER TABLE `patient`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `vitals`
+--
+ALTER TABLE `vitals`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -1146,6 +1182,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `description`
   ADD CONSTRAINT `fk_description_dept` FOREIGN KEY (`dept_id`) REFERENCES `department` (`dept_id`);
+
+--
+-- Constraints for table `vitals`
+--
+ALTER TABLE `vitals`
+  ADD CONSTRAINT `vitals_ibfk_1` FOREIGN KEY (`health_number`) REFERENCES `patient` (`health_number`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
