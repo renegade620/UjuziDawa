@@ -39,9 +39,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
                         header("location: admin.php?login=success");
                     } else if ($row['Role'] == 'doctor') {
                         $_SESSION['userid'] = $row['doctor_id'];
-                        header("location: doctors.php?login=success");
+                        header("location: doctor.php?login=success");
                     } else if ($row['Role'] == 'receptionist') {
-                        header("location: reception.php?login=success");
+                        header("location: receptionist.php?login=success");
                     } else if ($row['Role'] == 'nurse') {
                         header("location: nurse.php?login=success");
                     }

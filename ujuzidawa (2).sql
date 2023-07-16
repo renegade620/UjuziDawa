@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 14, 2023 at 12:27 AM
+-- Generation Time: Jul 16, 2023 at 10:01 PM
 -- Server version: 10.4.16-MariaDB
 -- PHP Version: 7.4.12
 
@@ -109,6 +109,31 @@ INSERT INTO `description` (`desc_id`, `disease`, `definition`, `dept_id`) VALUES
 (39, 'Arthritis', 'Arthritis is the swelling and tenderness of one or more of your joints. The main symptoms of arthritis are joint pain and stiffness, which typically worsen with age. The most common types of arthritis are osteoarthritis and rheumatoid arthritis.', 6),
 (40, 'Gastroenteritis', 'Gastroenteritis is an inflammation of the digestive tract, particularly the stomach, and large and small intestines. Viral and bacterial gastroenteritis are intestinal infections associated with symptoms of diarrhea , abdominal cramps, nausea , and vomiting .', 7),
 (41, 'Tuberculosis', 'Tuberculosis (TB) is an infectious disease usually caused by Mycobacterium tuberculosis (MTB) bacteria. Tuberculosis generally affects the lungs, but can also affect other parts of the body. Most infections show no symptoms, in which case it is known as latent tuberculosis.', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `diagnosis`
+--
+
+CREATE TABLE `diagnosis` (
+  `diagnosis_id` int(11) NOT NULL,
+  `health_number` varchar(255) DEFAULT NULL,
+  `symptoms` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`symptoms`)),
+  `diseases` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`diseases`)),
+  `diagnosed_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `diagnosed_by` varchar(255) DEFAULT NULL,
+  `treated_for` varchar(255) DEFAULT NULL,
+  `referred_to` varchar(255) DEFAULT NULL,
+  `prescription` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `diagnosis`
+--
+
+INSERT INTO `diagnosis` (`diagnosis_id`, `health_number`, `symptoms`, `diseases`, `diagnosed_at`, `diagnosed_by`, `treated_for`, `referred_to`, `prescription`) VALUES
+(5, 'NHIF201', '[\"skin rash\"]', '[\"Drug Reaction\",\"Fungal infection\",\"Impetigo\",\"Psoriasis\",\"Acne\"]', '2023-07-16 10:46:02', 'Omondi', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -449,11 +474,24 @@ INSERT INTO `disease_symptom` (`disease`, `symptom`, `weight`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `password_resets`
+--
+
+CREATE TABLE `password_resets` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `expires_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `patient`
 --
 
 CREATE TABLE `patient` (
-  `id` int(11) NOT NULL,
+  `patient_id` int(11) NOT NULL,
   `registration_datetime` datetime DEFAULT NULL,
   `health_number` varchar(255) DEFAULT NULL,
   `patient_name` varchar(255) DEFAULT NULL,
@@ -477,8 +515,9 @@ CREATE TABLE `patient` (
 -- Dumping data for table `patient`
 --
 
-INSERT INTO `patient` (`id`, `registration_datetime`, `health_number`, `patient_name`, `gender`, `date_of_birth`, `phone_number`, `email`, `address`, `marital_status`, `is_under_18`, `parent_name`, `parent_phone_number`, `emergency_contact_name`, `emergency_contact_relationship`, `emergency_contact_phone_number`, `reason_for_registration`, `taking_medications`) VALUES
-(2, '2023-07-12 10:02:00', 'NHIF201', 'Oliver Tambo', 'Male', '1995-03-01', '0712345678', 'otambo@gmail.com', 'Nairobi', 'Married', 0, '', '', 'Maria Tambo', 'Wife', '0734125678', 'Treatment', 0);
+INSERT INTO `patient` (`patient_id`, `registration_datetime`, `health_number`, `patient_name`, `gender`, `date_of_birth`, `phone_number`, `email`, `address`, `marital_status`, `is_under_18`, `parent_name`, `parent_phone_number`, `emergency_contact_name`, `emergency_contact_relationship`, `emergency_contact_phone_number`, `reason_for_registration`, `taking_medications`) VALUES
+(2, '2023-07-12 10:02:00', 'NHIF201', 'Oliver Tambo', 'Male', '1995-03-01', '0712345678', 'otambo@gmail.com', 'Nairobi', 'Married', 0, '', '', 'Maria Tambo', 'Wife', '0734125678', 'Treatment', 0),
+(12, '2023-07-15 09:04:00', 'NHIF202', 'Samuel Katana', 'Male', '2023-06-05', '0784561237', 'samuel@gmail.com', 'Nairobi', 'Single', 0, '', '', 'Hannah Kadzo', 'Mother', '0725647813', 'Treatment', 0);
 
 -- --------------------------------------------------------
 
@@ -1050,16 +1089,19 @@ CREATE TABLE `users` (
   `gender` varchar(1) NOT NULL,
   `address` varchar(50) NOT NULL,
   `phone_number` varchar(50) NOT NULL,
-  `Role` enum('admin','receptionist','nurse','doctor') NOT NULL DEFAULT 'receptionist'
+  `Role` enum('admin','receptionist','nurse','doctor') NOT NULL DEFAULT 'receptionist',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `user_name`, `email`, `password`, `confirm_password`, `dob`, `gender`, `address`, `phone_number`, `Role`) VALUES
-(2, 'Omondi', 'Were', 'franko', 'franklinegift@gmail.com', '$2y$10$pdlEorz1K3twu/z4XNebveIcI8UYuglMsC/I9MP78a2', '$2y$10$pdlEorz1K3twu/z4XNebveIcI8UYuglMsC/I9MP78a2', '1990-03-06', 'm', 'Nairobi', '0712345678', 'doctor'),
-(3, 'Ruth', 'Jeptoo', 'ruthj', 'ruthj@gmail.com', '$2y$10$g2Wmw/oeY38luPpj6ENgdeVeUJfy/6kPrmtLLucrWdF', '$2y$10$g2Wmw/oeY38luPpj6ENgdeVeUJfy/6kPrmtLLucrWdF', '1995-11-03', 'f', 'Nairobi', '0712345678', 'receptionist');
+INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `user_name`, `email`, `password`, `confirm_password`, `dob`, `gender`, `address`, `phone_number`, `Role`, `created_at`) VALUES
+(2, 'Omondi', 'Were', 'Omondi', 'franklinegift@gmail.com', '$2y$10$pdlEorz1K3twu/z4XNebveIcI8UYuglMsC/I9MP78a2', '$2y$10$pdlEorz1K3twu/z4XNebveIcI8UYuglMsC/I9MP78a2', '1990-03-06', 'm', 'Nairobi', '0712345678', 'doctor', '2023-07-15 15:05:45'),
+(3, 'Ruth', 'Jeptoo', 'Ruth', 'ruthj@gmail.com', '$2y$10$g2Wmw/oeY38luPpj6ENgdeVeUJfy/6kPrmtLLucrWdF', '$2y$10$g2Wmw/oeY38luPpj6ENgdeVeUJfy/6kPrmtLLucrWdF', '1995-11-03', 'f', 'Nairobi', '0712345678', 'receptionist', '2023-07-15 15:05:45'),
+(4, 'Nancy', 'Macharia', 'Nancy', 'nancy@gmail.com', '$2y$10$7BcJJmEgfC2LiqfWsLfjkOH7XOzEojpAiNIfPY6y6kZ', '$2y$10$7BcJJmEgfC2LiqfWsLfjkOH7XOzEojpAiNIfPY6y6kZ', '1995-04-27', 'f', 'Nairobi', '0723145687', 'nurse', '2023-07-15 15:05:45'),
+(5, 'Abraham', 'Lincoln', 'Abraham', 'abralinc@gmail.com', '$2y$10$DT0mvdzOZTxgyAQUl.Bt2O7ds1N83YRJqxKeGeq.yRe', '$2y$10$DT0mvdzOZTxgyAQUl.Bt2O7ds1N83YRJqxKeGeq.yRe', '1994-07-29', 'm', 'Nairobi', '0723145786', 'admin', '2023-07-15 15:05:45');
 
 -- --------------------------------------------------------
 
@@ -1082,7 +1124,8 @@ CREATE TABLE `vitals` (
 --
 
 INSERT INTO `vitals` (`id`, `health_number`, `recorded_at`, `temperature`, `blood_pressure`, `heart_rate`, `respiratory_rate`) VALUES
-(1, 'NHIF201', '2023-07-13 11:13:54', 36, '90', 70, 15);
+(1, 'NHIF201', '2023-07-13 11:13:54', 36, '90', 70, 15),
+(4, 'NHIF202', '2023-07-15 21:11:51', 36, '95', 75, 17);
 
 --
 -- Indexes for dumped tables
@@ -1102,16 +1145,29 @@ ALTER TABLE `description`
   ADD KEY `fk_description_dept` (`dept_id`);
 
 --
+-- Indexes for table `diagnosis`
+--
+ALTER TABLE `diagnosis`
+  ADD PRIMARY KEY (`diagnosis_id`),
+  ADD KEY `health_number` (`health_number`);
+
+--
 -- Indexes for table `disease_symptom`
 --
 ALTER TABLE `disease_symptom`
   ADD PRIMARY KEY (`disease`,`symptom`);
 
 --
+-- Indexes for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `patient`
 --
 ALTER TABLE `patient`
-  ADD PRIMARY KEY (`id`),
+  ADD PRIMARY KEY (`patient_id`),
   ADD UNIQUE KEY `health_number` (`health_number`,`email`);
 
 --
@@ -1156,22 +1212,34 @@ ALTER TABLE `department`
   MODIFY `dept_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
+-- AUTO_INCREMENT for table `diagnosis`
+--
+ALTER TABLE `diagnosis`
+  MODIFY `diagnosis_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `patient`
 --
 ALTER TABLE `patient`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `patient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `vitals`
 --
 ALTER TABLE `vitals`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
@@ -1182,6 +1250,12 @@ ALTER TABLE `vitals`
 --
 ALTER TABLE `description`
   ADD CONSTRAINT `fk_description_dept` FOREIGN KEY (`dept_id`) REFERENCES `department` (`dept_id`);
+
+--
+-- Constraints for table `diagnosis`
+--
+ALTER TABLE `diagnosis`
+  ADD CONSTRAINT `diagnosis_ibfk_1` FOREIGN KEY (`health_number`) REFERENCES `patient` (`health_number`);
 
 --
 -- Constraints for table `vitals`

@@ -4,7 +4,6 @@ const navList = document.querySelector('.nav-list');
 const loader = document.querySelector('.loader-overlay');
 var modal = document.getElementById("signup-modal"); // Get the modal
 var btn = document.getElementById("signup-btn"); // Get the button that opens the sign-up modal
-var btn = document.getElementById("login-btn"); // Get the button that opens the login modal
 var span = document.getElementsByClassName("close")[0]; // Get the <span> element that closes the modal
 // Get the modals
 var signupModal = document.getElementById("signup-modal");
@@ -12,8 +11,12 @@ var loginModal = document.getElementById("login-modal");
 // Get the close buttons
 var signupClose = document.getElementsByClassName("close")[0];
 var loginClose = document.getElementsByClassName("close")[1];
+var forgotPasswordClose = document.getElementsByClassName("close")[2];
 // Get the login link
 var loginLink = document.getElementById("login-link");
+// Get the forgot password link and modal
+var forgotPasswordLink = document.getElementById("forgot-password-link");
+var forgotPasswordModal = document.getElementById("forgot-password-modal");
 
 // REMOVE LOADER WHEN PAGE LOADED
 window.addEventListener('load', () => {
@@ -89,5 +92,31 @@ window.onclick = function (event) {
         loginModal.style.display = "none";
     }
 }
+
+// FORGOT PASSWORD
+// When the user clicks on the forgot password link, show the forgot password modal and hide the login modal
+forgotPasswordLink.onclick = function () {
+    loginModal.style.display = "none";
+    forgotPasswordModal.style.display = "block";
+}
+
+// When the user clicks on the close button in the forgot password modal, hide the modal
+forgotPasswordClose.onclick = function () {
+    forgotPasswordModal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the forgot password modal, hide the modal
+window.onclick = function (event) {
+    if (event.target == forgotPasswordModal) {
+        forgotPasswordModal.style.display = "none";
+    }
+}
+
+
+
+
+
+
+
 
 

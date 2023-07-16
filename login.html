@@ -21,7 +21,7 @@
 </head>
 
 
-</html>
+
 
 <body>
     <a href="index.html">Back</a>
@@ -41,55 +41,4 @@
 
 </body>
 
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
-    var patientRegistrationTile = document.getElementById("patientRegistrationTile");
-    var patientRegistrationForm = document.getElementById("patientRegistrationForm");
-    var bookAppointmentTile = document.getElementById("bookAppointmentTile");
-    var bookAppointmentForm = document.getElementById("bookAppointmentForm");
-    var diagnosisTile = document.getElementById("diagnosisTile");
-    var diagnosisForm = document.getElementById("diagnosisForm");
-    var patientReportTile = document.getElementById("patientReportTile");
-    var patientReport = document.getElementById("patientReport")
-
-    patientRegistrationTile.addEventListener("click", function() {
-        patientRegistrationForm.style.display = "block";
-        bookAppointmentForm.style.display = "none";
-        diagnosisForm.style.display = "none";
-        patientReport.style.display = "none";
-    });
-
-    bookAppointmentTile.addEventListener("click", function() {
-        patientRegistrationForm.style.display = "none";
-        bookAppointmentForm.style.display = "block";
-        diagnosisForm.style.display = "none";
-        patientReport.style.display = "none";
-    });
-
-    diagnosisTile.addEventListener("click", function() {
-        patientRegistrationForm.style.display = "none";
-        bookAppointmentForm.style.display = "none";
-        diagnosisForm.style.display = "block";
-        patientReport.style.display = "none";
-    });
-
-    patientReportTile.addEventListener("click", function() {
-        patientRegistrationForm.style.display = "none";
-        bookAppointmentForm.style.display = "none";
-        diagnosisForm.style.display = "none";
-        patientReport.style.display = "block";
-    });
-</script>
-
-
+</html>

@@ -1,5 +1,7 @@
 <?php
 session_start();
+$doctorName = $_SESSION['username']
+
 ?>
 
 <!DOCTYPE html>
@@ -129,8 +131,26 @@ session_start();
             $symptoms_json = "";
             $diseases_json = "";
 
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                // retrieve selected symptom from the user
+            if (isset($_POST['form-submitted'])) {
+                if (isset($_POST['health-number'])) {
+                    $health_number = $_POST['health-number'];
+
+                    $patient_query = "SELECT * FROM patient INNER JOIN vitals ON patient.health_number = vitals.health_number WHERE patient.health_number = '$health_number'";
+                    $patient_result = $conn->query($patient_query);
+
+
+                    if ($patient_result && $patient_result->num_rows > 0) {
+                        $patient_row = $patient_result->fetch_assoc();
+                        $health_number = $patient_row['health_number'];
+                        $patient_name = $patient_row['patient_name'];
+
+                        echo "Health Number: " . $health_number . "<br>";
+                        echo "Patient Name: " . $patient_name . "<br>";
+
+                        $_SESSION['health_number'] = $health_number;
+                        echo $health_number;
+                    }
+                }
                 if (isset($_POST['symptom']) && is_array($_POST['symptom'])) {
                     $selected_symptoms = $_POST['symptom'];
 
@@ -184,60 +204,30 @@ session_start();
                     // no symptoms selected by user
                     $diseases = "Please select at least one symptom.";
                 }
+                $healthNumber = $_SESSION['health_number'];
+                $doctorName = $_SESSION['username'];
 
-                if (isset($_POST['patientname'])) {
-                    $patient_name = $_POST['patientname'];
-                    $department = $_POST['department'];
-                    $date = $_POST['date'];
-                    $time = $_POST['time'];
-
-                    $patient_query = "SELECT * FROM patient WHERE patient_name = '$patient_name'";
-                    $patient_result = $conn->query($patient_query);
-
-
-                    if ($patient_result && $patient_result->num_rows > 0) {
-                        $patient_row = $patient_result->fetch_assoc();
-                        $patient_id = $patient_row['patient_id'];
-
-                        echo "Patient ID: " . $patient_id . "<br>";
-                        echo "Patient Name: " . $patient_name . "<br>";
-                        echo "Department: " . $department . "<br>";
-                        echo "Date: " . $date . "<br>";
-                        echo "Time: " . $time . "<br>";
-
-                        $_SESSION['patient_id'] = $patient_id;
-
-
-                        $diagnosis_query = "SELECT * FROM diagnosis WHERE patient_id = '$patient_id'";
-                        $diagnosis_result = $conn->query($diagnosis_query);
-
-                        if ($diagnosis_result && $diagnosis_result->num_rows > 0) {
-                            while ($diagnosis_row = $diagnosis_result->fetch_assoc()) {
-                                if ($diagnosis_row['patient_id'] == $patient_id) {
-                                    $symptomu = json_decode($diagnosis_row['symptoms']);
-                                    $diseaso =  json_decode($diagnosis_row['diseases']);
-                                }
-                            }
-                        }
-                        $_SESSION["symptoms"] = isset($symptomu) ? json_encode($symptomu) : '';
-                        $_SESSION["diseases"] = isset($diseaso) ? json_encode($diseaso) : '';
-
-                        echo "Symptoms: " . (isset($symptomu) ? implode(', ', $symptomu) : '') . "<br>";
-                        echo "Diseases: " . (isset($diseaso) ? implode(', ', $diseaso) : '') . "<br>";
-                    }
-                }
+                $x = "INSERT INTO diagnosis(health_number, symptoms, diseases, diagnosed_at, diagnosed_by) VALUES ('$healthNumber', '$symptoms_json', '$diseases_json', NOW(), '$doctorName')";
+                echo $x;
+                $conn->query($x);
+                echo '<div id="diagnosis-results">';
+                echo   'Symptoms: ' . $symptoms_json . '<br>';
+                echo 'Diseases: ' . $diseases_json . '<br>';
+                echo '</div>';
             }
             $conn->close();
             ?>
+
         </div>
         <form method="POST">
+            <input type="hidden" name="form-submitted" value="1">
             <h1>Diagnosis</h1>
             <h2>Health Number<br><br></h2>
             <label for="health-number">Health Number:</label>
             <input type="text" id="health-number" name="health-number" required><br><br>
 
             <h2>Select symptoms<br><br></h2>
-            <label for="symptom-1">Symptom 1:</label>
+            <label for="symptom">Symptom 1:</label>
             <select id="symptoms-1" name="symptom[]" multiple>
                 <option value="itching">itching</option>
                 <option value="skin rash">skin rash</option>
@@ -274,7 +264,7 @@ session_start();
 
             </select>
 
-            <label for="symptom-2">Symptom 2:</label>
+            <label for="symptom">Symptom 2:</label>
             <select id="symptoms-2" name="symptom[]" multiple>
                 <option value="nodal skin eruptions">nodal skin eruptions</option>
                 <option value="skin rash">skin rash</option>
@@ -325,7 +315,7 @@ session_start();
                 <option value="blister">blister</option>
             </select>
 
-            <label for="symptom-3">Symptom 3:</label>
+            <label for="symptom">Symptom 3:</label>
             <select id="symptoms-3" name="symptom[]" multiple>
                 <option value="nodal skin eruptions">nodal skin eruptions</option>
                 <option value="dischromic patches">dischromic patches</option>
@@ -391,22 +381,6 @@ session_start();
             <div id="diagnosis-results">
                 <?php echo $diseases; ?>
             </div>
-
-            <?php
-            require "connect.php";
-            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['symptom'])) {
-                $patientID = $_SESSION['patient_id'];
-
-                $x = "INSERT INTO diagnosis(symptoms, diseases, patient_id) VALUES ('$symptoms_json', '$diseases_json', '$patientID)";
-                echo $x;
-                $conn->query($x);
-            ?>
-                <div id="diagnosis-results">
-                    Symptoms: <?php echo $symptoms_json; ?> <br>
-                    Diseases: <?php echo $diseases_json; ?> <br>
-                </div>
-            <?php } ?>
-
 
         </form>
     </div>

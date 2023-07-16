@@ -13,17 +13,23 @@
         }
 
         table {
-            margin-top: 20px;
             border-collapse: collapse;
             width: 100%;
         }
-        th, td {
-            padding: 8px;
+
+        th,
+        td {
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            padding: 8px;
         }
-        th {
+
+        tr:nth-child(even) {
             background-color: #f2f2f2;
+        }
+
+        th {
+            background-color: #487cff;
+            color: white;
         }
 
         .back {
@@ -50,9 +56,9 @@
     include "connect.php";
 
     // Retrieve data from the users and users_profile tables
-    $query = "SELECT users.first_name, users.last_name, user_profile.symptoms, user_profile.diseases, user_profile.diagnosed_at
-              FROM users
-              JOIN user_profile ON users.user_id = user_profile.user_id";
+    $query = "SELECT patient.patient_name, diagnosis.symptoms, diagnosis.diseases, diagnosis.diagnosed_at, diagnosis.diagnosed_by
+              FROM patient
+              JOIN diagnosis ON patient.health_number = diagnosis.health_number ";
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
@@ -65,21 +71,23 @@
 
     <table>
         <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
+            <th>Name</th>
             <th>Symptoms</th>
             <th>Diseases</th>
             <th>Diagnosed_at</th>
+            <th>Diagnosed_by</th>
         </tr>
         <?php
         // Display the diagnosis details
         while ($row = mysqli_fetch_assoc($result)) {
             echo '<tr>';
-            echo '<td>' . $row["first_name"] . '</td>';
-            echo '<td>' . $row["last_name"] . '</td>';
-            echo '<td>' . $row["symptoms"] . '</td>';
-            echo '<td>' . $row["diseases"] . '</td>';
+            echo '<td>' . $row["patient_name"] . '</td>';
+            $symptoms = json_decode($row["symptoms"], true);
+            echo "<td>" . implode(", ", $symptoms) . "</td>";
+            $diseases = json_decode($row["diseases"], true);
+            echo "<td>" . implode(", ", $diseases) . "</td>";
             echo '<td>' . $row["diagnosed_at"] . '</td>';
+            echo '<td>' . 'Dr.' .$row["diagnosed_by"] . '</td>';
             echo '</tr>';
         }
         ?>

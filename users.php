@@ -57,24 +57,23 @@
         }
 
         table {
-            width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            width: 100%;
         }
 
-        table th,
-        table td {
-            padding: 10px;
+        th,
+        td {
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            padding: 8px;
         }
 
-        table th {
-            background-color: #f9f9f9;
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
         }
 
-        table tr:hover {
-            background-color: #f5f5f5;
+        th {
+            background-color: #487cff;
+            color: white;
         }
 
         .no-users {
@@ -163,7 +162,7 @@
                     echo "<td>" . $row["address"] . "</td>";
                     echo "<td>" . $row["phone_number"] . "</td>";
                     echo "<td>" . $row["Role"] . "</td>";
-                    echo "<td>" . $row["created_at"] . "</td>";
+                    echo "<td  colspan='10'>" . $row["created_at"] . "</td>";
                     echo '<td>';
                     echo '<form method="POST">';
                     echo '<input type="hidden" name="user_id" value="' . $row['user_id'] . '">';
@@ -202,10 +201,14 @@
                     <input type="text" name="address" placeholder="Address" required>
                     <input type="tel" name="phone_num" placeholder="Phone Number" required><br><br>
 
-                    <input type="radio" id="user" name="role" value="user">
-                    <label for="user">User</label><br>
-                    <input type="radio" id="admin" name="role" value="admin">
-                    <label for="admin">Admin</label><br><br>
+                    <input type="radio" id="user" name="role" value="Doctor">
+                    <label for="user">Doctor</label><br>
+                    <input type="radio" id="admin" name="role" value="Admin">
+                    <label for="admin">Admin</label><br>
+                    <input type="radio" id="user" name="role" value="Nurse">
+                    <label for="user">Nurse</label><br>
+                    <input type="radio" id="admin" name="role" value="Receptionist">
+                    <label for="admin">Receptionist</label><br><br>
 
                     <button type="submit">Add User</button>
                 </form>

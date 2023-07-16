@@ -176,7 +176,6 @@ session_start();
                     echo "</ul>";
                 } else {
                     $sql = "INSERT INTO vitals (health_number, recorded_at, temperature, blood_pressure, heart_rate, respiratory_rate) VALUES (?, NOW(), ?, ?, ?, ?)";
-                    echo "Hello" . $sql;
                     $stmt = $conn->prepare($sql);
                     $stmt->bind_param("sddii", $healthNumber, $temperature, $bloodPressure, $heartRate, $respiratoryRate);
                     $stmt->execute();

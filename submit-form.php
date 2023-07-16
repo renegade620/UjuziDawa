@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["signup"])) {
             $role = !empty($_POST["department"]) ? "doctor" : "reception";
 
             $stmt->bind_param("sssssssssss", $_POST["fname"], $_POST["lname"], $_POST["uname"], $_POST["email"], $hashed_password, $hashed_password, $_POST["dob"], $_POST["gender"], $_POST["address"], $_POST["phone"], $role);
-            // if ($stmt->execute()) {
+            if ($stmt->execute()) {
             //     $userID = $stmt->insert_id;
 
             //     // Insert doctor data if department is specified
@@ -107,11 +107,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["signup"])) {
             //             }
             //         }
             //     }
-            //     header("Location: index.html");
-            //     exit;
-            // } else {
-            //     $errors[] = "An error occurred. Please try again later.";
-            // }
+                header("Location: index.html");
+                exit;
+            } else {
+                $errors[] = "An error occurred. Please try again later.";
+            }
         }
         $stmt->close();
     }

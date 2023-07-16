@@ -1,26 +1,35 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Demographics</title>
     <style>
         body {
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
         }
+
         h1 {
             color: #333;
         }
+
         table {
-            margin-top: 20px;
             border-collapse: collapse;
             width: 100%;
         }
-        th, td {
-            padding: 8px;
+
+        th,
+        td {
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            padding: 8px;
         }
-        th {
+
+        tr:nth-child(even) {
             background-color: #f2f2f2;
+        }
+
+        th {
+            background-color: #487cff;
+            color: white;
         }
 
         .back {
@@ -42,12 +51,12 @@
     </div>
     </style>
 </head>
+
 <body>
     <?php
-    include "connect.php"; // Include the database connection code
+    include "connect.php";
 
-    // Retrieve the users' data including calculated age
-    $query = "SELECT users.*, TIMESTAMPDIFF(YEAR, users.dob, CURDATE()) AS age FROM users";
+    $query = "SELECT patient.*, TIMESTAMPDIFF(YEAR, patient.date_of_birth, CURDATE()) AS age, TIMESTAMPDIFF(MONTH, patient.date_of_birth, CURDATE()) % 12 AS months FROM patient";
     $result = mysqli_query($conn, $query);
 
     ?>
@@ -64,8 +73,8 @@
         // Display the users' data with age in a table
         while ($row = mysqli_fetch_assoc($result)) {
             echo '<tr>';
-            echo '<td>' . $row["first_name"] . ' ' . $row["last_name"] . '</td>';
-            echo '<td>' . $row["age"] . '</td>';
+            echo '<td>' . $row["patient_name"] . '</td>';
+            echo '<td>' . $row["age"] . 'yr(s) ' .  $row["months"] . 'month(s)' . '</td>';
             echo '<td>' . $row["address"] . '</td>';
             echo '</tr>';
         }
@@ -76,4 +85,5 @@
     $conn->close();
     ?>
 </body>
+
 </html>

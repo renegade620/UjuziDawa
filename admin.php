@@ -10,48 +10,42 @@ session_start();
     <style>
         body {
             font-family: Verdana, Geneva, Tahoma, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         .dashboard {
             display: flex;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
         }
 
         .sidebar {
-            flex-basis: 200px;
-            background-color: #f1f1f1;
-            padding: 10px;
-            margin-right: 20px;
+            background-color: #f4f4f4;
+            width: 200px;
         }
 
         .sidebar ul {
-            list-style-type: none;
+            list-style: none;
             padding: 0;
-            margin: 0;
         }
 
         .sidebar li {
             margin-bottom: 10px;
         }
 
-        .sidebar li a {
+        .sidebar a {
             display: block;
             padding: 10px;
-            background-color: #ddd;
             color: #333;
             text-decoration: none;
-            border-radius: 5px;
         }
 
-        .sidebar li a:hover {
-            background-color: #ccc;
+        .sidebar a:hover {
+            background-color: #e4e4e4;
         }
 
         .main-content {
-            flex-basis: 80%;
-            padding: 10px;
+            flex-basis: 1;
+            padding: 20px;
         }
 
         h1 {
@@ -60,30 +54,23 @@ session_start();
 
         .summary {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
         }
 
         .summary-card {
-            flex-basis: 30%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            background-color: #487cff;
+            color: white;
+            padding: 20px;
+            margin-right: 20px;
         }
 
-        .activities {
-            margin-bottom: 20px;
+        .activities h2 {
+            margin-top: 20px;
         }
 
         .activity-item {
+            background-color: #f4f4f4;
             padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
             margin-bottom: 10px;
-        }
-
-        .activity-item:last-child {
-            margin-bottom: 0;
         }
 
         .top-right {
@@ -107,11 +94,54 @@ session_start();
             text-decoration: none;
             font-weight: bold;
             border-radius: 5px;
+
+        }
+
+        header h1 {
+            color: white;
+            font-size: xx-large;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header {
+            background-color: #487cff;
+            color: white;
+            padding: 20px 0;
+        }
+
+        header img {
+            height: 50px;
+        }
+
+        #title {
+            margin-left: 20px;
+        }
+
+        .sub-menu {
+            display: none;
         }
     </style>
 </head>
 
 <body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="img\logo\ujuzi-dawa-logo-removebg-preview.png" alt="Logo">
+            </div>
+            <div id="title">
+                <h1>Admin's Desk</h1>
+            </div>
+            <form action="logout.php">
+                <button id="logout-btn" class="btn btn-rounded">Logout</button>
+            </form>
+        </div>
+    </header>
     <div class="dashboard">
         <div class="sidebar">
             <ul>
@@ -124,7 +154,7 @@ session_start();
         </div>
 
         <div class="main-content">
-            <h1>Admin Dashboard</h1>
+            <h1>Hello Admin - <?php echo $_SESSION['username']; ?></h1>
 
             <div class="summary">
                 <div class="summary-card">
@@ -139,31 +169,47 @@ session_start();
                     <h3>Total Diseases</h3>
                     <p><?php echo getTotalDiseases(); ?></p>
                 </div>
+                <div class="summary-card">
+                    <h3>Total Departments</h3>
+                    <p><?php echo getTotalDepartments(); ?></p>
+                </div>
                 <?php
-function getTotalDiagnoses() {
-    include "connect.php";
-    $query = "SELECT COUNT(*) AS total_diagnoses FROM user_profile";
-    $result = mysqli_query($conn, $query);
-    $row = mysqli_fetch_assoc($result);
-    return $row['total_diagnoses'];
-}
+                function getTotalDiagnoses()
+                {
+                    include "connect.php";
+                    $query = "SELECT COUNT(*) AS total_diagnoses FROM diagnosis";
+                    $result = mysqli_query($conn, $query);
+                    $row = mysqli_fetch_assoc($result);
+                    return $row['total_diagnoses'];
+                }
 
-function getTotalUsers() {
-    include "connect.php";
-    $query = "SELECT COUNT(*) AS total_users FROM users";
-    $result = mysqli_query($conn, $query);
-    $row = mysqli_fetch_assoc($result);
-    return $row['total_users'];
-}
+                function getTotalUsers()
+                {
+                    include "connect.php";
+                    $query = "SELECT COUNT(*) AS total_users FROM users";
+                    $result = mysqli_query($conn, $query);
+                    $row = mysqli_fetch_assoc($result);
+                    return $row['total_users'];
+                }
 
-function getTotalDiseases() {
-    include "connect.php";
-    $query = "SELECT COUNT(*) AS total_diseases FROM description";
-    $result = mysqli_query($conn, $query);
-    $row = mysqli_fetch_assoc($result);
-    return $row['total_diseases'];
-}
-?>
+                function getTotalDiseases()
+                {
+                    include "connect.php";
+                    $query = "SELECT COUNT(*) AS total_diseases FROM description";
+                    $result = mysqli_query($conn, $query);
+                    $row = mysqli_fetch_assoc($result);
+                    return $row['total_diseases'];
+                }
+
+                function getTotalDepartments()
+                {
+                    include "connect.php";
+                    $query = "SELECT COUNT(*) AS total_departments FROM department";
+                    $result = mysqli_query($conn, $query);
+                    $row = mysqli_fetch_assoc($result);
+                    return $row['total_departments'];
+                }
+                ?>
             </div>
 
             <div class="activities">
@@ -182,10 +228,9 @@ function getTotalDiseases() {
                 </div>
             </div>
         </div>
-        <!-- Display the current user logged in -->
         <div class="top-right">
             <div>
-                <span>Logged in as: <?php echo $_SESSION['username']; ?></span>
+                <span style="color: white;">Logged in as: <?php echo $_SESSION['username']; ?></span>
             </div>
             <div>
                 <button id="logout" onclick="logout()">Logout</button>
@@ -194,6 +239,17 @@ function getTotalDiseases() {
                 function logout() {
                     window.location.href = "logout.php";
                 }
+
+                const menuItems = document.querySelectorAll('.sidebar > ul > li');
+
+                menuItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        const subMenu = item.querySelector('.sub-menu');
+                        if (subMenu) {
+                            subMenu.style.display = subMenu.style.display === 'block' ? 'none' : 'block';
+                        }
+                    });
+                });
             </script>
         </div>
     </div>
