@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 16, 2023 at 10:01 PM
+-- Generation Time: Jul 17, 2023 at 03:11 PM
 -- Server version: 10.4.16-MariaDB
 -- PHP Version: 7.4.12
 
@@ -584,6 +584,21 @@ INSERT INTO `precaution_remedy` (`disease_id`, `disease`, `remedy_1`, `remedy_2`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `referrals`
+--
+
+CREATE TABLE `referrals` (
+  `id` int(11) NOT NULL,
+  `health_number` varchar(255) NOT NULL,
+  `department` varchar(255) NOT NULL,
+  `referral_reason` text NOT NULL,
+  `referred_to` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `severity`
 --
 
@@ -1074,6 +1089,27 @@ INSERT INTO `symptoms` (`symp_id`, `disease`, `symptom_1`, `symptom_2`, `symptom
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `treatments`
+--
+
+CREATE TABLE `treatments` (
+  `id` int(11) NOT NULL,
+  `health_number` varchar(255) NOT NULL,
+  `disease_treated` varchar(255) NOT NULL,
+  `prescription` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `treatments`
+--
+
+INSERT INTO `treatments` (`id`, `health_number`, `disease_treated`, `prescription`, `created_at`) VALUES
+(1, 'NHIF201', 'Fungal infection', 'Antifungal Cream', '2023-07-17 11:00:55');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -1177,6 +1213,13 @@ ALTER TABLE `precaution_remedy`
   ADD PRIMARY KEY (`disease_id`);
 
 --
+-- Indexes for table `referrals`
+--
+ALTER TABLE `referrals`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `health_number` (`health_number`);
+
+--
 -- Indexes for table `severity`
 --
 ALTER TABLE `severity`
@@ -1187,6 +1230,13 @@ ALTER TABLE `severity`
 --
 ALTER TABLE `symptoms`
   ADD PRIMARY KEY (`symp_id`);
+
+--
+-- Indexes for table `treatments`
+--
+ALTER TABLE `treatments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `health_number` (`health_number`);
 
 --
 -- Indexes for table `users`
@@ -1230,6 +1280,18 @@ ALTER TABLE `patient`
   MODIFY `patient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
+-- AUTO_INCREMENT for table `referrals`
+--
+ALTER TABLE `referrals`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `treatments`
+--
+ALTER TABLE `treatments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
@@ -1256,6 +1318,18 @@ ALTER TABLE `description`
 --
 ALTER TABLE `diagnosis`
   ADD CONSTRAINT `diagnosis_ibfk_1` FOREIGN KEY (`health_number`) REFERENCES `patient` (`health_number`);
+
+--
+-- Constraints for table `referrals`
+--
+ALTER TABLE `referrals`
+  ADD CONSTRAINT `referrals_ibfk_1` FOREIGN KEY (`health_number`) REFERENCES `patient` (`health_number`);
+
+--
+-- Constraints for table `treatments`
+--
+ALTER TABLE `treatments`
+  ADD CONSTRAINT `treatments_ibfk_1` FOREIGN KEY (`health_number`) REFERENCES `patient` (`health_number`);
 
 --
 -- Constraints for table `vitals`
