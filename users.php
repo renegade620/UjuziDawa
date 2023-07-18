@@ -136,10 +136,8 @@
     </div>
     <div class="dashboard">
 
-
         <div class="main-content">
             <h1>Users</h1>
-
             <?php
             require "connect.php";
 
@@ -279,6 +277,28 @@
                 ?>
 
             </div>
+            <?php
+            require "connect.php";
+
+            // Retrieve data from the users table
+            $query = "SELECT Role, COUNT(*) as user_count FROM users GROUP BY Role";
+            $result = mysqli_query($conn, $query);
+
+            if (!$result) {
+                die('Query Error: ' . mysqli_error($conn));
+            }
+
+            // Display the number of users by role
+            echo "<h1>Number of Users by Role</h1>";
+            echo "<ul>";
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo "<li>" . htmlspecialchars($row["Role"]) . ": " . htmlspecialchars($row["user_count"]) . "</li>";
+            }
+            echo "</ul>";
+
+            $conn->close();
+            ?>
+
         </div>
     </div>
 </body>

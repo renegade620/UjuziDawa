@@ -152,8 +152,9 @@ session_start();
                 <li><a href="#">Dashboard</a></li>
                 <li>Patient Report
                     <ul class="sub-menu">
-                        <li><a href="get-patient-vital.php">Patient Vitals</a></li>
+                        <li><a href="regNvitals.php">Patient Vitals</a></li>
                         <li><a href="diagnosed.php">Diagnosed</a></li>
+                        <li><a href="treated.php">Treated</a></li>
                     </ul>
                 </li>
                 <li>Diagnosis & Treatment

@@ -5,7 +5,7 @@
     <title>Diseases</title>
     <style>
         body {
-            font-family: Verdana, Tahoma, sans-serif;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
         }
 
         h1 {
@@ -42,27 +42,6 @@
             cursor: pointer;
         }
 
-        .back {
-            margin-top: 20px;
-        }
-
-        .back-button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 5px;
-        }
-
-        .more-info {
-            display: none;
-        }
-
-        .more-info.hidden {
-            display: table-row;
-        }
 
         table {
             border-collapse: collapse;
@@ -83,43 +62,61 @@
             background-color: #487cff;
             color: white;
         }
+
+        .back {
+            margin-top: 20px;
+        }
+
+        .back-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .more-info.hidden {
+            display: none;
+        }
     </style>
 </head>
-
-<?php
-include "connect.php";
-
-// Function to sanitize user input
-function sanitizeInput($input)
-{
-    $input = trim($input);
-    $input = htmlspecialchars($input);
-    return $input;
-}
-
-// Process the form submission to add a new disease
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $diseaseName = sanitizeInput($_POST["disease_name"]);
-    $diseaseDescription = sanitizeInput($_POST["disease_description"]);
-
-    // Insert the new disease into the database
-    $insertQuery = "INSERT INTO description (disease, definition) VALUES ('$diseaseName', '$diseaseDescription')";
-    mysqli_query($conn, $insertQuery);
-
-    // Redirect back to diseases.php
-    header("Location: diseases.php");
-    exit();
-}
-
-// Retrieve the diseases and descriptions from the description table
-$query = "SELECT description.disease, description.definition, department.dept_name FROM description INNER JOIN department ON description.dept_id = department.dept_id";
-$result = mysqli_query($conn, $query);
-?>
 
 <body>
     <div class="back">
         <a href="admin.php" class="back-button">Back to Dashboard</a>
     </div>
+
+    <?php
+    include "connect.php";
+
+    // Function to sanitize user input
+    function sanitizeInput($input)
+    {
+        $input = trim($input);
+        $input = htmlspecialchars($input);
+        return $input;
+    }
+
+    // Process the form submission to add a new disease
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $diseaseName = sanitizeInput($_POST["disease_name"]);
+        $diseaseDescription = sanitizeInput($_POST["disease_description"]);
+
+        // Insert the new disease into the database
+        $insertQuery = "INSERT INTO description (disease, definition) VALUES ('$diseaseName', '$diseaseDescription')";
+        mysqli_query($conn, $insertQuery);
+
+        // Redirect back to diseases.php
+        header("Location: diseases.php");
+        exit();
+    }
+
+    // Retrieve the diseases and descriptions from the description table
+    $query = "SELECT description.disease, description.definition, department.dept_name FROM description INNER JOIN department ON description.dept_id = department.dept_id";
+    $result = mysqli_query($conn, $query);
+    ?>
 
     <div class="disease-list">
         <?php
@@ -133,7 +130,7 @@ $result = mysqli_query($conn, $query);
                 echo '<td>' . $row["dept_name"] . '</td>';
                 echo "<td><button class='toggle'>Show More</button></td>";
                 echo "</tr>";
-                echo "<tr class='more-info'>";
+                echo "<tr class='more-info hidden'>";
                 echo "<td colspan='6'>";
                 echo '<p>' . $row["definition"] . '</p>';
                 echo "</td>";
@@ -171,6 +168,25 @@ $result = mysqli_query($conn, $query);
     </div>
 
     <?php
+    // Retrieve data from the description and department tables
+    $query = "SELECT department.dept_name, COUNT(description.disease) as disease_count
+              FROM description
+              INNER JOIN department ON description.dept_id = department.dept_id
+              GROUP BY department.dept_name";
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        die('Query Error: ' . mysqli_error($conn));
+    }
+
+    // Display the number of diseases by department
+    echo "<h1>Number of Diseases by Department</h1>";
+    echo "<ul>";
+    while ($row = mysqli_fetch_assoc($result)) {
+        echo "<li>" . htmlspecialchars($row["dept_name"]) . ": " . htmlspecialchars($row["disease_count"]) . "</li>";
+    }
+    echo "</ul>";
+
     $conn->close();
     ?>
 
@@ -185,6 +201,5 @@ $result = mysqli_query($conn, $query);
         });
     </script>
 </body>
-
 
 </html>

@@ -4,21 +4,22 @@ require "connect.php";
 // Initialize errors array
 $errors = [];
 
+// Validation rules and error messages
+$validationRules = [
+    "fname" => "First name is required.",
+    "lname" => "Last name is required.",
+    "uname" => "Username is required.",
+    "email" => "Email is required.",
+    "password" => "Password is required.",
+    "confirm-password" => "Passwords do not match.",
+    "dob" => "Pick date.",
+    "gender" => "Pick gender.",
+    "address" => "Address is required.",
+    "phone" => "Phone Number is required."
+];
+
 // Handle signup form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["signup"])) {
-    // Define input validation rules and error messages
-    $validationRules = [
-        "fname" => "First name is required.",
-        "lname" => "Last name is required.",
-        "uname" => "Username is required.",
-        "email" => "Email is required.",
-        "password" => "Password is required.",
-        "confirm-password" => "Passwords do not match.",
-        "dob" => "Pick date.",
-        "gender" => "Pick gender.",
-        "address" => "Address is required.",
-        "phone" => "Phone Number is required."
-    ];
 
     // Perform input validation
     foreach ($validationRules as $field => $message) {
@@ -26,6 +27,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["signup"])) {
         if (empty($value)) {
             $errors[$field] = $message;
         }
+    }
+
+    $fname = trim($_POST['fname'] ?? '');
+    if (!preg_match('/^[a-zA-Z]+$/', $fname)) {
+        $errors['fname'] = 'First name must only contain letters.';
+    }
+
+    $lname = trim($_POST['lname'] ?? '');
+    if (!preg_match('/^[a-zA-Z]+$/', $fname)) {
+        $errors['lname'] = 'Last name must only contain letters.';
+    }
+
+    $uname = trim($_POST['uname'] ?? '');
+    if (!preg_match('/^[a-zA-Z]+$/', $fname)) {
+        $errors['uname'] = 'First name must only contain letters.';
     }
 
     $email = trim($_POST["email"] ?? "");
@@ -43,78 +59,54 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["signup"])) {
         $errors["confirm-password"] = "Passwords do not match.";
     }
 
+    echo "<script>";
+    foreach ($errors as $field => $message) {
+        $fieldId = $field . "-error";
+        echo "document.getElementById('$fieldId').textContent = '$message';";
+    }
+    echo "</script>";
+
     // Proceed if there are no input validation errors
     if (empty($errors)) {
         // Check if username already exists
         $sql = "SELECT user_name FROM users WHERE user_name=?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $_POST["uname"]);
-        $stmt->execute();
-        $stmt->store_result();
+        if ($stmt = mysqli_prepare($conn, $sql)) {
+            mysqli_stmt_bind_param($stmt, 's', $_POST['uname']);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_store_result($stmt);
 
-        if ($stmt->num_rows > 0) {
-            $errors["uname"] = "Username already exists.";
-        } else {
-            // Insert user data into users table
-            $sql = "INSERT INTO users (first_name, last_name, user_name, email, password, confirm_password, dob, gender, address, phone_number, Role) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $stmt = $conn->prepare($sql);
-            $hashed_password = password_hash($_POST["password"], PASSWORD_DEFAULT);
-            $role = !empty($_POST["department"]) ? "doctor" : "reception";
-
-            $stmt->bind_param("sssssssssss", $_POST["fname"], $_POST["lname"], $_POST["uname"], $_POST["email"], $hashed_password, $hashed_password, $_POST["dob"], $_POST["gender"], $_POST["address"], $_POST["phone"], $role);
-            if ($stmt->execute()) {
-            //     $userID = $stmt->insert_id;
-
-            //     // Insert doctor data if department is specified
-            //     if (!empty($_POST["department"])) {
-            //         $department = $_POST["department"];
-            //         $dep_query = "SELECT dept_id FROM department WHERE dept_name = ?";
-            //         $stmt2 = $conn->prepare($dep_query);
-            //         // Check for errors in preparing the statement
-            //         if ($stmt2 === false) {
-            //             die("Error preparing statement: " . $conn->error);
-            //         } else {
-            //             $stmt2->bind_param("s", $department);
-            //             $stmt2->execute();
-            //             $dep_result = $stmt2->get_result();
-            //             $drow = $dep_result->fetch_assoc();
-            //             $departmentID = $drow["dept_id"];
-            //             echo "Hello" . "<br>";
-            //             echo $departmentID . "<br>";
-            //             $stmt2->close();
-
-            //             $sql2 = "INSERT INTO doctor (user_id, first_name, last_name, dept_id, department, shift_start, shift_end) 
-            //                  VALUES (?, ?, ?, ?, ?, '00:00:00', '00:00:00')";
-            //             $stmt3 = $conn->prepare($sql2);
-            //             echo $userID . "<br>";
-            //             echo $_POST["fname"] . "<br>";
-            //             echo $_POST["lname"] . "<br>";
-            //             echo $departmentID . "<br>";
-            //             echo $department . "<br>";
-
-            //             // Check for errors in preparing the statement
-            //             if ($stmt3 === false) {
-            //                 die("Error preparing statement: " . $conn->error);
-            //             } else {
-            //                 $stmt3->bind_param("issis", $userID, $_POST["fname"], $_POST["lname"], $departmentID, $department);
-            //                 if (!$stmt3->execute()) {
-            //                     $errors[] = "Error executing the doctor insertion query: " . $stmt3->error;
-
-            //                     echo $errors[count($errors) - 1];
-            //                 }
-            //                 $stmt3->close();
-            //             }
-            //         }
-            //     }
-                header("Location: index.html");
-                exit;
+            if (mysqli_stmt_num_rows($stmt) > 0) {
+                $errors['uname'] = 'Username already exists.';
             } else {
-                $errors[] = "An error occurred. Please try again later.";
+                // Insert user data into users table
+                $sql = 'INSERT INTO users (first_name, last_name, user_name, email, password, confirm_password, dob, gender, address, phone_number, Role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                if ($stmt = mysqli_prepare($conn, $sql)) {
+                    $role = !empty($_POST['department']) ? 'doctor' : 'receptionist';
+                    mysqli_stmt_bind_param(
+                        $stmt,
+                        'sssssssssss',
+                        $_POST['fname'],
+                        $_POST['lname'],
+                        $_POST['uname'],
+                        $_POST['email'],
+                        password_hash($_POST['password'], PASSWORD_DEFAULT),
+                        password_hash($_POST['password'], PASSWORD_DEFAULT),
+                        $_POST['dob'],
+                        $_POST['gender'],
+                        $_POST['address'],
+                        $_POST['phone'],
+                        $role
+                    );
+                    if (mysqli_stmt_execute($stmt)) {
+                        header('Location: index.html');
+                        exit;
+                    } else {
+                        $errors[] = 'An error occurred. Please try again later.';
+                    }
+                }
             }
+            mysqli_stmt_close($stmt);
         }
-        $stmt->close();
+        mysqli_close($conn);
     }
-
-    mysqli_close($conn);
 }

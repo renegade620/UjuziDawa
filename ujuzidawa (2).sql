@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 17, 2023 at 03:11 PM
+-- Generation Time: Jul 18, 2023 at 02:41 AM
 -- Server version: 10.4.16-MariaDB
 -- PHP Version: 7.4.12
 
@@ -133,7 +133,26 @@ CREATE TABLE `diagnosis` (
 --
 
 INSERT INTO `diagnosis` (`diagnosis_id`, `health_number`, `symptoms`, `diseases`, `diagnosed_at`, `diagnosed_by`, `treated_for`, `referred_to`, `prescription`) VALUES
-(5, 'NHIF201', '[\"skin rash\"]', '[\"Drug Reaction\",\"Fungal infection\",\"Impetigo\",\"Psoriasis\",\"Acne\"]', '2023-07-16 10:46:02', 'Omondi', NULL, NULL, NULL);
+(5, 'NHIF201', '[\"skin rash\"]', '[\"Drug Reaction\",\"Fungal infection\",\"Impetigo\",\"Psoriasis\",\"Acne\"]', '2023-07-16 10:46:02', 'Omondi', NULL, NULL, NULL),
+(6, 'NHIF202', '[\"shivering\",\"chills\"]', '[\"Allergy\",\"Common Cold\",\"Dengue\",\"Malaria\",\"Pneumonia\"]', '2023-07-17 22:45:51', 'Omondi', NULL, NULL, NULL),
+(7, 'NHIF203', '[\"weight loss\"]', '[\"Diabetes \",\"Hyperthyroidism\",\"Jaundice\",\"Tuberculosis\"]', '2023-07-17 22:47:09', 'Omondi', NULL, NULL, NULL),
+(8, 'NHIF204', '[\"fatigue\",\"dehydration\",\"breathlessness\"]', '[\"Pneumonia\",\"Tuberculosis\",\"Bronchial Asthma\"]', '2023-07-17 22:48:03', 'Omondi', NULL, NULL, NULL),
+(9, 'NHIF205', '[\"continuous sneezing\",\"shivering\",\"high fever\"]', '[\"Common Cold\",\"Allergy\",\"Impetigo\",\"Jaundice\",\"Malaria\"]', '2023-07-17 22:49:28', 'Omondi', NULL, NULL, NULL),
+(11, 'NHIF206', '[\"sunken eyes\",\"ulcers on tongue\",\"stomach pain\"]', '[\"GERD\",\"Drug Reaction\",\"Gastroenteritis\"]', '2023-07-17 22:50:29', 'Omondi', NULL, NULL, NULL),
+(12, 'NHIF207', '[\"headache\",\"high fever\",\"restlessness\"]', '[\"Malaria\",\"Typhoid\",\"Chicken pox\",\"Common Cold\",\"Dengue\"]', '2023-07-17 22:51:02', 'Omondi', NULL, NULL, NULL),
+(13, 'NHIF211', '[\"stiff neck\",\"weakness in limbs\"]', '[\"Cervical spondylosis\",\"Arthritis\",\"Migraine\"]', '2023-07-17 22:51:47', 'Omondi', NULL, NULL, NULL),
+(14, 'NHIF216', '[\"itching\",\"nodal skin eruptions\",\"dischromic patches\"]', '[\"Fungal infection\",\"Chicken pox\",\"Chronic cholestasis\",\"Drug Reaction\",\"Hepatitis B\"]', '2023-07-17 22:52:27', 'Omondi', NULL, NULL, NULL),
+(15, 'NHIF216', '[\"stomach pain\",\"dizziness\",\"diarrhoea\"]', '[\"Malaria\",\"Typhoid\",\"Gastroenteritis\",\"Hepatitis A\",\"Hyperthyroidism\"]', '2023-07-17 22:52:56', 'Omondi', NULL, NULL, NULL),
+(16, 'NHIF217', '[\"back pain\",\"stomach pain\",\"burning micturition\"]', '[\"Drug Reaction\",\"Urinary tract infection\",\"GERD\",\"Cervical spondylosis\",\"Dengue\"]', '2023-07-17 22:53:18', 'Omondi', NULL, NULL, NULL),
+(17, 'NHIF230', '[\"cough\",\"shivering\",\"high fever\"]', '[\"Pneumonia\",\"Tuberculosis\",\"Bronchial Asthma\",\"Common Cold\",\"Hepatitis E\"]', '2023-07-17 22:53:43', 'Omondi', NULL, NULL, NULL),
+(18, 'NHIF236', '[\"patches in throat\"]', '[\"AIDS\"]', '2023-07-17 22:54:04', 'Omondi', NULL, NULL, NULL),
+(19, 'NHIF240', '[\"muscle wasting\"]', '[\"AIDS\"]', '2023-07-17 22:54:20', 'Omondi', NULL, NULL, NULL),
+(20, 'NHIF246', '[\"vomiting\",\"loss of appetite\",\"abdominal pain\"]', '[\"Hepatitis A\",\"Hepatitis D\",\"Hepatitis E\",\"Peptic ulcer diseae\",\"Chronic cholestasis\"]', '2023-07-17 22:54:45', 'Omondi', NULL, NULL, NULL),
+(21, 'NHIF250', '[\"fatigue\",\"restlessness\",\"nausea\"]', '[\"Hepatitis C\",\"Hepatitis D\",\"Hepatitis E\",\"Hyperthyroidism\",\"Hypoglycemia\"]', '2023-07-17 22:55:16', 'Omondi', NULL, NULL, NULL),
+(22, 'NHIF252', '[\"indigestion\",\"ulcers on tongue\",\"burning micturition\"]', '[\"Drug Reaction\",\"Urinary tract infection\",\"Migraine\",\"Peptic ulcer diseae\",\"GERD\"]', '2023-07-17 22:55:50', 'Omondi', NULL, NULL, NULL),
+(23, 'NHIF257', '[\"skin rash\"]', '[\"Acne\",\"Chicken pox\",\"Dengue\",\"Drug Reaction\",\"Fungal infection\"]', '2023-07-17 22:56:12', 'Omondi', NULL, NULL, NULL),
+(24, 'NHIF259', '[\"indigestion\"]', '[\"Migraine\",\"Peptic ulcer diseae\"]', '2023-07-17 22:56:34', 'Omondi', NULL, NULL, NULL),
+(25, 'NHIF262', '[\"sunken eyes\"]', '[\"Gastroenteritis\"]', '2023-07-17 22:57:21', 'Omondi', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -517,7 +536,25 @@ CREATE TABLE `patient` (
 
 INSERT INTO `patient` (`patient_id`, `registration_datetime`, `health_number`, `patient_name`, `gender`, `date_of_birth`, `phone_number`, `email`, `address`, `marital_status`, `is_under_18`, `parent_name`, `parent_phone_number`, `emergency_contact_name`, `emergency_contact_relationship`, `emergency_contact_phone_number`, `reason_for_registration`, `taking_medications`) VALUES
 (2, '2023-07-12 10:02:00', 'NHIF201', 'Oliver Tambo', 'Male', '1995-03-01', '0712345678', 'otambo@gmail.com', 'Nairobi', 'Married', 0, '', '', 'Maria Tambo', 'Wife', '0734125678', 'Treatment', 0),
-(12, '2023-07-15 09:04:00', 'NHIF202', 'Samuel Katana', 'Male', '2023-06-05', '0784561237', 'samuel@gmail.com', 'Nairobi', 'Single', 0, '', '', 'Hannah Kadzo', 'Mother', '0725647813', 'Treatment', 0);
+(12, '2023-07-15 09:04:00', 'NHIF202', 'Samuel Katana', 'Male', '2023-06-05', '0784561237', 'samuel@gmail.com', 'Nairobi', 'Single', 0, '', '', 'Hannah Kadzo', 'Mother', '0725647813', 'Treatment', 0),
+(13, '2023-07-17 11:24:00', 'NHIF203', 'Laura Kadzo', 'Female', '2000-01-02', '0712324569', 'laura@gmail.com', 'Nakuru', 'Divorced', 0, '', '', 'Hannah Kadzo', 'Sister', '0785123697', 'Consultation', 0),
+(14, '2023-07-17 11:34:00', 'NHIF204', 'Jackson Mandago', 'Male', '1955-03-16', '0723568974', 'keino@gmail.com', 'Kericho', 'Widowed', 0, '', '', 'Janet Keino', 'Sister', '0715243678', 'Checkup', 0),
+(15, '2023-07-17 12:34:00', 'NHIF205', 'Peter Manyu', 'Male', '1972-04-01', '0745869712', 'manyu@yahoo.com', 'Meru', 'Married', 0, '', '', 'Anne Manyu', 'Wife', '0766656562', 'Treatment', 0),
+(16, '2023-07-17 12:45:00', 'NHIF206', 'Griffins Ligare', 'Male', '2015-05-25', '0723145786', 'ligare@gmail.com', 'Makueni', 'Single', 0, '', '', 'Leon Ligare', 'Father', '0789456123', 'Checkup', 0),
+(17, '2023-07-17 12:49:00', 'NHIF207', 'Faith Kipyegon', 'Female', '1968-07-06', '0725896413', 'faith@gmail.com', 'Mombasa', 'Married', 0, '', '', 'David Kipyegon', 'Husband', '0745967812', 'Treatment', 0),
+(18, '2023-07-17 13:50:00', 'NHIF208', 'Juma Kilonzi', 'Male', '1997-08-26', '0736987452', 'kilonzi@gmail.com', 'Machakos', 'Single', 0, '', '', 'Martha Kilonzi', 'Sister', '0712547893', 'Follow up', 0),
+(21, '2023-07-17 13:52:00', 'NHIF211', 'Oscar Kambona', 'Male', '2000-06-08', '0752947863', 'oscar@gmail.com', 'Nairobi', 'Single', 0, '', '', 'Imani Mwinyihatibu', 'Sister', '0754123694', 'Injury', 0),
+(22, '2023-07-17 13:59:00', 'NHIF216', 'Kilonzi Kilonzi', 'Male', '1995-03-26', '0725825874', 'kilozkiloz@gmail.com', 'Embu', 'Single', 0, '', '', 'Barack Odhiambo', 'Colleague', '0798451236', 'Treatment', 0),
+(23, '2023-07-17 13:59:00', 'NHIF217', 'Musa Munyau', 'Male', '2002-12-12', '0702894597', 'samu@gmail.com', 'Kilifi', 'Single', 0, '', '', 'Lina Mtunzi', 'Girlfriend', '0700254678', 'Treatment', 0),
+(24, '2023-07-17 14:04:00', 'NHIF230', 'Daudi Kabaka', 'Male', '1997-08-14', '0788741236', 'daudi@gmail.com', 'Voi', 'Married', 0, '', '', 'Jezebel Mtambori', 'Wife', '0711478594', 'Treatment', 0),
+(25, '2023-07-17 14:04:00', 'NHIF236', 'Maurice Odhiambo', 'Male', '1982-02-27', '0722547891', 'mauricio@gmail.com', 'Homabay', 'Married', 0, '', '', 'Salome Atieno', 'Wife', '0705604791', 'Treatment', 0),
+(27, '2023-07-18 14:13:00', 'NHIF240', 'Maskan Habaya', 'Female', '1982-04-12', '0741258796', 'kan@gmail.com', 'Nairobi', 'Married', 0, '', '', 'Yusuf Habaya', 'Husband', '0725413697', 'Treatment', 0),
+(28, '2023-07-18 14:15:00', 'NHIF246', 'Ian Joseph', 'Male', '1997-12-05', '0745876931', 'ianj@gmail.com', 'Kisumu', 'Single', 0, '', '', 'Joseph Ian', 'Friend', '0787456931', 'Treatment', 0),
+(29, '2023-07-18 14:19:00', 'NHIF250', 'Raphael Wakli', 'Male', '1982-12-11', '0125681230', 'phael@gmail.com', 'Busia', 'Married', 0, '', '', 'Maria Nafula', 'Wife', '0725874136', 'Consultation', 0),
+(30, '2023-07-18 14:23:00', 'NHIF252', 'Job Mwakazi', 'Male', '2004-04-15', '0748512965', 'jmwakzi@gmail.com', 'Kwale', 'Single', 0, '', '', 'Amina Mwanyumba', 'Aunt', '0745746954', 'Treatment', 0),
+(31, '2023-07-18 14:25:00', 'NHIF257', 'Misa Ula', 'Female', '1997-07-07', '0785488526', 'misa@gmail.com', 'Mandera', 'Single', 0, '', '', 'Mosa Ula', 'Sister', '0712457896', 'Consultation', 0),
+(32, '2023-07-18 14:28:00', 'NHIF259', 'Frezian Kwamboka', 'Female', '2010-10-10', '0745678912', 'fkwamz@gmail.com', 'Kajiado', 'Single', 0, '', '', 'Maria Kwamboka', 'Mother', '0745678912', 'Vaccination', 0),
+(33, '2023-07-18 14:30:00', 'NHIF262', 'Yusuf Nzonzi', 'Male', '1990-11-25', '0722145569', 'nzonzi@gmail.com', 'Garissa', 'Married', 0, '', '', 'Aisha Nzonzi', 'Wife', '0785474712', 'Follow up', 0);
 
 -- --------------------------------------------------------
 
@@ -1097,6 +1134,7 @@ CREATE TABLE `treatments` (
   `health_number` varchar(255) NOT NULL,
   `disease_treated` varchar(255) NOT NULL,
   `prescription` text NOT NULL,
+  `by_doctor` varchar(50) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -1104,8 +1142,20 @@ CREATE TABLE `treatments` (
 -- Dumping data for table `treatments`
 --
 
-INSERT INTO `treatments` (`id`, `health_number`, `disease_treated`, `prescription`, `created_at`) VALUES
-(1, 'NHIF201', 'Fungal infection', 'Antifungal Cream', '2023-07-17 11:00:55');
+INSERT INTO `treatments` (`id`, `health_number`, `disease_treated`, `prescription`, `by_doctor`, `created_at`) VALUES
+(1, 'NHIF201', 'Fungal infection', 'Antifungal Cream', 'Omondi', '2023-07-17 11:00:55'),
+(3, 'NHIF202', 'Common Cold', 'Flu Gone', 'Omondi', '2023-07-17 23:16:42'),
+(4, 'NHIF203', 'Diabetes', 'Insulin', 'Omondi', '2023-07-17 23:19:01'),
+(5, 'NHIF204', 'Pneumonia', 'Anti-pneumonia', 'Omondi', '2023-07-17 23:24:46'),
+(6, 'NHIF205', 'Common Cold', 'Flu Gone', 'Omondi', '2023-07-17 23:25:55'),
+(7, 'NHIF207', 'Malaria', 'Chloroquin', 'Omondi', '2023-07-17 23:26:51'),
+(8, 'NHIF216', 'Fungal infection', 'Antifungal Cream', 'Omondi', '2023-07-17 23:27:32'),
+(9, 'NHIF216', 'Malaria', 'Chloroquin', 'Omondi', '2023-07-17 23:27:55'),
+(10, 'NHIF217', 'Drug Reaction', 'Decrease current dosage', 'Omondi', '2023-07-17 23:28:52'),
+(11, 'NHIF236', 'AIDS', 'ARVs', 'Omondi', '2023-07-17 23:29:18'),
+(12, 'NHIF240', 'AIDS', 'ARVs', 'Omondi', '2023-07-17 23:29:36'),
+(13, 'NHIF257', 'Acne', 'Facial Cream', 'Omondi', '2023-07-17 23:30:09'),
+(14, 'NHIF262', 'Gastroenteritis', 'Antacid', 'Omondi', '2023-07-17 23:30:43');
 
 -- --------------------------------------------------------
 
@@ -1119,8 +1169,8 @@ CREATE TABLE `users` (
   `last_name` varchar(50) NOT NULL,
   `user_name` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
-  `confirm_password` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `confirm_password` varchar(255) NOT NULL,
   `dob` date NOT NULL,
   `gender` varchar(1) NOT NULL,
   `address` varchar(50) NOT NULL,
@@ -1134,10 +1184,20 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `user_name`, `email`, `password`, `confirm_password`, `dob`, `gender`, `address`, `phone_number`, `Role`, `created_at`) VALUES
-(2, 'Omondi', 'Were', 'Omondi', 'franklinegift@gmail.com', '$2y$10$pdlEorz1K3twu/z4XNebveIcI8UYuglMsC/I9MP78a2', '$2y$10$pdlEorz1K3twu/z4XNebveIcI8UYuglMsC/I9MP78a2', '1990-03-06', 'm', 'Nairobi', '0712345678', 'doctor', '2023-07-15 15:05:45'),
-(3, 'Ruth', 'Jeptoo', 'Ruth', 'ruthj@gmail.com', '$2y$10$g2Wmw/oeY38luPpj6ENgdeVeUJfy/6kPrmtLLucrWdF', '$2y$10$g2Wmw/oeY38luPpj6ENgdeVeUJfy/6kPrmtLLucrWdF', '1995-11-03', 'f', 'Nairobi', '0712345678', 'receptionist', '2023-07-15 15:05:45'),
-(4, 'Nancy', 'Macharia', 'Nancy', 'nancy@gmail.com', '$2y$10$7BcJJmEgfC2LiqfWsLfjkOH7XOzEojpAiNIfPY6y6kZ', '$2y$10$7BcJJmEgfC2LiqfWsLfjkOH7XOzEojpAiNIfPY6y6kZ', '1995-04-27', 'f', 'Nairobi', '0723145687', 'nurse', '2023-07-15 15:05:45'),
-(5, 'Abraham', 'Lincoln', 'Abraham', 'abralinc@gmail.com', '$2y$10$DT0mvdzOZTxgyAQUl.Bt2O7ds1N83YRJqxKeGeq.yRe', '$2y$10$DT0mvdzOZTxgyAQUl.Bt2O7ds1N83YRJqxKeGeq.yRe', '1994-07-29', 'm', 'Nairobi', '0723145786', 'admin', '2023-07-15 15:05:45');
+(2, 'Omondi', 'Were', 'Omondi', 'franklinegift@gmail.com', '$2a$10$aLr5TnzEm/rpYkwgO/aGO.9pKtjpM137x9az3FbJTjZjsZqwEZ4em', '$2a$10$aLr5TnzEm/rpYkwgO/aGO.9pKtjpM137x9az3FbJTjZjsZqwEZ4em', '1990-03-06', 'm', 'Nairobi', '0712345678', 'doctor', '2023-07-17 20:09:53'),
+(3, 'Ruth', 'Jeptoo', 'Ruth', 'ruthj@gmail.com', '$2a$10$nba.JmUT0/14tZdzsmDauOU/mYzYJunFuBVH8pGX9t4EKbfrhqq5e', '$2a$10$nba.JmUT0/14tZdzsmDauOU/mYzYJunFuBVH8pGX9t4EKbfrhqq5e', '1995-11-03', 'f', 'Nairobi', '0712345678', 'receptionist', '2023-07-17 20:13:11'),
+(4, 'Nancy', 'Macharia', 'Nancy', 'nancy@gmail.com', '$2a$10$l9doGzmkgmun7a/J78dqouo0zbyn0O04B2Lfi4kdYU3vOSgwSogmK', '$2a$10$l9doGzmkgmun7a/J78dqouo0zbyn0O04B2Lfi4kdYU3vOSgwSogmK', '1995-04-27', 'f', 'Nairobi', '0723145687', 'nurse', '2023-07-17 20:14:55'),
+(5, 'Abraham', 'Lincoln', 'Abraham', 'abralinc@gmail.com', '$2a$10$Upxv2O0//Chmj0ct.8mxW.RGbmVVG3ZUdV2VPSaCTE2Y7HL4eBCzi', '$2a$10$Upxv2O0//Chmj0ct.8mxW.RGbmVVG3ZUdV2VPSaCTE2Y7HL4eBCzi', '1994-07-29', 'm', 'Nairobi', '0723145786', 'admin', '2023-07-17 20:17:08'),
+(6, 'Ali', 'Mahmoud', 'Modi', 'modi@gmail.com', '$2y$10$WjNREzBvF.6Vk99KUWwg2uWMzrSZxRsaWNBgCJX83ew', '$2y$10$5ibGFbtAlXcHCytxDYwdZ.n04EM3iuJriNJBQz5bieW', '1993-02-26', 'm', 'Nairobi', '0725647831', 'doctor', '2023-07-17 19:05:47'),
+(7, 'Sharon', 'Mweresa', 'Shazzy', 'shaz@gmail.com', '$2y$10$GbGNIQ//Y.qUv5wzNZ92tOfsXWui3icsxNrGWmeVEZQ', '$2y$10$99Cay8CDEk4ONLU1uXGfyO45UPPdgkAQSAHgdXHFnOR', '1993-07-28', 'f', 'Nairobi', '0745321978', 'receptionist', '2023-07-17 19:08:38'),
+(8, 'Oscar', 'Mwinyi', 'Omwiny', 'omwiny@gmail.com', '$2y$10$2Mfe3tt29tExG6VzxQJWAOrKGHlGB3NddXvEP9u2cJ1', '$2y$10$i9PxJmdDDphqGdn2NiwGWOPMiVcNxWhH8D0nUgwlzJA', '1995-05-04', 'm', 'Nairobi', '0731524897', 'admin', '2023-07-17 19:10:24'),
+(9, 'Lucy', 'Mwangi', 'Lwangi', 'lwangi@gmail.com', '$2y$10$5.aF/9wYkxG7UWVxysqS9OmCjqScQhCMKZnlOh/iDW2', '$2y$10$PmwmRGldEsejYhxVfT1gAuLQx8iECiqDPdAb1DUcBwe', '1996-06-05', 'f', 'Nairobi', '0754126397', 'nurse', '2023-07-17 19:12:01'),
+(10, 'Amin', 'Abdikadir', 'Kadir', 'kadir@gmail.com', '$2y$10$iub.fXiq1xZIFxREM3j5IOVaYwVawpnHw3qoK9Ghome', '$2y$10$ZRuly3rzRowORPbqj5GWeOHpDNt14FWx0ODonfp2tel', '1997-10-10', 'm', 'Nairobi', '0752678913', 'doctor', '2023-07-17 19:15:36'),
+(11, 'Lucas', 'Kipkemoi', 'Moi', 'moi@gmail.com', '$2y$10$GlMVHP6BaXD1e8aN0BlrHOfy7GgavCiRcjw0jcJ2we6', '$2y$10$HcZAioy78UwSutCl3vIeRuRNXtwNZ4Z5x/LAwjDq4FT', '1994-09-12', 'm', 'Nairobi', '0745968713', 'receptionist', '2023-07-17 19:17:48'),
+(12, 'Ashley', 'Wangari', 'Wangari', 'wanga@gmail.com', '$2y$10$9LrmEizPTs8gRLNXb2tHbO.peerXfSbYB97VVgx5zrB', '$2y$10$gnBp6ki.kjcuO7qAjuo/fu0.3osQbqcMfNzNF6QMa8p', '2000-12-30', 'f', 'Nairobi', '0754129876', 'nurse', '2023-07-17 19:21:13'),
+(13, 'Gabriel', 'Katana', 'Gabu', 'gabu@gmail.com', '$2y$10$Tz.8CmBksB4LfeSWCYrH..479ky7VfN.bTTXevpGw/F', '$2y$10$9a7.vf26m5nLfYvkr1sBkeeQvEu9ELW7eyJ7KRAeFxj', '1997-01-27', 'm', 'Nairobi', '0723145786', 'nurse', '2023-07-17 19:24:31'),
+(14, 'Oscar', 'Sudi', 'Oscar', 'sudi@gmail.com', '$2y$10$5Y1aMAzxnDszLm6KwWjfVuQFP1yKrpCwn4NBZ/FCbu4', '$2y$10$AHWBuBjqiUBe2jybn0yEhuN9osnmkbbSB9ZIVh.A0kO', '1890-02-03', 'm', 'Nairobi', '0789456123', 'nurse', '2023-07-17 19:29:13'),
+(15, 'Henrietta', 'Adhiambo', 'Adhis', 'adhiambo@gmail.com', '$2y$10$eB8c.blsbtugdir7WZJ.duQlXRUoVCI1GEWvKv3bZQJ', '$2y$10$VvCkbubHL6gDmLCuS7q5d.n6kQydyZ.Qee0QxL2GILX', '1995-03-03', 'f', 'Nairobi', '0789456123', 'doctor', '2023-07-17 19:28:47');
 
 -- --------------------------------------------------------
 
@@ -1161,7 +1221,25 @@ CREATE TABLE `vitals` (
 
 INSERT INTO `vitals` (`id`, `health_number`, `recorded_at`, `temperature`, `blood_pressure`, `heart_rate`, `respiratory_rate`) VALUES
 (1, 'NHIF201', '2023-07-13 11:13:54', 36, '90', 70, 15),
-(4, 'NHIF202', '2023-07-15 21:11:51', 36, '95', 75, 17);
+(4, 'NHIF202', '2023-07-15 21:11:51', 36, '95', 75, 17),
+(5, 'NHIF203', '2023-07-18 01:11:13', 37, '85', 85, 15),
+(6, 'NHIF204', '2023-07-18 01:12:44', 35, '130', 70, 17),
+(7, 'NHIF205', '2023-07-18 01:13:26', 34, '120', 60, 17),
+(8, 'NHIF206', '2023-07-18 01:14:40', 36, '75', 50, 19),
+(9, 'NHIF207', '2023-07-18 01:15:42', 38, '130', 65, 17),
+(10, 'NHIF208', '2023-07-18 01:16:25', 34, '85', 95, 14),
+(11, 'NHIF211', '2023-07-18 01:17:19', 35, '82', 95, 17),
+(12, 'NHIF216', '2023-07-18 01:19:22', 35, '86', 90, 15),
+(13, 'NHIF217', '2023-07-18 01:21:23', 36, '86', 90, 14),
+(14, 'NHIF230', '2023-07-18 01:21:59', 34, '84', 65, 15),
+(15, 'NHIF236', '2023-07-18 01:22:32', 37, '90', 59, 13),
+(16, 'NHIF240', '2023-07-18 01:23:04', 32, '84', 59, 14),
+(17, 'NHIF246', '2023-07-18 01:23:39', 35, '80', 66, 16),
+(18, 'NHIF250', '2023-07-18 01:24:07', 37, '92', 72, 16),
+(19, 'NHIF252', '2023-07-18 01:24:51', 35, '100', 90, 15),
+(20, 'NHIF257', '2023-07-18 01:25:31', 39, '85', 75, 16),
+(21, 'NHIF259', '2023-07-18 01:26:29', 34, '80', 75, 18),
+(22, 'NHIF262', '2023-07-18 01:27:10', 37, '80', 80, 15);
 
 --
 -- Indexes for dumped tables
@@ -1204,7 +1282,8 @@ ALTER TABLE `password_resets`
 --
 ALTER TABLE `patient`
   ADD PRIMARY KEY (`patient_id`),
-  ADD UNIQUE KEY `health_number` (`health_number`,`email`);
+  ADD UNIQUE KEY `health_number` (`health_number`,`email`),
+  ADD UNIQUE KEY `health_number_2` (`health_number`);
 
 --
 -- Indexes for table `precaution_remedy`
@@ -1265,7 +1344,7 @@ ALTER TABLE `department`
 -- AUTO_INCREMENT for table `diagnosis`
 --
 ALTER TABLE `diagnosis`
-  MODIFY `diagnosis_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `diagnosis_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `password_resets`
@@ -1277,7 +1356,7 @@ ALTER TABLE `password_resets`
 -- AUTO_INCREMENT for table `patient`
 --
 ALTER TABLE `patient`
-  MODIFY `patient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `patient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `referrals`
@@ -1289,19 +1368,19 @@ ALTER TABLE `referrals`
 -- AUTO_INCREMENT for table `treatments`
 --
 ALTER TABLE `treatments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `vitals`
 --
 ALTER TABLE `vitals`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- Constraints for dumped tables

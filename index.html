@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <!-- START LOADER  --> 
+  <!-- START LOADER  -->
   <div class="loader-overlay">
     <div class="spinner"></div>
   </div>
@@ -23,28 +23,42 @@
       <span class="close">&times;</span>
       <h2>Sign Up</h2>
       <form action="submit-form.php" method="POST">
-        <label for="fname">First Name:</label>
-        <input type="text" id="fname" name="fname" required><br><br>
 
+        <span id="fname-error" class="error"></span><br><br>
+        <label for="fname">First Name:</label>
+        <input type="text" id="fname" name="fname"><br><br>
+
+
+        <span id="lname-error" class="error"></span><br><br>
         <label for="lname">Last Name:</label>
         <input type="text" id="lname" name="lname" required><br><br>
 
+        <span id="uname-error" class="error"></span><br><br>
         <label for="uname">Username:</label>
         <input type="text" id="uname" name="uname" required><br><br>
 
 
+        <span id="email-error" class="error"></span><br><br>
         <label for="email">Email Address:</label>
         <input type="email" id="email" name="email" required><br><br>
 
+
+        <span id="password-error" class="error"></span><br><br>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required><br><br>
 
+
+        <span id="confirm-password-error" class="error"></span><br><br>
         <label for="confirm-password">Confirm Password:</label>
         <input type="password" id="confirm-password" name="confirm-password" required><br><br>
 
+
+        <span id="dob-error" class="error"></span><br><br>
         <label for="dob">Date of Birth:</label>
         <input type="date" id="dob" name="dob" required><br><br>
 
+
+        <span id="gender-error" class="error"></span><br><br>
         <label for="gender">Gender:</label>
         <select id="gender" name="gender" required>
           <option value="">Select Gender</option>
@@ -53,11 +67,15 @@
           <option value="other">Other</option>
         </select><br><br>
 
+        <span id="address-error" class="error"></span><br><br>
         <label for="address">Address:</label>
         <input type="text" id="address" name="address" required><br><br>
 
+        <span id="phone-error" class="error"></span><br><br>
         <label for="phone">Phone Number:</label>
         <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" required><br><br>
+
+
         <label for="department"><i>Only for doctors!</i></label>
         <select id="department" name="department">
           <option>Select Department</option>
@@ -74,6 +92,7 @@
           <option value="Neurology">Neurology</option>
           <option value="Pulmonology">Pulmonology</option>
         </select><br><br>
+
         <input type="submit" name="signup" value="Create Account">
         <input type="reset" value="Reset"><br><br>
         <p>Already have an account? <a href="#" id="login-link">Log in</a></p>
@@ -85,16 +104,17 @@
   <!-- START OF LOGIN MODAL -->
   <!-- Login modal -->
   <div id="login-modal" class="modal">
+    <span id="login-error" class="error"></span>
     <div class="modal-content">
       <span class="close">&times;</span>
       <h2>Log in</h2>
       <form action="login.php" method="POST">
         <div>
-          <input type="text" name="username" id="username"  required="">
+          <input type="text" name="username" id="username" required="">
           <label for="username">Username</label>
         </div>
         <div>
-          <input type="password" name="pwd"  id="pwd"  required="">
+          <input type="password" name="pwd" id="pwd" required="">
           <label for="pwd">Password</label>
         </div>
         <input type="submit" name="login" value="Login">
@@ -142,8 +162,13 @@
         <p class="lead">
           With this application, your patient doesn't get impatient
         </p>
-        <p class="lead">Create Account: <a><button id="signup-btn" class="btn btn-rounded">Get Started</button></a><br><br></p>
-        <p class="lead">Login as: <a href="login.html"><button  id="login-btn"  class="btn btn-rounded">Receptionist</button></a>  <a href="login.html"><button id="login-btn"  class="btn btn-rounded">Nurse</button></a>  <a href="login.html"><button id="login-btn"  class="btn btn-rounded">Doctor</button></a>  <a href="login.html"><button id="login-btn"  class="btn btn-rounded">Admin</button></a></p>
+        <p class="lead">Create Account: <a><button id="signup-btn" class="btn btn-rounded">Get
+              Started</button></a><br><br></p>
+        <p class="lead">Login as: <a href="login.html"><button id="login-btn"
+              class="btn btn-rounded">Receptionist</button></a> <a href="login.html"><button id="login-btn"
+              class="btn btn-rounded">Nurse</button></a> <a href="login.html"><button id="login-btn"
+              class="btn btn-rounded">Doctor</button></a> <a href="login.html"><button id="login-btn"
+              class="btn btn-rounded">Admin</button></a></p>
       </div>
       <div class="banner-img">
         <img src="img\hero\medcare.jpg" alt="Banner" />
@@ -152,6 +177,127 @@
   </section>
   <!-- END BANNER -->
   <script src="js/home.js"></script>
+  <script>
+    const fnameInput = document.getElementById('fname');
+    const fnameError = document.getElementById('fname-error');
+    const lnameInput = document.getElementById('lname');
+    const lnameError = document.getElementById('lname-error');
+    const unameInput = document.getElementById('uname');
+    const unameError = document.getElementById('uname-error');
+    const emailInput = document.getElementById('email');
+    const emailError = document.getElementById('email-error');
+    const passwordInput = document.getElementById('password');
+    const passwordError = document.getElementById('password-error');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const confirmPasswordError = document.getElementById('confirm-password-error');
+    const dobInput = document.getElementById('dob');
+    const dobError = document.getElementById('dob-error');
+    const genderInput = document.getElementById('gender');
+    const genderError = document.getElementById('gender-error');
+    const addressInput = document.getElementById('address');
+    const addressError = document.getElementById('address-error');
+    const phoneInput = document.getElementById('phone');
+    const phoneError = document.getElementById('phone-error');
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+
+
+
+    fnameInput.addEventListener('input', () => {
+      if (fnameInput.value.trim() === '') {
+        fnameError.textContent = 'First name is required.';
+      } else if (!/^[a-zA-Z]+$/.test(fnameInput.value)) {
+        fnameError.textContent = 'First name must only contain letters.';
+      }
+      else {
+        fnameError.textContent = '';
+      }
+    });
+
+    lnameInput.addEventListener('input', () => {
+      if (lnameInput.value.trim() === '') {
+        lnameError.textContent = 'Last name is required.';
+      } else if (!/^[a-zA-Z]+$/.test(lnameInput.value)) {
+        lnameError.textContent = 'Last name must only contain letters.';
+      } else {
+        lnameError.textContent = '';
+      }
+    });
+
+    unameInput.addEventListener('input', () => {
+      if (unameInput.value.trim() === '') {
+        unameError.textContent = 'Username is required.';
+      } else if (!/^[a-zA-Z]+$/.test(unameInput.value)) {
+        unameError.textContent = 'Last name must only contain letters.';
+      } else {
+        unameError.textContent = '';
+      }
+    });
+
+    emailInput.addEventListener('input', () => {
+      if (emailInput.value.trim() === '') {
+        emailError.textContent = 'Username is required.';
+      } else if (!/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(emailInput.value)) {
+        emailError.textContent = 'Invalid email format.';
+      } else {
+        emailError.textContent = '';
+      }
+    });
+    passwordInput.addEventListener('input', () => {
+      if (passwordInput.value.length < 8) {
+        passwordError.textContent = 'Password must be at least 8 characters long.';
+      } else {
+        passwordError.textContent = '';
+      }
+    });
+
+    confirmPasswordInput.addEventListener('input', () => {
+      if (passwordInput.value !== confirmPasswordInput.value) {
+        confirmPasswordError.textContent = 'Passwords do not match.';
+      } else {
+        confirmPasswordError.textContent = '';
+      }
+    });
+
+    dobInput.addEventListener('input', () => {
+      if (dobInput.value === '') {
+        dobError.textContent = 'Pick date.';
+      } else {
+        dobError.textContent = '';
+      }
+    });
+
+    genderInput.addEventListener('input', () => {
+      if (genderInput.value === '') {
+        genderError.textContent = 'Pick gender.';
+      } else {
+        genderError.textContent = '';
+      }
+    });
+
+    addressInput.addEventListener('input', () => {
+      if (addressInput.value.trim() === '') {
+        addressError.textContent = 'Address is required.';
+      } else {
+        addressError.textContent = '';
+      }
+    });
+
+    phoneInput.addEventListener('input', () => {
+      if (phoneInput.value.trim() === '') {
+        phoneError.textContent = 'Phone Number is required.';
+      } else {
+        phoneError.textContent = '';
+      }
+    });
+
+    if (error === 'wrongpassword') {
+      const loginError = document.querySelector('#login-error');
+      loginError.textContent = 'Wrong password. Please try again.';
+    }
+
+
+  </script>
 </body>
 
 </html>

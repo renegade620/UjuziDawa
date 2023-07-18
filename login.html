@@ -26,6 +26,7 @@
 <body>
     <a href="index.html">Back</a>
     <h2>Log in</h2>
+    <span id="login-error" class="error"></span>
     <form action="login.php" method="POST">
         <div>
             <input type="text" name="username" required="">
@@ -38,7 +39,16 @@
         <input type="submit" name="login" value="Login">
         <a href="#" id="forgot-password-link">Forgot Password?</a>
     </form>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+const error = urlParams.get('error');
 
+if (error === 'wrongpassword') {
+    const loginError = document.querySelector('#login-error');
+    loginError.textContent = 'Wrong password. Please try again.';
+}
+
+</script>
 </body>
 
 </html>

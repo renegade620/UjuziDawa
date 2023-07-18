@@ -31,6 +31,47 @@
             background-color: #487cff;
             color: white;
         }
+
+        form {
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        form label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        form input[type="text"] {
+            padding: 5px;
+            font-size: 18px;
+        }
+
+        form input[type="submit"] {
+            padding: 5px 10px;
+            font-size: 18px;
+            background-color: #487cff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        form input[type="submit"]:hover {
+            background-color: #3568cc;
+        }
+
+        h3 {
+            text-align: center;
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            color: #487cff;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 10px;
+        }
     </style>
 </head>
 
@@ -38,16 +79,29 @@
     <div class="back">
         <a href="receptionist.php" class="back-button">Back to Dashboard</a>
     </div>
+    <form method="GET">
+        <label for="health-number">Health Number:</label>
+        <input type="text" id="health-number" name="health_number">
+        <input type="submit" value="Search">
+    </form>
     <?php
     require "connect.php";
 
+    $healthNumber = $_GET['health_number'] ?? '';
+
     $sql = "SELECT *, TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) AS age FROM patient";
+    if (!empty($healthNumber)) {
+        $sql .= " WHERE health_number = ?";
+    }
     $stmt = $conn->prepare($sql);
+    if (!empty($healthNumber)) {
+        $stmt->bind_param('s', $healthNumber);
+    }
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        echo "<h3>Registered Patient</h3>";
+        echo "<h3>Registered Patients</h3>";
         echo "<table>";
         echo "<tr><th>Health Number</th><th>Patient Name</th><th>Gender</th><th>Age</th><th>Phone Number</th><th>Email</th><th>Reason for registration</th><th>More Info</th></tr>";
         while ($row = $result->fetch_assoc()) {
@@ -67,17 +121,13 @@
             echo "<p>Emergency Contact Person: " . $row["emergency_contact_name"] . "</p>";
             echo "<p>Emergency Contact Person: " . $row["emergency_contact_phone_number"] . "</p>";
             echo "<p>Marital Status: " . $row["marital_status"] . "</p>";
-            // Add more columns here
             echo "</td>";
             echo "</tr>";
         }
         echo "</table>";
     } else {
-        // No patient found
         echo "No patient found with health number: " . $healthNumber;
     }
-
-    // Close the result and connection
     $result->close();
     $conn->close();
     ?>

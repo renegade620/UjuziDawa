@@ -173,6 +173,10 @@ session_start();
                     <h3>Total Departments</h3>
                     <p><?php echo getTotalDepartments(); ?></p>
                 </div>
+                <div class="summary-card">
+                    <h3>Total Patients</h3>
+                    <p><?php echo getTotalPatients(); ?></p>
+                </div>
                 <?php
                 function getTotalDiagnoses()
                 {
@@ -208,6 +212,15 @@ session_start();
                     $result = mysqli_query($conn, $query);
                     $row = mysqli_fetch_assoc($result);
                     return $row['total_departments'];
+                }
+
+                function getTotalPatients()
+                {
+                    include "connect.php";
+                    $query = "SELECT COUNT(*) AS total_patients FROM patient";
+                    $result = mysqli_query($conn, $query);
+                    $row = mysqli_fetch_assoc($result);
+                    return $row['total_patients'];
                 }
                 ?>
             </div>

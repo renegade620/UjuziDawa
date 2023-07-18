@@ -1,3 +1,6 @@
+<?php session_start();
+$doctorTreat = $_SESSION['username'];
+?>
 <!DOCTYPE html>
 <html>
 
@@ -139,6 +142,7 @@
             $healthNumber = $_POST["health-number"];
             $diseaseTreated = $_POST["disease-treated"];
             $prescription = $_POST["prescription"];
+            $doctorTreat = $doctorTreat;
 
             // Validate form data
             if (empty($healthNumber) || empty($diseaseTreated) || empty($prescription)) {
@@ -146,8 +150,8 @@
             } else {
                 require "connect.php";
 
-                $stmt = $conn->prepare("INSERT INTO treatments (health_number, disease_treated, prescription) VALUES (?, ?, ?)");
-                $stmt->bind_param("sss", $healthNumber, $diseaseTreated, $prescription);
+                $stmt = $conn->prepare("INSERT INTO treatments (health_number, disease_treated, prescription, by_doctor) VALUES (?, ?, ?, ?)");
+                $stmt->bind_param("ssss", $healthNumber, $diseaseTreated, $prescription, $doctorTreat);
 
                 // Execute statement
                 if ($stmt->execute()) {
@@ -197,7 +201,7 @@
             $healthNumber = $_POST["health-number"];
             $department = $_POST['department'];
             $referralReason = $_POST["referral-reason"];
-            $referralPerson = $_POST["referral-to"];
+            $referralPerson = $_POST["referred-to"];
 
             // Validate form data
             if (empty($healthNumber) || empty($referralReason) || empty($referralPerson)) {
@@ -205,14 +209,14 @@
             } else {
                 require "connect.php";
 
-                $stmt = $conn->prepare("INSERT INTO referrals (health_number, department, referral_reason, referral_person) VALUES (?, ?, ?)");
-                $stmt->bind_param("sss", $healthNumber, $referralReason, $referralPerson);
+                $stmt = $conn->prepare("INSERT INTO referrals (health_number, department, referral_reason, referral_person) VALUES (?, ?, ?, ?)");
+                $stmt->bind_param("ssss", $healthNumber, $department, $referralReason, $referralPerson);
 
                 // Execute statement
                 if ($stmt->execute()) {
-                    echo "Patient Successfully Treated!";
+                    echo "Patient Referred!";
                 } else {
-                    echo "Patient not Treated!";
+                    echo "Patient not Referred!";
                 }
 
                 // Close statement and connection

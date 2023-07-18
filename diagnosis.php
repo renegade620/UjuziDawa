@@ -94,6 +94,72 @@
     </table>
 
     <?php
+    // Retrieve data from the diagnosis table
+    $query = "SELECT symptoms FROM diagnosis";
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        die('Query Error: ' . mysqli_error($conn));
+    }
+
+    // Create an array to store the symptom counts
+    $symptomCounts = [];
+
+    // Loop through the diagnosis data and count the symptoms
+    while ($row = mysqli_fetch_assoc($result)) {
+        $symptoms = json_decode($row["symptoms"], true);
+        foreach ($symptoms as $symptom) {
+            if (!isset($symptomCounts[$symptom])) {
+                $symptomCounts[$symptom] = 0;
+            }
+            $symptomCounts[$symptom]++;
+        }
+    }
+
+    // Sort the symptom counts in descending order
+    arsort($symptomCounts);
+
+    // Display the most common symptoms
+    echo "<h1>Most Common Symptoms</h1>";
+    echo "<ul>";
+    foreach ($symptomCounts as $symptom => $count) {
+        echo "<li>" . htmlspecialchars($symptom) . ": " . htmlspecialchars($count) . "</li>";
+    }
+    echo "</ul>";
+
+    // Retrieve data from the diagnosis table
+    $query = "SELECT diseases FROM diagnosis";
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        die('Query Error: ' . mysqli_error($conn));
+    }
+
+    // Create an array to store the disease counts
+    $diseaseCounts = [];
+
+    // Loop through the diagnosis data and count the diseases
+    while ($row = mysqli_fetch_assoc($result)) {
+        $diseases = json_decode($row["diseases"], true);
+        foreach ($diseases as $disease) {
+            if (!isset($diseaseCounts[$disease])) {
+                $diseaseCounts[$disease] = 0;
+            }
+            $diseaseCounts[$disease]++;
+        }
+    }
+
+    // Sort the disease counts in descending order
+    arsort($diseaseCounts);
+
+    // Display the number of diagnoses by disease
+    echo "<h1>Number of Diagnoses by Disease</h1>";
+    echo "<ul>";
+    foreach ($diseaseCounts as $disease => $count) {
+        echo "<li>" . htmlspecialchars($disease) . ": " . htmlspecialchars($count) . "</li>";
+    }
+    echo "</ul>";
+
     $conn->close();
     ?>
 </body>
